@@ -8,9 +8,15 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def script(name: str, *arguments: object) -> list[object]:
+    path = ROOT / "scripts" / name
+    return ([sys.executable, path] if path.suffix == ".py" else [path]) + list(arguments)
 
 
 def environment() -> dict[str, str]:
@@ -74,9 +80,6 @@ def main() -> int:
         (work / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
         if result.returncode:
             raise RuntimeError(name + " failed; inspect its private run log")
-
-    def script(name: str, *arguments: object) -> list[object]:
-        return [ROOT / "scripts" / name, *arguments]
 
     run("host-check", script("check-ios-host.sh"))
     run("validate-game", script("validate-celeste-input.sh", "--game-root", args.game_root,

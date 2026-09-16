@@ -29,6 +29,10 @@ Bounded tooling adjustments are the icon source location, the vanilla iOS host
 doctor's host-architecture/OS policy, explicit serial vanilla iOS publishing,
 the cloud verifier's reference to the actual modern iOS graph, a standalone
 unsigned convenience wrapper and an explicit cloud-source export pin. The
+convenience wrapper invokes Python entry points with its current interpreter;
+the original K-N wrapper intentionally has no executable file mode. An owned
+non-executable fixture checks success and nonzero-exit propagation, and the
+actual K-N help entry point is exercised without generating a product. The
 desktop HookGen regression now restores its host builder before running it;
 the old `--no-restore` assumption failed on a fresh checkout. The vanilla tvOS
 soft-reload verifier now recognizes the existing canonical Apple version import

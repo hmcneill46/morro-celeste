@@ -3139,7 +3139,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_MIGRATION.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_MIGRATION.md",
-      "sha256": "ef393f1d035c8fbe81bc09a5f2649f0ad9a2f2e80796cc79ab91186ad5c0c31a"
+      "sha256": "517ff70eb9a53e98ef57ea5f41d1c76dde9de7224f828d00419c3a9b3eeda14e"
     },
     {
       "baselineGitObject": "e7c45733a735e0e2d803ce7b2e9f71d71f3d4791",
@@ -5028,7 +5028,7 @@
       "gitMode": "100755",
       "path": "scripts/build-morro-unsigned.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: build-morro-unsigned.py",
-      "sha256": "4d287acfc1316f355d29a0e9d31eb7c85e1e367274d164d42a12f82409bffccf"
+      "sha256": "ebf93c10738403c13d6eacda6fa67773f8f8b311fb212aad5581de3f346773e5"
     },
     {
       "baselineGitObject": "7dfec9c0e359ed32f9d198879dba11161d4f15e0",
@@ -7335,7 +7335,7 @@
       "gitMode": "100644",
       "path": "tests/test_morro_migration.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_morro_migration.py",
-      "sha256": "ef6a5b28f68e9c242159d7c8c0416995b5d253168108f9573f6b11c54c976397"
+      "sha256": "c3c983ff59672c99e0e71a5f22ca433969ea003a27089f1ec634a1f472a422ad"
     },
     {
       "baselineGitObject": "6532b3f42d76dc0fcaa1f5ffc392bd7bbcd86017",

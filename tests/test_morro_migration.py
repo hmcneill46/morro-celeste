@@ -54,6 +54,24 @@ class HostPolicy(unittest.TestCase):
 
 
 class ModernGraph(unittest.TestCase):
+    def test_python_entrypoint_needs_no_executable_mode_and_retains_failure(self):
+        builder = module("build-morro-unsigned")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "scripts" / "owned.py"
+            source.parent.mkdir()
+            source.write_text("import sys\nprint('owned entrypoint')\nraise SystemExit(int(sys.argv[1]))\n")
+            source.chmod(0o600)
+            with mock.patch.object(builder, "ROOT", root):
+                for code in (0, 9):
+                    result = subprocess.run(builder.script("owned.py", str(code)), capture_output=True, text=True)
+                    self.assertEqual(result.returncode, code)
+                    self.assertEqual(result.stdout.strip(), "owned entrypoint")
+        result = subprocess.run(builder.script("build-apple-everest-stage25kn.py", "--help"),
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("--package-root", result.stdout)
+
     def test_actual_shared_version_binding_and_negative_controls(self):
         verifier = module("verify-celeste-tvos-stage13b")
         project = (ROOT / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj").read_text()
