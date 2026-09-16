@@ -5,7 +5,9 @@ starts with local prerequisites, then documents the builder's advanced
 automation, reproducibility, and generated files. If you are still choosing a
 build route, begin with the root [README](../README.md).
 
-This is the **local Apple silicon Mac** guide. Users who do not have a Mac can use
+This is the **local Mac** guide for Intel and Apple silicon. For the standalone
+Morro layout and build-49 Everest lane, start with [Building Morro](MORRO_BUILDING.md).
+Users who do not have a Mac can use
 the separate [private GitHub cloud builder](CLOUD_BUILDING.md) for compilation.
 That route invokes this same self-builder and produces an unsigned IPA; signing
 and Apple TV installation remain separate.
@@ -14,7 +16,7 @@ and Apple TV installation remain separate.
 
 Have these ready before beginning a full build:
 
-- an Apple silicon Mac with full Xcode installed, first launch completed, and
+- an Intel or Apple-silicon Mac with full Xcode installed, first launch completed, and
   the tvOS SDK available;
 - .NET SDK 10.0.302 and tvOS workload set 10.0.302.0;
 - GNU Make (`gmake`) and Mono (`monodis`);
@@ -46,32 +48,20 @@ FMOD still pass their exact validators before the build continues.
 
 ## Clone and submodules
 
-The public fork's default branch is `tvos-port`:
+For the local Morro migration, use the already prepared checkout:
 
 ```bash
-git clone https://github.com/hmcneill46/celeste-ios.git
-cd celeste-ios
+cd ~/Projects/Morro-Celeste
 git -c url.https://github.com/.insteadOf=git://github.com/ \
   submodule update --init --recursive
 ./build-tvos.sh --help
 ```
 
-The command-scoped rewrite is required because the pinned FNA revision still
-uses GitHub's retired `git://` transport for nested submodules. It changes no
-repository URL or global Git setting; Git fetches those official repositories
-over HTTPS for this invocation.
-
-If the GitHub default branch has not yet been updated, the equivalent explicit
-clone is:
-
-```bash
-git clone --branch tvos-port --recurse-submodules \
-  https://github.com/hmcneill46/celeste-ios.git
-cd celeste-ios
-```
-
-Do not substitute the original upstream `main` branch; that is the legacy iOS
-project and does not contain the completed self-builder.
+Morro has not been published to a new GitHub destination yet. After publication,
+clone that repository's actual Code URL, then run the same submodule command.
+Do not substitute the legacy upstream branch. The command-scoped rewrite is
+required because the pinned FNA revision names GitHub's retired `git://`
+transport; it changes no repository URL or global Git configuration.
 
 ## Pinned toolchain and command audit
 
@@ -80,7 +70,7 @@ toolchain is:
 
 | Component | Accepted value |
 | --- | --- |
-| Host architecture | arm64 Apple silicon |
+| Host architecture | arm64 Apple silicon or x86_64 Intel |
 | .NET SDK | 10.0.302, selected by `global.json` |
 | .NET workload set | 10.0.302.0 with `tvos` installed |
 | Xcode | 26.6 |
@@ -616,5 +606,6 @@ and `artifacts/` roots and do not use the private GitHub Actions cloud builder.
 
 The [historical engineering records](history/README.md) document individual
 audit gates and commands. They are useful when modifying the port but are not
-the public build workflow. The root `build.sh` and `celestemeow/` project are
-the original legacy iOS lane; the tvOS self-builder does not replace them.
+the public build workflow. The original Xamarin `build.sh` and `celestemeow/`
+project remain in Git history; Morro removes that unused lane from its working
+tree. Modern vanilla and static Everest tooling remain together.

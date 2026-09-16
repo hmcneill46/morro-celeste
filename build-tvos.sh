@@ -271,7 +271,10 @@ printf 'Logs: dist/logs/\n\n'
 begin_phase 1 "Checking this Mac"
 [[ "$(uname -s)" == Darwin ]] || stop_build "This builder requires macOS" "$(uname -s)" "macOS" "Run it on a Mac with Xcode installed."
 HOST_ARCH="$(uname -m)"
-[[ "$HOST_ARCH" == arm64 ]] || ui_warning "$HOST_ARCH is untested; Apple silicon arm64 is the supported host."
+case "$HOST_ARCH" in
+  arm64|x86_64) ;;
+  *) stop_build "Unsupported Mac host architecture" "$HOST_ARCH" "arm64 or x86_64" "Use the documented Mac toolchain." ;;
+esac
 [[ -w "$REPO_ROOT" ]] || stop_build "The repository is not writable" "read-only path" "writable clone" "Move or change permissions on the clone."
 tool_names=(git python3 dotnet xcodebuild xcrun swift gmake patch plutil codesign security shasum ditto lipo nm nmedit monodis file)
 tool_reasons=(

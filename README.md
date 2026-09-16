@@ -1,4 +1,32 @@
-# Celeste for Apple TV, iPhone, and iPad
+# Morro — Celeste for Apple platforms
+
+**Native Celeste for iPhone, iPad and Apple TV, with full ahead-of-time compilation.**
+
+Morro is named after Morro Rock in California. The searchable repository name is
+**morro-celeste**. It carries the modern vanilla Apple port and the bounded static
+Everest pipeline, retaining the original port's Git history, credits and license.
+No JIT activation is required. This local migration has not been published as a
+new GitHub repository; the inherited upstream remains available for provenance.
+
+The companion [Cabrillo — Celeste Mod Loader for Apple Platforms](https://github.com/hmcneill46/cabrillo-celeste)
+uses a separate Mono JIT runtime and mod-loader architecture. Cabrillo's iPadOS
+and other Apple-platform plans belong to that project; they are not Morro support
+claims. The repositories have independent builds and acceptance decisions.
+
+## Start here
+
+- [Morro build and private-input guide](docs/MORRO_BUILDING.md) — independent local setup and unsigned vanilla/Everest commands.
+- [Migration and file inventory](docs/MORRO_MIGRATION.md) — retained history, removed legacy files, attribution and publishing choices.
+- [Credits](CREDITS.md) — original port, game, runtime, native and mod contributors.
+- [Static Everest architecture](docs/APPLE_EVEREST_STATIC_AOT.md) and [compatibility scope](docs/APPLE_EVEREST_COMPATIBILITY.md).
+
+Vanilla gameplay has its separate historical acceptance below. **Everest build
+49 is still pending physical acceptance**: lobby + Bing + The Squeeze and 18
+regression maps, not general Everest or all Strawberry Jam. Its original signed
+products remain frozen at source `34c0b933a4cf2252780ec84e5630847809793eab`.
+A migration build records its actual new tooling revision and does not inherit
+those products' identity or any old device PASS. No build number or application
+identifier is changed merely to rename the source project.
 
 An unofficial community project that builds native Apple versions of Celeste
 from game files you already own. The mature Apple TV product and the modern
@@ -25,9 +53,9 @@ supply both from your own accounts; the builders validate them locally.
 | iPhone or iPad | [iPhone/iPad self-build and install guide](docs/IOS_BUILDING.md) | `./build-ios.sh` |
 
 Both products accept the same [nine exact Celeste 1.4.0.0 FNA
-profiles](docs/CELESTE_INPUTS.md). The iPhone/iPad full game currently requires
-an Apple-silicon Mac and a physical device; the Apple TV product additionally
-has the private unsigned cloud compilation route.
+profiles](docs/CELESTE_INPUTS.md). The pinned device build path supports Intel x86_64 and Apple silicon arm64
+macOS hosts. Unsigned compilation requires no connected device. The Apple TV
+product additionally has the private unsigned cloud compilation route.
 
 ## Apple TV start here
 
@@ -37,7 +65,7 @@ You need:
    Steam, or Epic Games Store.
 2. **FMOD Engine iOS/tvOS 1.10.09 build 97915** from FMOD.
 3. A way to compile:
-   - an Apple silicon Mac for the local builder, or
+   - a supported Intel or Apple silicon Mac for the local builder, or
    - your own private GitHub repository for cloud compilation.
 4. A way to sign and install the app on your Apple TV. A cloud-built IPA is
    unsigned and cannot be installed until it is signed.
@@ -49,7 +77,7 @@ the native dependency pipeline to follow them.
 
 ```mermaid
 flowchart TD
-    A["I want Celeste on Apple TV"] --> B{"Apple silicon Mac available?"}
+    A["I want Celeste on Apple TV"] --> B{"Supported Mac available?"}
     B -->|Yes| C["Build locally with build-tvos.sh"]
     B -->|No| D["Compile in your own private GitHub repository"]
     C --> E["Sign and install on Apple TV"]
@@ -76,7 +104,7 @@ tvOS-capable signing and installation method afterward.
 
 ### Build locally on a Mac
 
-On a supported Apple silicon Mac, [`./build-tvos.sh`](build-tvos.sh) validates
+On a supported Intel or Apple silicon Mac, [`./build-tvos.sh`](build-tvos.sh) validates
 the inputs, builds the native and managed code, and can either:
 
 - sign and install directly using an Apple Account and a paired Apple TV;
@@ -139,7 +167,7 @@ repository. The project validates it but does not redistribute it.
 
 ## Step 3 — Build
 
-- **Apple silicon Mac:** follow [Build locally](docs/BUILDING.md), then run
+- **Supported Mac:** follow [Build locally](docs/BUILDING.md), then run
   `./build-tvos.sh`.
 - **Windows, Linux, or no suitable Mac:** follow [Build in the
   cloud](docs/CLOUD_BUILDING.md) to create the unsigned IPA privately.
@@ -279,7 +307,8 @@ available:
 - [Contributing](CONTRIBUTING.md)
 - [Development and acceptance history](docs/history/README.md)
 
-The original Xamarin.iOS project is retained for provenance and legacy work.
+The original Xamarin.iOS project remains in Git history for provenance.
+Morro's working tree contains the modern AOT project and its supporting records.
 The beginner/public builders now cover Apple TV and iPhone/iPad independently.
 Developers can also inspect the [modern iOS architecture](docs/IOS_FOUNDATION.md), which plays the
 same canonical Celeste game on physical iPhone and iPad using either a
@@ -310,6 +339,8 @@ debugging and reproducibility, but are not required reading to build the app.
 This work builds on
 [RoootTheFox/celeste-ios](https://github.com/RoootTheFox/celeste-ios) and its
 contributors, including the original FNA/iOS port and native build foundation.
+RoootTheFox's work was critical to this project's foundation. Morro preserves
+that commit history and the original licence; see [full credits](CREDITS.md).
 Celeste is by Extremely OK Games / Maddy Makes Games. Runtime and native work
 uses [FNA](https://github.com/FNA-XNA/FNA),
 [SDL](https://github.com/libsdl-org/SDL),

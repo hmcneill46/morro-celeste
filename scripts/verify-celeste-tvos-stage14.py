@@ -52,6 +52,14 @@ def verify_links(repo: pathlib.Path) -> int:
     return checked
 
 
+def verify_ios_graph(repo: pathlib.Path) -> None:
+    ios_project = repo / "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj"
+    if not ios_project.is_file():
+        fail("modern iOS project graph is missing")
+    if "CelesteTvOS.ControllerPrompts" in ios_project.read_text(errors="replace"):
+        fail("tvOS host preference leaked into the iOS project")
+
+
 def product_info(app: pathlib.Path) -> tuple[dict, list[bytes]]:
     info = plistlib.loads((app / "Info.plist").read_bytes())
     executable = app / str(info.get("CFBundleExecutable", ""))
@@ -195,10 +203,7 @@ def main() -> int:
     offenders = [name for name in tracked if name.lower().endswith(forbidden) or ".app/" in name.lower()]
     if offenders:
         fail("private/proprietary release output is tracked: " + ", ".join(offenders[:4]))
-    if not (repo / "celestemeow/celestemeow.csproj").is_file():
-        fail("retained iOS project graph is missing")
-    if "CelesteTvOS.ControllerPrompts" in (repo / "celestemeow/celestemeow.csproj").read_text(errors="replace"):
-        fail("tvOS host preference leaked into the iOS project")
+    verify_ios_graph(repo)
 
     summary = {
         "schemaVersion": 1,

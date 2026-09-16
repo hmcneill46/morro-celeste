@@ -1,0 +1,22 @@
+[
+  {
+    "file": "INTEL_IOS_BUILD_2026-09-07.md",
+    "originalSha256": "4c99c7a33d99b2386caf94374936b7620083340ec99b0b3b96fcab2c7ecaffe8",
+    "sanitizedSha256": "a31bbe63e7651a5d83cf72f4262331d5d4afe112a445b5c6fd63b8a9961956fe",
+    "edits": [
+      "historical-scope notice",
+      "personal checkout path placeholder where present",
+      "private artifact link converted to descriptive text where present"
+    ]
+  },
+  {
+    "file": "BUILD_DOCS_AUDIT_2026-09-02.md",
+    "originalSha256": "184b3c6d4fe25fa5f28f85a7d26780bd870a3ee4c6fdbb3184525087058ebb9d",
+    "sanitizedSha256": "591cdc000bf30fbe84f8d6738fb2bdeacb28ce1dadde2abbfc31276fe9f4569e",
+    "edits": [
+      "historical-scope notice",
+      "personal checkout path placeholder where present",
+      "private artifact link converted to descriptive text where present"
+    ]
+  }
+]

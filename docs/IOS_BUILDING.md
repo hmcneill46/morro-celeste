@@ -10,8 +10,8 @@ game files or FMOD SDK files and does not download either one for you.
 
 ## What you need
 
-- An Apple-silicon Mac running the exact toolchain checked by the builder:
-  macOS 26.3, Xcode 26.6 with iOS SDK 26.5, .NET SDK 10.0.302, workload set
+- An Intel or Apple-silicon Mac running the toolchain checked by the builder:
+  macOS 26.3 or later in the 26.x family, Xcode 26.6 with iOS SDK 26.5, .NET SDK 10.0.302, workload set
   10.0.302.0, and the iOS workload 26.5.10301.
 - Your own unmodified Celeste 1.4.0.0 FNA files matching one of the [nine
   supported profiles](CELESTE_INPUTS.md).
@@ -29,14 +29,13 @@ device—not Simulator—is the supported full-game route.
 ## 1. Get the repository
 
 ```bash
-git clone https://github.com/hmcneill46/celeste-ios.git
-cd celeste-ios
+cd ~/Projects/Morro-Celeste
 git -c url.https://github.com/.insteadOf=git://github.com/ \
   submodule update --init --recursive
 ```
 
-If you are testing a named release branch before integration, add
-`--branch NAME` to the clone command. The command-scoped URL rewrite is needed
+This is the existing local Morro checkout. After publication, clone the actual
+Morro repository URL first. The command-scoped URL rewrite is needed
 because the pinned FNA revision names GitHub's retired `git://` transport for
 nested submodules; it changes no repository or global Git configuration. Do
 not copy generated source or an app from another checkout.

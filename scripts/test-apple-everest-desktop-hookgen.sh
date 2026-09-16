@@ -15,7 +15,7 @@ TEST_ROOT="$REPO_ROOT/apple-everest/tests/desktop-hookgen"
 WORK="$REPO_ROOT/.build/apple-everest/desktop-hookgen"
 
 "$SCRIPT_DIR/bootstrap-apple-everest-host.sh"
-(cd /private/tmp && "$DOTNET8" run --project "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" --no-restore -- acquire \
+(cd /private/tmp && "$DOTNET8" run --project "$REPO_ROOT/tools/AppleEverestBuilder/AppleEverestBuilder.csproj" -- acquire \
   --profile "$REPO_ROOT/apple-everest/profiles/stable-1.6458.0.json" --output "$UPSTREAM")
 
 # The historical MonoMod project is multi-targeted. Restore only the supported

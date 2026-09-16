@@ -1,0 +1,46 @@
+{
+  "status": "IMMUTABLE_HISTORICAL_REPORT_COPIES",
+  "originalReportsPreserved": true,
+  "copies": [
+    {
+      "file": "HOST-A_CONTINUATION_REPORT.md",
+      "sha256": "8f2cafeb259193d17f66a9556538a2a1b2b3789227954c19b3a3f414a244fe43",
+      "bytes": 21163
+    },
+    {
+      "file": "HOST-A_FINAL_REPORT.md",
+      "sha256": "64eb4df76759bf19ad1f812d6480113bc0593ebff3b4629a90903593239074c6",
+      "bytes": 25432
+    },
+    {
+      "file": "HOST-A_NATIVE_DIAGNOSIS_REPORT.md",
+      "sha256": "60429d990a9ac8d0aaa3658e3f11897adf29ce1ab2c6ef9017ba8e5c0598e2d8",
+      "bytes": 21753
+    },
+    {
+      "file": "HOST-B_FINAL_REPORT.md",
+      "sha256": "00fd6455bcae8ca3159dbb63df2fc8baf7f752adf5b0b0a638c3ad5de2ecf2d4",
+      "bytes": 17819
+    },
+    {
+      "file": "HOST-C_FINAL_REPORT.md",
+      "sha256": "38721bd4a01ea37929887e8662ed032de77bf8387f2cbd575a76294eaf577ed1",
+      "bytes": 28130
+    },
+    {
+      "file": "STAGE25KM_FINAL_REPORT.md",
+      "sha256": "cbe5a317d31d65772e59abf7a493bb92580e8af5d42e6f01991c9fb88529927b",
+      "bytes": 36554
+    },
+    {
+      "file": "STAGE25KN_BUILD47_PHYSICAL_FAILURE_REPORT.md",
+      "sha256": "aff8eb9796b0d19bb94b4d0c30888cbc0a6251578bccad69d13ada2a2cba3d3d",
+      "bytes": 3078
+    },
+    {
+      "file": "STAGE25KN_FINAL_REPORT.md",
+      "sha256": "b02abe6d435e008d293934b489fc60f8457dc409ccf4f86d0dd9f2c289e9939f",
+      "bytes": 25505
+    }
+  ]
+}

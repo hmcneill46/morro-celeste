@@ -83,3 +83,9 @@ dist/
 .build/tvos-stage10b-*/
 
 .DS_Store
+
+# Morro owner-supplied inputs, build tools, and private migration evidence.
+.private/
+.build/morro/
+artifacts/morro/
+**/__pycache__/

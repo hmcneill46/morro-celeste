@@ -117,7 +117,7 @@ def main() -> int:
         generated_icon = pathlib.Path(icon_temp_text) / "AppIcon1024.png"
         subprocess.check_call([
             "xcrun", "swift", str(root / "scripts/generate-ios-app-icon.swift"),
-            "--input", str(root / "celestemeow/Assets.xcassets/AppIcon.appiconset/Icon1024.png"),
+            "--input", str(root / "modern-ios/Assets/AppIcon/Icon1024.png"),
             "--output", str(generated_icon),
         ], stdout=subprocess.DEVNULL)
         subprocess.check_call([

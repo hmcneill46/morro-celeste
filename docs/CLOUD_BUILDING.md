@@ -13,6 +13,26 @@ The cloud build stops at an unsigned, signing-ready IPA. Provisioning, signing,
 and installation are separate and may still require a compatible external
 signing path.
 
+## Morro source selection
+
+The existing public template below remains pinned to its historical source.
+To build Morro after its source has been published, export a separate private
+builder with both source-pin authorities updated together:
+
+```sh
+python3 scripts/export-morro-cloud-builder.py \
+  --destination ../Morro-Private-Builder \
+  --source-repository OWNER/PUBLISHED-MORRO-REPOSITORY \
+  --source-sha "$(git rev-parse HEAD)"
+```
+
+Replace the repository placeholder with its real public address. The command
+creates only the five reviewed template files in a new local directory. It does
+not create a GitHub repository, publish, run Actions, or copy private inputs.
+The chosen SHA must be published at that address before the workflow can fetch
+it. Follow the same private-input and cleanup rules below. The preserved cloud
+lane builds **vanilla tvOS**; iOS and build-49 Everest use the local Morro wrapper.
+
 ## What you need
 
 - A GitHub account.

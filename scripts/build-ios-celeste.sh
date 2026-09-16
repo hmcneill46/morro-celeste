@@ -104,7 +104,7 @@ start="$(date +%s)"
 phase() { printf '[%s] %s (elapsed %ss; free %s)\n' "$(date '+%H:%M:%S')" "$1" "$(( $(date +%s)-start ))" "$(df -h "$REPO_ROOT" | awk 'NR==2 {print $4}')"; }
 phase "Publishing canonical Celeste for ios-arm64 (full AOT/trim/LLVM)"
 log="$OUTPUT_DIR/logs/publish.log"
-args=(publish "$PROJECT" -c Release -r ios-arm64 --self-contained true
+args=(publish "$PROJECT" -c Release -r ios-arm64 --self-contained true -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false
   -p:IOSProductMode=Celeste -p:EnableFmodDeviceFoundation=true
   -p:CelesteAppleRepoRoot="$REPO_ROOT"
   -p:ArchiveOnBuild=false -p:UseInterpreter=false -p:RunAOTCompilation=true

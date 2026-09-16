@@ -5,6 +5,11 @@ Use this page to jump directly to the task or level of detail you need.
 
 ## Getting started
 
+- [Building Morro](MORRO_BUILDING.md) — standalone modern vanilla and build-49
+  static Everest builds, private inputs and the pinned Intel/Apple-silicon tools.
+- [Morro migration](MORRO_MIGRATION.md) — preserved ancestry, file inventory,
+  verification boundaries and later publication.
+- [Credits](../CREDITS.md) — original port, game, dependencies and mod authors.
 - [Build locally on a Mac](BUILDING.md) — Apple TV prerequisites, builder
   choices, signing, and generated outputs.
 - [Build and install on iPhone/iPad](IOS_BUILDING.md) — the beginner modern-iOS

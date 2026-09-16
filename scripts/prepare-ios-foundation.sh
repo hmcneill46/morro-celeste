@@ -54,7 +54,7 @@ mkdir -p "$temp/native" "$temp/managed" "$temp/fna" "$temp/artwork"
 touch "$temp/.ios-host-stage"
 
 xcrun swift "$REPO_ROOT/scripts/generate-ios-app-icon.swift" \
-  --input "$REPO_ROOT/celestemeow/Assets.xcassets/AppIcon.appiconset/Icon1024.png" \
+  --input "$REPO_ROOT/modern-ios/Assets/AppIcon/Icon1024.png" \
   --output "$temp/artwork/AppIcon1024.png"
 
 for component in SDL2 FNA3D FAudio Theorafile ApplePlatformStubs; do

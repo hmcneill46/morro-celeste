@@ -261,25 +261,20 @@ else
     printf 'Not a Git worktree: %s\n' "$repo_dir"
 fi
 
-section 'Pinned native-source checkout presence'
-builder_dir="$repo_dir/fnalibs-ios-builder-celeste"
-for source_name in SDL2 FNA3D FAudio Theorafile MoltenVK; do
-    if [ -d "$builder_dir/$source_name" ]; then
-        printf '%-12s present' "$source_name"
-        if git -C "$builder_dir/$source_name" rev-parse HEAD >/dev/null 2>&1; then
-            printf ' commit=%s' "$(git -C "$builder_dir/$source_name" rev-parse HEAD)"
+section 'Modern native source and artifact presence'
+for native_root in "$repo_dir/.build/ios-native" "$repo_dir/.build/tvos-native/self-build"; do
+    printf 'Work root: %s\n' "$native_root"
+    for source_name in SDL2 FNA3D FAudio Theorafile MoltenVK; do
+        source_path="$native_root/sources/$source_name"
+        if [ -d "$source_path" ]; then
+            printf '%-12s commit=%s\n' "$source_name" "$(git -C "$source_path" rev-parse HEAD 2>/dev/null || printf unavailable)"
         fi
-        printf '\n'
-    else
-        printf '%-12s NOT CHECKED OUT\n' "$source_name"
-    fi
+    done
 done
-
-section 'Checked-in native archive architectures'
-for archive_path in "$repo_dir"/fnalibs-ios-builder-celeste/prebuilt/*.a "$repo_dir"/celestemeow/*.a; do
-    if [ -f "$archive_path" ]; then
-        printf '%s: ' "$(basename -- "$archive_path")"
-        lipo -archs "$archive_path" 2>&1 || file "$archive_path"
+for manifest in "$repo_dir/artifacts/ios-native/normalized-manifest.json" "$repo_dir/artifacts/tvos-native/self-build/normalized-manifest.json"; do
+    if [ -f "$manifest" ]; then
+        printf 'Native manifest: %s\n' "$manifest"
+        run shasum -a 256 "$manifest"
     fi
 done
 

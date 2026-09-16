@@ -228,7 +228,7 @@ printf '\nCeleste for iPhone and iPad Builder\nPort v%s · Build %s\n\n' "$VERSI
 printf 'Private local logs: artifacts/ios/logs/\n\n'
 
 begin_phase 1 "Checking this Mac"
-[[ "$(uname -s)" == Darwin ]] || stop_build "This builder requires macOS." "Use an Apple-silicon Mac with the documented Xcode and .NET toolchain."
+[[ "$(uname -s)" == Darwin ]] || stop_build "This builder requires macOS." "Use an Intel or Apple-silicon Mac with the documented Xcode and .NET toolchain."
 tools=(git python3 dotnet xcodebuild xcrun plutil codesign security shasum zip unzip patch nm nmedit)
 missing=""
 for tool in "${tools[@]}"; do command -v "$tool" >/dev/null 2>&1 || missing="$missing $tool"; done
