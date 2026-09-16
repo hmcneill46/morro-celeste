@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly BASELINE_COMMIT="ce65a3896241ad33b0685a37e17278d0d5398e23"
+# Source-isolation baseline for Morro; native/FMOD acceptance hashes stay exact.
+readonly BASELINE_COMMIT="34c0b933a4cf2252780ec84e5630847809793eab"
 readonly EXPECTED_STAGE1_HASH="6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 readonly EXPECTED_FMOD_LOGICAL_HASH="40e9fb6ce63d1551611e2ed365934a4dfa56c616be1393e249a4a550fdfdeccc"
 readonly REQUIRED_EXPORTS=(
@@ -123,16 +124,18 @@ if git -C "$REPO_ROOT" grep -n -E 'com\.apple\.developer\.user-management' -- tv
 fi
 
 git -C "$REPO_ROOT" diff --quiet "$BASELINE_COMMIT" -- \
-  build.sh celestemeow fnalibs-ios-builder-celeste \
+  FNA \
   native/tvos-dependencies.lock.json native/patches \
   scripts/fetch-tvos-deps.sh scripts/verify-tvos-native.sh || {
-  echo "error: existing iOS or locked Stage 1 dependency lane changed" >&2
+  echo "error: retained FNA or locked Stage 1 dependency lane changed" >&2
   exit 1
 }
 python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage16b.py" --repo-root "$REPO_ROOT" >/dev/null
 python3 "$REPO_ROOT/scripts/verify-celeste-tvos-stage14.py" --repo-root "$REPO_ROOT" >/dev/null
-(cd "$REPO_ROOT" && shasum -a 256 -c tvos/stage2-ios-native-baseline.sha256 >/dev/null)
-echo "PASS: accepted Stage 14 inventory, Stage 16 native evolution, and iOS lane"
+# Morro preserves the historical checksum record; its unused Xamarin archives
+# are absent. Verify every retained modern source/lock and the icon relocation.
+python3 "$REPO_ROOT/scripts/verify-morro-layout.py"
+echo "PASS: accepted Stage 14 inventory, Stage 16 native evolution, and Morro modern source foundation"
 
 python3 "$REPO_ROOT/scripts/verify-repository-stage8b.py" >/dev/null
 echo "PASS: current repository verifier found no proprietary binary or private identity data"

@@ -7,9 +7,11 @@ import argparse
 import json
 import pathlib
 import plistlib
+import re
 import subprocess
 import sys
 import zipfile
+import xml.etree.ElementTree as ET
 
 
 def fail(message: str) -> None:
@@ -27,6 +29,39 @@ def scan_blobs(blobs: list[bytes], label: str) -> None:
         encoded = (token.encode(), token.encode("utf-16le"))
         if not any(any(value in blob for value in encoded) for blob in blobs):
             fail(f"{label} lacks Stage 13B product token: {token}")
+
+
+def verify_version_authority(project: str, authority: pathlib.Path) -> None:
+    """Accept the historical stage identity or the exact shared Apple binding."""
+    tree = ET.fromstring(project)
+    information = tree.findall(".//AssemblyInformationalVersion")
+    if len(information) != 1:
+        fail("one explicit host informational version is required")
+    if information[0].text in {"13.0.0+stage13b", "15.0.0+stage15", "16.0.0+stage16b"}:
+        return
+    expected = {
+        "ApplicationDisplayVersion": "$(IOSPortSemanticVersion)",
+        "ApplicationVersion": "$(IOSPortBuildNumber)",
+        "AssemblyInformationalVersion": "$(IOSPortSemanticVersion)+build.$(IOSPortBuildNumber).tvos",
+    }
+    imports = [node for node in tree.findall("Import")
+               if node.get("Project", "").replace("\\", "/") == "../../modern-ios/IOSPortVersion.props"]
+    if len(imports) != 1 or imports[0].get("Condition") or not authority.is_file():
+        fail("host project lacks the unconditional canonical Apple version import")
+    for name, value in expected.items():
+        nodes = tree.findall(".//" + name)
+        if len(nodes) != 1 or nodes[0].text != value or nodes[0].get("Condition"):
+            fail("host project changed shared version binding: " + name)
+        if not any(nodes[0] in list(group) and not group.get("Condition") for group in tree.findall("PropertyGroup")):
+            fail("host version binding is not unconditional: " + name)
+    versions = ET.parse(authority).getroot()
+    for name, pattern in (("IOSPortSemanticVersion", r"[0-9]+\.[0-9]+\.[0-9]+"),
+                          ("IOSPortBuildNumber", r"[1-9][0-9]*")):
+        nodes = versions.findall(".//" + name)
+        if len(nodes) != 1 or not re.fullmatch(pattern, nodes[0].text or "") or nodes[0].get("Condition"):
+            fail("invalid canonical Apple version authority: " + name)
+        if not any(nodes[0] in list(group) and not group.get("Condition") for group in versions.findall("PropertyGroup")):
+            fail("canonical version authority is conditional: " + name)
 
 
 def main() -> int:
@@ -85,10 +120,7 @@ def main() -> int:
         "Stage 13B main-thread soft-reload update hook",
     ), "locked generated transformation")
     require(project, ("UseInterpreter>false",), "host project")
-    if not any(version in project for version in (
-        "13.0.0+stage13b", "15.0.0+stage15", "16.0.0+stage16b"
-    )):
-        fail("host project no longer identifies the accepted Stage 13B boundary or an accepted successor")
+    verify_version_authority(project, repo / "modern-ios/IOSPortVersion.props")
 
     forbidden_calls = (
         "Process.Start(", "Environment.Exit(", "Engine.Instance.Exit(", ".Game.Exit(",

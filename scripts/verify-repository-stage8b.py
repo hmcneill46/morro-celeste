@@ -20,6 +20,9 @@ REQUIRED_DOCS = (
     "docs/STATUS.md",
     "docs/history/README.md",
     "CONTRIBUTING.md",
+    "CREDITS.md",
+    "docs/MORRO_BUILDING.md",
+    "docs/MORRO_MIGRATION.md",
     "docs/history/stages/TVOS_PUBLIC_PREREQUISITES_STAGE8C_REPORT.md",
     "docs/history/stages/TVOS_LOCALE_REPRODUCIBILITY_STAGE8D_REPORT.md",
     "docs/history/stages/TVOS_COMPRESSED_PERSISTENCE_STAGE9B_REPORT.md",
@@ -65,7 +68,7 @@ def main() -> None:
 
     readme = (repo / "README.md").read_text(encoding="utf-8")
     required_readme = (
-        "# Celeste for Apple TV",
+        "# Morro — Celeste for Apple platforms",
         "./build-tvos.sh",
         "nine exact **Celeste 1.4.0.0 FNA** input profiles",
         "docs/CELESTE_INPUTS.md",

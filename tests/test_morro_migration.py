@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -53,6 +54,35 @@ class HostPolicy(unittest.TestCase):
 
 
 class ModernGraph(unittest.TestCase):
+    def test_actual_shared_version_binding_and_negative_controls(self):
+        verifier = module("verify-celeste-tvos-stage13b")
+        project = (ROOT / "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj").read_text()
+        original = (ROOT / "modern-ios/IOSPortVersion.props").read_text()
+        with tempfile.TemporaryDirectory() as tmp:
+            authority = Path(tmp) / "version.props"
+            authority.write_text(original)
+            verifier.verify_version_authority(project, authority)
+            for old, new in (("../../modern-ios/IOSPortVersion.props", "../../wrong.props"),
+                             ("$(IOSPortBuildNumber)</ApplicationVersion>", "0</ApplicationVersion>"),
+                             ("<ApplicationVersion>", '<ApplicationVersion Condition="false">'),
+                             ("<ApplicationVersion>", "<ApplicationVersion>49</ApplicationVersion><ApplicationVersion>"),
+                             ("<PropertyGroup>", '<PropertyGroup Condition="false">')):
+                text = project.replace("\\", "/").replace(old, new)
+                with self.subTest(old=old), self.assertRaises(SystemExit):
+                    verifier.verify_version_authority(text, authority)
+            for old, new in (("<IOSPortBuildNumber>49", "<IOSPortBuildNumber>0"),
+                             ("<IOSPortSemanticVersion>0.1.1", "<IOSPortSemanticVersion>unknown"),
+                             ("<PropertyGroup>", '<PropertyGroup Condition="false">')):
+                authority.write_text(original.replace(old, new))
+                with self.subTest(authority=old), self.assertRaises(SystemExit):
+                    verifier.verify_version_authority(project, authority)
+            authority.unlink()
+            with self.assertRaises(SystemExit):
+                verifier.verify_version_authority(project, authority)
+            with self.assertRaises(SystemExit):
+                verifier.verify_version_authority("<Project><!-- 16.0.0+stage16b --></Project>", authority)
+            verifier.verify_version_authority("<Project><PropertyGroup><AssemblyInformationalVersion>16.0.0+stage16b</AssemblyInformationalVersion></PropertyGroup></Project>", authority)
+
     def test_real_cloud_graph_check_rejects_missing_and_contaminated_ios_project(self):
         verifier = module("verify-celeste-tvos-stage14")
         with tempfile.TemporaryDirectory() as tmp:
@@ -69,6 +99,41 @@ class ModernGraph(unittest.TestCase):
 
 
 class SourceInventory(unittest.TestCase):
+    def test_real_source_guard_rejects_native_host_icon_tampering_and_omission(self):
+        verifier = module("verify-morro-layout")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            def git(*args):
+                return subprocess.check_output(["git", "-c", "user.name=Synthetic fixture",
+                    "-c", "user.email=fixture@example.invalid", "-c", "core.hooksPath=/dev/null", *args],
+                    cwd=root, stderr=subprocess.DEVNULL, text=True).strip()
+            git("init", "-q")
+            fixtures = {"native/owned.lock.json": b'{"revision":"owned-fixture"}\n',
+                        "modern-ios/OwnedFixture.cs": b"class OwnedFixture {}\n",
+                        "managed/RequiredFixture.cs": b"class RequiredFixture {}\n",
+                        verifier.ICON_OLD: b"owned synthetic icon bytes"}
+            for name, data in fixtures.items():
+                target = root / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+            git("add", "--all")
+            git("commit", "-qm", "Owned foundation fixture")
+            baseline = git("rev-parse", "HEAD")
+            (root / verifier.ICON_NEW).parent.mkdir(parents=True)
+            git("mv", verifier.ICON_OLD, verifier.ICON_NEW)
+            with mock.patch.object(verifier, "BASELINE", baseline):
+                verifier.make_inventory(root)
+                for name in ("native/owned.lock.json", "modern-ios/OwnedFixture.cs", verifier.ICON_NEW):
+                    target = root / name
+                    original = target.read_bytes()
+                    target.write_bytes(original + b"changed meaningful bytes")
+                    with self.subTest(path=name), self.assertRaises(ValueError):
+                        verifier.make_inventory(root)
+                    target.write_bytes(original)
+                git("rm", "managed/RequiredFixture.cs")
+                with self.assertRaisesRegex(ValueError, "unapproved baseline omission"):
+                    verifier.make_inventory(root)
+
     def test_inventory_rejects_omission_duplicate_and_changed_evidence(self):
         verifier = module("verify-morro-layout")
         actual = {"files": [{"path": "owned.cs", "sha256": "a" * 64, "purpose": "owned runtime"}]}

@@ -30,7 +30,19 @@ doctor's host-architecture/OS policy, explicit serial vanilla iOS publishing,
 the cloud verifier's reference to the actual modern iOS graph, a standalone
 unsigned convenience wrapper and an explicit cloud-source export pin. The
 desktop HookGen regression now restores its host builder before running it;
-the old `--no-restore` assumption failed on a fresh checkout. Game,
+the old `--no-restore` assumption failed on a fresh checkout. The vanilla tvOS
+soft-reload verifier now recognizes the existing canonical Apple version import
+and exact property bindings, rather than requiring obsolete stage-version
+literals. Missing, duplicate, conditional or changed bindings still fail; the
+actual soft-reload behavior and product-token checks remain unchanged. Current FMOD,
+Stage 6 and cloud aggregate callers also replace checks for unused Xamarin
+prebuilt archives with the complete Morro source inventory check. All retained
+prior native/host isolation paths, native hashes, generated-source locks and
+product checks remain enforced against the accepted build-49 source foundation.
+The public documentation check recognizes Morro's heading and additionally
+requires its building, migration and credits documents. The original archive checksum record and exact
+historical verifier versions remain in Git history; old manual stage commands
+retain historical scope. Game,
 runtime, helper/native code, transforms, dependency versions, normalization,
 content, audio, persistence, native identities and canonical build 49 are not
 changed to make migration pass.

@@ -61,7 +61,7 @@ else
   "$REPO_ROOT/scripts/verify-celeste-tvos-stage13b.py" --repo-root "$REPO_ROOT"
 fi
 python3 "$REPO_ROOT/scripts/verify-repository-stage8b.py"
-(cd "$REPO_ROOT" && shasum -a 256 -c tvos/stage2-ios-native-baseline.sha256 >/dev/null)
+python3 "$REPO_ROOT/scripts/verify-morro-layout.py"
 
 args=(--repo-root "$REPO_ROOT")
 [[ -z "$GENERATED_ROOT" ]] || args+=(--generated-root "$GENERATED_ROOT")

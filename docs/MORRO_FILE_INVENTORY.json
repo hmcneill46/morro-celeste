@@ -3139,7 +3139,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_MIGRATION.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_MIGRATION.md",
-      "sha256": "862bad3e45fdb7b16c8573f4e5458de63c789bf7f79e6559a7907119e82b4234"
+      "sha256": "7ef0c75b4c4652e73a654ff48dced424e5e6a4dd135921b039f3fed65d603290"
     },
     {
       "baselineGitObject": "e7c45733a735e0e2d803ce7b2e9f71d71f3d4791",
@@ -6957,11 +6957,11 @@
     {
       "baselineGitObject": "f178cb411c53e215268e9dfcd57b89b1515b6310",
       "baselinePath": "scripts/verify-celeste-tvos-stage13b.py",
-      "disposition": "retained",
+      "disposition": "migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-celeste-tvos-stage13b.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-celeste-tvos-stage13b.py",
-      "sha256": "e20c6009ed8d04bebe30e30c2c347e1cf29fefc38346a8c884979e1efa600551"
+      "sha256": "714e2a2475c4788858e0be587cf8f3eddb5038355f9d8463815f7f2e146c473a"
     },
     {
       "baselineGitObject": "77f4744206ef9aa961a8dca42da7a2122d53c854",
@@ -6984,11 +6984,11 @@
     {
       "baselineGitObject": "df99350c693ec69d4c5b085f022add104387875c",
       "baselinePath": "scripts/verify-celeste-tvos-stage14.sh",
-      "disposition": "retained",
+      "disposition": "migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-celeste-tvos-stage14.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-celeste-tvos-stage14.sh",
-      "sha256": "963fdf71bb075b8c12ede040f6cf7eb04890f09690dfd65e0718e2b77f9c6418"
+      "sha256": "5ad8ba63ffd01c1993b94653729f2c5a83740058787cd0ea4c00f91864eb761e"
     },
     {
       "baselineGitObject": "a5d8c036bdea96281dc629521fd5c61dbc6f566f",
@@ -7182,11 +7182,11 @@
     {
       "baselineGitObject": "768d81c3cadaa1e90377cf891ecdea714b5bcda1",
       "baselinePath": "scripts/verify-celeste-tvos-stage6.sh",
-      "disposition": "retained",
+      "disposition": "migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-celeste-tvos-stage6.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-celeste-tvos-stage6.sh",
-      "sha256": "62b6ad140eb05564fef7c5cdab934959cd35dd5e584496e7a07bad6c5c10a07b"
+      "sha256": "1acc5b01284c881fd89281dbc359daf1a68900c3a65b7e93f9c6f7cb95103956"
     },
     {
       "baselineGitObject": "deab16d2236e31dcb026f3df79566b3e09c8d5d9",
@@ -7209,11 +7209,11 @@
     {
       "baselineGitObject": "14a017825f17d2c101331489851fcd3676ae31b3",
       "baselinePath": "scripts/verify-fmod-tvos.sh",
-      "disposition": "retained",
+      "disposition": "migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-fmod-tvos.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-fmod-tvos.sh",
-      "sha256": "f480b8557bde034c40bddf7331d89999dbb18960f04b7ee31165c1c3b0fdff24"
+      "sha256": "2ec7b40f038e7ee924a86add31c1b79f6b641a0a0ebb9ff7d772318cd7386555"
     },
     {
       "baselineGitObject": "794db2b5c0457e426a20e1895668ea34de4f69f3",
@@ -7256,16 +7256,16 @@
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "2ed644659df8eef3d7811cac3dbb923b9d731b7e81ccdebfb4e3932c0f217449"
+      "sha256": "7abba230c1c2ccc4798d4173e7524f8d8b87b23849949dab07516a49f3e758ad"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
       "baselinePath": "scripts/verify-repository-stage8b.py",
-      "disposition": "retained",
+      "disposition": "migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-repository-stage8b.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-repository-stage8b.py",
-      "sha256": "74962b8a3689f253b20799017bfaee51adc82a21a95fd4fc41df0f1a9b199135"
+      "sha256": "dac740b5169b547c56c5d8f2e194aeb1bb0798f33579e9abc0f8dc834ecd81dd"
     },
     {
       "baselineGitObject": "44e6ac31b9dca36edbb5cdf1b5a66f7e87290f18",
@@ -7335,7 +7335,7 @@
       "gitMode": "100644",
       "path": "tests/test_morro_migration.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_morro_migration.py",
-      "sha256": "f2f94eb7a83445b0c5e320db4cb8cf3aec1c01f3d45d4fd99873077d72ae94f1"
+      "sha256": "c449a2c0e9ea7cdf22c06a3aded97fcea63f41a331f427b3f9580f21b58e01a5"
     },
     {
       "baselineGitObject": "6532b3f42d76dc0fcaa1f5ffc392bd7bbcd86017",
