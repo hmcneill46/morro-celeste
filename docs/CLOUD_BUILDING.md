@@ -16,18 +16,17 @@ signing path.
 ## Morro source selection
 
 The existing public template below remains pinned to its historical source.
-To build Morro after its source has been published, export a separate private
-builder with both source-pin authorities updated together:
+To build Morro, export a separate private builder with both source-pin authorities updated together:
 
 ```sh
 python3 scripts/export-morro-cloud-builder.py \
   --destination ../Morro-Private-Builder \
-  --source-repository OWNER/PUBLISHED-MORRO-REPOSITORY \
-  --source-sha "$(git rev-parse HEAD)"
+  --source-repository hmcneill46/morro-celeste \
+  --source-sha 6dc6427d1bdeab1a92987a4a1936235e48b7266b
 ```
 
-Replace the repository placeholder with its real public address. The command
-creates only the five reviewed template files in a new local directory. It does
+This pins the source used for the four successful local migration builds.
+The command creates only the five reviewed template files in a new local directory. It does
 not create a GitHub repository, publish, run Actions, or copy private inputs.
 The chosen SHA must be published at that address before the workflow can fetch
 it. Follow the same private-input and cleanup rules below. The preserved cloud
@@ -55,20 +54,18 @@ IPA, then run Cleanup. The headings below walk through them in order.
 
 ### 1. Create your private builder repository
 
-Open the public
-[`hmcneill46/celeste-tvos-cloud-builder`](https://github.com/hmcneill46/celeste-tvos-cloud-builder)
-template and click **Use this template → Create a new repository**.
+For Morro, use the five-file export above. It can be generated on any machine
+with Git and Python 3; a Mac is not needed for this preparation. Create an empty
+**private** GitHub repository under your account and push only that exported
+folder to it. Include its hidden `.github` directory. The exporter updates both
+source-pin locations together and preserves the existing private-input guards.
 
-On GitHub's creation page:
-
-1. Choose your account as the owner.
-2. Enter a repository name.
-3. Under **Visibility**, choose **Private**.
-4. Click **Create repository from template**.
-
-Do not upload files to the public template itself. The Build workflow also
-checks repository visibility through GitHub's API and refuses to run unless
-both `private` and `visibility=private` are reported.
+The older [public template](https://github.com/hmcneill46/celeste-tvos-cloud-builder)
+remains a historical route and still targets its original source. Copying that
+template without the Morro export does not build Morro. Never upload Celeste,
+FMOD or IPAs to either public source repository. The Build workflow checks
+repository visibility through GitHub's API and refuses private-input processing
+unless both `private` and `visibility=private` are reported.
 
 ### 2. Prepare exactly two files
 

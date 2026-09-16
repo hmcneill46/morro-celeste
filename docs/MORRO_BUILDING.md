@@ -5,6 +5,20 @@ Everest build-49 lane. Its source layout is independent of the old checkout.
 The product names, bundle identities, save domains and canonical version remain
 unchanged during migration. Unsigned artifacts cannot be installed directly.
 
+## Fresh source checkout
+
+```sh
+git clone https://github.com/hmcneill46/morro-celeste.git Morro-Celeste
+cd Morro-Celeste
+git -c url.https://github.com/.insteadOf=git://github.com/ submodule update --init --recursive
+```
+
+The repository contains all owned build/generation/verification code and project
+history. Recursive public dependencies and exact package downloads remain pinned;
+Celeste, FMOD and Xcode must be supplied separately. No historical local checkout,
+generated closure, IPA or copied PASS is required. See [current progress](MORRO_STATUS.md)
+for the distinction between tested source and later documentation commits.
+
 ## Host and private inputs
 
 Use Xcode **26.6 / 17F113**, the four iOS/tvOS device/simulator SDKs **26.5**,
@@ -39,6 +53,35 @@ shipped package marker. Only that exact marker is retained, not personal saves.
 Desktop runtime binaries and unused Mac launcher files are not build inputs.
 All package ZIPs are rehashed by the unchanged production preflight. Do not
 replace helpers with latest versions, import M1 binaries or copy old app objects.
+
+## Exact build-49 public packages
+
+For a **new** empty package destination, the existing pinned fetcher acquires 24
+K-J/K-L packages including SJ assets/audio. K-N adds exactly CommunalHelper and
+ChronoHelper. This shell block stops on a failed download or identity check:
+
+```sh
+(
+  set -e
+  python3 scripts/fetch-apple-everest-stage25kj-inputs.py \
+    --include-presentation --output .private/inputs/packages
+  curl --fail --location --retry 3 https://gamebanana.com/mmdl/1775162 \
+    --output .private/inputs/packages/CommunalHelper.zip
+  curl --fail --location --retry 3 https://gamebanana.com/mmdl/1778580 \
+    --output .private/inputs/packages/ChronoHelper.zip
+  printf '%s  %s\n' \
+    44f4fb0b277a4900fd2a555e1a73e661140aa7b2455d3c7776cf420193349e3c .private/inputs/packages/CommunalHelper.zip \
+    af46039437fbed52e72941d07e0d9ce6657dacc838516459f7e9e995fea07a18 .private/inputs/packages/ChronoHelper.zip \
+    | shasum -a 256 -c -
+)
+```
+
+The fetcher refuses an existing destination, so it cannot replace an established
+input cache. K-N preparation independently validates all ZIP/DLL/version/profile
+identities again. Exact pins come from `strawberry-jam-dependency-graph-stage25kc.json`,
+`sj-beginner-expansion-inputs-stage25km.json` and the selected K-N contracts in
+`apple-everest/`. EeveeHelper and the other audit-only packages are not inputs.
+If a pinned public download disappears or differs, stop; do not use latest.
 
 ## Unsigned builds
 

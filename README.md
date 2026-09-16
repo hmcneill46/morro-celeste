@@ -5,8 +5,9 @@
 Morro is named after Morro Rock in California. The searchable repository name is
 **morro-celeste**. It carries the modern vanilla Apple port and the bounded static
 Everest pipeline, retaining the original port's Git history, credits and license.
-No JIT activation is required. This local migration has not been published as a
-new GitHub repository; the inherited upstream remains available for provenance.
+No JIT activation is required. The standalone source repository is
+[hmcneill46/morro-celeste](https://github.com/hmcneill46/morro-celeste); the
+original upstream remains credited and its history is preserved.
 
 The companion [Cabrillo — Celeste Mod Loader for Apple Platforms](https://github.com/hmcneill46/cabrillo-celeste)
 uses a separate Mono JIT runtime and mod-loader architecture. Cabrillo's iPadOS
@@ -15,6 +16,7 @@ claims. The repositories have independent builds and acceptance decisions.
 
 ## Start here
 
+- [Current progress and evidence](docs/MORRO_STATUS.md) — build-49 results, historical milestones and remaining acceptance gaps.
 - [Morro build and private-input guide](docs/MORRO_BUILDING.md) — independent local setup and unsigned vanilla/Everest commands.
 - [Migration and file inventory](docs/MORRO_MIGRATION.md) — retained history, removed legacy files, attribution and publishing choices.
 - [Credits](CREDITS.md) — original port, game, runtime, native and mod contributors.
@@ -24,6 +26,9 @@ Vanilla gameplay has its separate historical acceptance below. **Everest build
 49 is still pending physical acceptance**: lobby + Bing + The Squeeze and 18
 regression maps, not general Everest or all Strawberry Jam. Its original signed
 products remain frozen at source `34c0b933a4cf2252780ec84e5630847809793eab`.
+Fresh unsigned vanilla and build-49 Everest products passed their iOS/tvOS
+checks at `6dc6427d1bdeab1a92987a4a1936235e48b7266b`. Exact IPA byte
+reproducibility remains unresolved; see the [migration report](docs/history/morro-migration/MORRO_MIGRATION_REPORT.md).
 A migration build records its actual new tooling revision and does not inherit
 those products' identity or any old device PASS. No build number or application
 identifier is changed merely to rename the source project.

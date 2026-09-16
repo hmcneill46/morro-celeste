@@ -29,13 +29,14 @@ device—not Simulator—is the supported full-game route.
 ## 1. Get the repository
 
 ```bash
-cd ~/Projects/Morro-Celeste
+git clone https://github.com/hmcneill46/morro-celeste.git Morro-Celeste
+cd Morro-Celeste
 git -c url.https://github.com/.insteadOf=git://github.com/ \
   submodule update --init --recursive
 ```
 
-This is the existing local Morro checkout. After publication, clone the actual
-Morro repository URL first. The command-scoped URL rewrite is needed
+If you already have the local Morro folder, enter it and run only the submodule
+command. The command-scoped URL rewrite is needed
 because the pinned FNA revision names GitHub's retired `git://` transport for
 nested submodules; it changes no repository or global Git configuration. Do
 not copy generated source or an app from another checkout.

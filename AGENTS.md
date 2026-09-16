@@ -15,10 +15,11 @@ Everest architecture/compatibility documents, and the relevant stage report.
   team identifiers, private logs or absolute personal paths.
 - Local migration commits preserve ancestry and freeze the actual tested source.
   Publishing/creating/renaming GitHub repositories, pushes, Actions, signing and
-  device operations need the owner's request; the migration authorizes none of them.
-- The inherited `upstream` remote has a disabled local push URL. No `origin` is
-  configured until the owner chooses the publication destination. Do not repair
-  that intentional state by pointing push at the old repository.
+  device operations need the owner's request. The owner authorized initial Morro
+  source publication separately; this is not standing permission for releases or Actions.
+- `origin` is the standalone `hmcneill46/morro-celeste` repository. The inherited
+  `upstream` remote has a disabled local push URL. Never redirect a push to the
+  old repository or mirror historical release refs into Morro.
 - Every tracked file has a reason in `docs/MORRO_FILE_INVENTORY.json`. Update the
   inventory when changing the source layout. Historical verifiers retain their
   original scope; passing current product checks is not physical gameplay GREEN.

@@ -48,18 +48,18 @@ FMOD still pass their exact validators before the build continues.
 
 ## Clone and submodules
 
-For the local Morro migration, use the already prepared checkout:
+For a new source checkout:
 
 ```bash
-cd ~/Projects/Morro-Celeste
+git clone https://github.com/hmcneill46/morro-celeste.git Morro-Celeste
+cd Morro-Celeste
 git -c url.https://github.com/.insteadOf=git://github.com/ \
   submodule update --init --recursive
 ./build-tvos.sh --help
 ```
 
-Morro has not been published to a new GitHub destination yet. After publication,
-clone that repository's actual Code URL, then run the same submodule command.
-Do not substitute the legacy upstream branch. The command-scoped rewrite is
+If you already have the local Morro folder, enter it and run only the submodule
+command. Do not substitute the legacy upstream branch. The command-scoped rewrite is
 required because the pinned FNA revision names GitHub's retired `git://`
 transport; it changes no repository URL or global Git configuration.
 

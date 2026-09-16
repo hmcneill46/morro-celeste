@@ -1,0 +1,20 @@
+{
+  "scope": "IMMUTABLE_SANITIZED_MIGRATION_EVIDENCE",
+  "testedSourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+  "copies": [
+    {
+      "file": "MORRO_MIGRATION_REPORT.md",
+      "bytes": 20980,
+      "sha256": "75d7faa371554f2397f5a11f33aed21ac370208bf5b34077f5cadd3134422231",
+      "sourceSha256": "1f61feb9203efac685dc3665b230b5d8695fc13754ad2ec308c1611ced35f060",
+      "publicationTransform": "remove one surplus blank line at end of Markdown file; body unchanged"
+    },
+    {
+      "file": "MORRO_MIGRATION_RESULTS.json",
+      "bytes": 44422,
+      "sha256": "8b920327b92c963d4dccc33b666cea1a23337f9611de94c648fddce2854fefe4",
+      "sourceSha256": "8b920327b92c963d4dccc33b666cea1a23337f9611de94c648fddce2854fefe4",
+      "publicationTransform": "none; byte-identical copy"
+    }
+  ]
+}

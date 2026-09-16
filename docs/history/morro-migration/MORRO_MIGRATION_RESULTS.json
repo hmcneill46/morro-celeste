@@ -1,0 +1,1158 @@
+{
+  "source": {
+    "sourceBaseline": "34c0b933a4cf2252780ec84e5630847809793eab",
+    "finalToolingSource": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+    "sourceEntries": 992,
+    "removedEntries": 32,
+    "unchangedOriginalGameRuntimeManagedNativeAuthorities": true,
+    "ancestralCommitsRetained": 158,
+    "newLocalCommits": [
+      "6dc6427d1bdeab1a92987a4a1936235e48b7266b Launch non-executable Python build entry points through the interpreter",
+      "d3544cdb615c32cda4671ec7474da252c67e3dfb Validate release ancestry in standalone and no-tags cloud checkouts",
+      "ac5ce57716c7a3c425fca558510de7f518f830e4 Bind Morro vanilla verification to the modern build-49 foundation",
+      "450fc3bfc55de3bbda8594ea4c17abd20576d946 Establish Morro standalone modern Apple AOT source tree"
+    ],
+    "trackedPrivateInputsOrBuildOutputs": false,
+    "originalIconRelocatedByteForByte": true,
+    "credits": "README, CREDITS.md, original LICENSE and unchanged Git ancestry",
+    "companion": "https://github.com/hmcneill46/cabrillo-celeste",
+    "publication": "NOT_RUN",
+    "forkBadge": "standalone repository preparation; no GitHub metadata claim",
+    "branch": "codex/morro-modern-aot-migration",
+    "totalCommits": 162
+  },
+  "aotThroughPackagingWindows": [
+    {
+      "source": "Morro",
+      "platform": "ios",
+      "scope": "AOT/link plus original product verification and packaging",
+      "wallSeconds": 314.286,
+      "beforeFreeGiB": 816.85,
+      "afterFreeGiB": 812.071
+    },
+    {
+      "source": "Morro",
+      "platform": "tvos",
+      "scope": "AOT/link plus original product verification and packaging",
+      "wallSeconds": 308.308,
+      "beforeFreeGiB": 811.299,
+      "afterFreeGiB": 806.448
+    },
+    {
+      "source": "Reference",
+      "platform": "ios",
+      "scope": "AOT/link plus original product verification and packaging",
+      "wallSeconds": 311.488,
+      "beforeFreeGiB": 846.276,
+      "afterFreeGiB": 841.499
+    },
+    {
+      "source": "Reference",
+      "platform": "tvos",
+      "scope": "AOT/link plus original product verification and packaging",
+      "wallSeconds": 314.628,
+      "beforeFreeGiB": 841.319,
+      "afterFreeGiB": 836.72
+    }
+  ],
+  "nativeBuilds": "FRESH_IN_MORRO_THEN_VALIDATED_LOCAL_REUSE",
+  "nativeIdentities": {
+    "ios": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+    "tvos": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
+  },
+  "moddedProducts": [
+    {
+      "platform": "ios",
+      "platformNegativeControls": {
+        "actualProductPositive": true,
+        "disposableMemoryCopiesOnly": true,
+        "platform": "ios",
+        "rejectedControls": [
+          "wrong-native-os",
+          "simulator-native-os",
+          "wrong-native-cpu",
+          "missing-native-platform",
+          "malformed-native-platform",
+          "duplicate-native-platform",
+          "truncated-native-header",
+          "wrong-minimum-os",
+          "wrong-native-sdk",
+          "unknown-plist-platform",
+          "ambiguous-plist-platform",
+          "wrong-device-family",
+          "wrong-compiler-pack",
+          "wrong-llvm-pack",
+          "unreviewed-aot-triple"
+        ]
+      },
+      "productManifest": {
+        "configuration": "Release",
+        "fullAOT": true,
+        "fullTrim": true,
+        "ipaBytes": 920727351,
+        "ipaSha256": "822e9b6eac1d4745e93dc6c55981b60b913d2af8e01e1ba9981f718245dc4840",
+        "jit": false,
+        "platform": "ios",
+        "rid": "ios-arm64",
+        "schemaVersion": 1,
+        "sharedClosureSha256": "c236e3e77e6626e1600ce361c3214c62473cf79a279e17a9784f00269ff9bf7d",
+        "signing": "unsigned",
+        "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+        "sourceTreeDirty": false,
+        "useInterpreter": false
+      },
+      "readinessStatus": "PASS",
+      "census": {
+        "customOccurrences": 1309,
+        "distinctCustomIds": 83,
+        "maps": 21,
+        "rawAuthoredProfiles": 604,
+        "regressionOccurrences": 336
+      },
+      "gateA": {
+        "accepted": 1309,
+        "blocked": 0,
+        "occurrences": 1309,
+        "unclassified": 0
+      },
+      "gateB": {
+        "available": 83,
+        "factories": 83,
+        "missing": 0,
+        "selectedProfileFactories": 77,
+        "separateLegacyFactories": 6
+      },
+      "gateC": {
+        "closed": 83,
+        "factories": 83,
+        "blocked": 0,
+        "unknown": 0
+      },
+      "gateD": {
+        "blocked": 0,
+        "unknown": 0
+      },
+      "identities": {
+        "collabManifestSha256": "111f7cc7cda8f754b30f10097d9964a686a4b83e1d200d0fe57692eee09c1b5f",
+        "compositionLogicalSha256": "15244ab33e8ac980b526a42752740c6b4ff7298b843c975906f4060043f1a76a",
+        "contentLogicalSha256": "92e9ce053b4957230e760933336f2de8910f2762c834aca6a95c35aa95418e80",
+        "customAudioManifestSha256": "31788184560d70e5de36827c7d345fe778178a09026f59d54405b52adb82c11e",
+        "customBankLogicalSetSha256": "b363c32eb1f985c35ced264649656f0266c0c9be79468bfe6d31cc69626db63b",
+        "factoryRegistrySha256": "9d7fa8c198cea379e9e330b81741c02b2e747e97050ab2ec078c5432ca13ff04",
+        "levelSetProgressionManifestSha256": "81e3725848e8cabaa019bb2fcf9b010a5772442beb2de4470a3785b8d7b6fbbc",
+        "managedLogicalSha256": "fedad431cde0516dd2ead5848f6327448e9630dbc5e10a02804643404fd1be62",
+        "registrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
+        "semanticLogicalSha256": "f45f91061d08bb26c52354870f6c663523c666dcba995dfa3778fc3c6fae3245",
+        "sharedClosureSha256": "c236e3e77e6626e1600ce361c3214c62473cf79a279e17a9784f00269ff9bf7d"
+      },
+      "nativeIdentity": "9fb302d221180e39f270ea5ebf48e18433b67bd0a40943c042a227fe0f8ad6a2",
+      "actualPackagedAotProof": {
+        "selectedFactories": 77,
+        "acceptedOccurrences": 973,
+        "linkedForbiddenCallScan": true,
+        "strippedExecutableBodiesUsedAsProof": false,
+        "separateLegacyConstructorLifecycleNativeDefinitionsRequired": true,
+        "separateLegacyLinkedReferenceVerified": true
+      },
+      "contentProof": {
+        "status": "PASS",
+        "allMountedContentBytesMatch": true,
+        "customAudioBankCount": 8,
+        "customRegressionMapCount": 21,
+        "excludedSjMaps": 125,
+        "originalMapCount": 3,
+        "sourceOriginalMapBytesPreserved": true,
+        "verifiedMountedFiles": 2946
+      },
+      "provenance": {
+        "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+        "sourceTreeDirty": false,
+        "phase": "AFTER_NATIVE_LINK",
+        "hostArchitecture": "x64",
+        "targetArchitecture": "arm64",
+        "compilerPack": "Microsoft.NETCore.App.Runtime.AOT.osx-x64.Cross.ios-arm64",
+        "compilerVersion": "10.0.10",
+        "compilerSha256": "2778156a5490f7d172d182876fc95d7bdacb732fd4e05507bf68d3fdd9ea4982",
+        "llvmSha256": {
+          "llc": "6984a9b9da8b240d891f0c1acdce0bc68b987fa46313766d662d003eaecd855b",
+          "opt": "a1b23dae2a08e456612418df42c6f1138045d9442f3275cbff6f2db1701b8de0"
+        },
+        "oldCheckoutInputPathsInReceipt": false
+      }
+    },
+    {
+      "platform": "tvos",
+      "platformNegativeControls": {
+        "actualProductPositive": true,
+        "disposableMemoryCopiesOnly": true,
+        "platform": "tvos",
+        "rejectedControls": [
+          "wrong-native-os",
+          "simulator-native-os",
+          "wrong-native-cpu",
+          "missing-native-platform",
+          "malformed-native-platform",
+          "duplicate-native-platform",
+          "truncated-native-header",
+          "wrong-minimum-os",
+          "wrong-native-sdk",
+          "unknown-plist-platform",
+          "ambiguous-plist-platform",
+          "wrong-device-family",
+          "wrong-compiler-pack",
+          "wrong-llvm-pack",
+          "unreviewed-aot-triple"
+        ]
+      },
+      "productManifest": {
+        "configuration": "Release",
+        "fullAOT": true,
+        "fullTrim": true,
+        "ipaBytes": 934927631,
+        "ipaSha256": "38f65fecafc9e6b96a67be592d6a283f73a2b806801771aab4d724076cb3bf2e",
+        "jit": false,
+        "platform": "tvos",
+        "rid": "tvos-arm64",
+        "schemaVersion": 1,
+        "sharedClosureSha256": "c236e3e77e6626e1600ce361c3214c62473cf79a279e17a9784f00269ff9bf7d",
+        "signing": "unsigned",
+        "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+        "sourceTreeDirty": false,
+        "useInterpreter": false
+      },
+      "readinessStatus": "PASS",
+      "census": {
+        "customOccurrences": 1309,
+        "distinctCustomIds": 83,
+        "maps": 21,
+        "rawAuthoredProfiles": 604,
+        "regressionOccurrences": 336
+      },
+      "gateA": {
+        "accepted": 1309,
+        "blocked": 0,
+        "occurrences": 1309,
+        "unclassified": 0
+      },
+      "gateB": {
+        "available": 83,
+        "factories": 83,
+        "missing": 0,
+        "selectedProfileFactories": 77,
+        "separateLegacyFactories": 6
+      },
+      "gateC": {
+        "closed": 83,
+        "factories": 83,
+        "blocked": 0,
+        "unknown": 0
+      },
+      "gateD": {
+        "blocked": 0,
+        "unknown": 0
+      },
+      "identities": {
+        "collabManifestSha256": "111f7cc7cda8f754b30f10097d9964a686a4b83e1d200d0fe57692eee09c1b5f",
+        "compositionLogicalSha256": "15244ab33e8ac980b526a42752740c6b4ff7298b843c975906f4060043f1a76a",
+        "contentLogicalSha256": "92e9ce053b4957230e760933336f2de8910f2762c834aca6a95c35aa95418e80",
+        "customAudioManifestSha256": "31788184560d70e5de36827c7d345fe778178a09026f59d54405b52adb82c11e",
+        "customBankLogicalSetSha256": "b363c32eb1f985c35ced264649656f0266c0c9be79468bfe6d31cc69626db63b",
+        "factoryRegistrySha256": "9d7fa8c198cea379e9e330b81741c02b2e747e97050ab2ec078c5432ca13ff04",
+        "levelSetProgressionManifestSha256": "81e3725848e8cabaa019bb2fcf9b010a5772442beb2de4470a3785b8d7b6fbbc",
+        "managedLogicalSha256": "fedad431cde0516dd2ead5848f6327448e9630dbc5e10a02804643404fd1be62",
+        "registrySha256": "6e5b89f7d952aa98e72640abce0c75522567fb9d48f8b027e3db54f5cf9da72f",
+        "semanticLogicalSha256": "f45f91061d08bb26c52354870f6c663523c666dcba995dfa3778fc3c6fae3245",
+        "sharedClosureSha256": "c236e3e77e6626e1600ce361c3214c62473cf79a279e17a9784f00269ff9bf7d"
+      },
+      "nativeIdentity": "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc",
+      "actualPackagedAotProof": {
+        "selectedFactories": 77,
+        "acceptedOccurrences": 973,
+        "linkedForbiddenCallScan": true,
+        "strippedExecutableBodiesUsedAsProof": false,
+        "separateLegacyConstructorLifecycleNativeDefinitionsRequired": true,
+        "separateLegacyLinkedReferenceVerified": true
+      },
+      "contentProof": {
+        "status": "PASS",
+        "allMountedContentBytesMatch": true,
+        "customAudioBankCount": 8,
+        "customRegressionMapCount": 21,
+        "excludedSjMaps": 125,
+        "originalMapCount": 3,
+        "sourceOriginalMapBytesPreserved": true,
+        "verifiedMountedFiles": 2946
+      },
+      "provenance": {
+        "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+        "sourceTreeDirty": false,
+        "phase": "AFTER_NATIVE_LINK",
+        "hostArchitecture": "x64",
+        "targetArchitecture": "arm64",
+        "compilerPack": "Microsoft.NETCore.App.Runtime.AOT.osx-x64.Cross.tvos-arm64",
+        "compilerVersion": "10.0.10",
+        "compilerSha256": "b6b806cbfe113a18fa93b910816bd741db0309bda5a27ea54ed04d2cf419f476",
+        "llvmSha256": {
+          "llc": "6984a9b9da8b240d891f0c1acdce0bc68b987fa46313766d662d003eaecd855b",
+          "opt": "a1b23dae2a08e456612418df42c6f1138045d9442f3275cbff6f2db1701b8de0"
+        },
+        "oldCheckoutInputPathsInReceipt": false
+      }
+    }
+  ],
+  "payloadVerification": [
+    {
+      "product": "reference-vanilla-ios",
+      "payloadFileCount": 1303,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        1,
+        2
+      ],
+      "minimumOS": "15.0",
+      "SDK": "iphoneos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "reference-vanilla-tvos",
+      "payloadFileCount": 1290,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        3
+      ],
+      "minimumOS": "16.0",
+      "SDK": "appletvos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "reference-everest49-ios",
+      "payloadFileCount": 4257,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        1,
+        2
+      ],
+      "minimumOS": "15.0",
+      "SDK": "iphoneos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "reference-everest49-tvos",
+      "payloadFileCount": 4251,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        3
+      ],
+      "minimumOS": "16.0",
+      "SDK": "appletvos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "morro-vanilla-ios",
+      "payloadFileCount": 1303,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        1,
+        2
+      ],
+      "minimumOS": "15.0",
+      "SDK": "iphoneos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "morro-vanilla-tvos",
+      "payloadFileCount": 1290,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        3
+      ],
+      "minimumOS": "16.0",
+      "SDK": "appletvos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "morro-everest49-ios",
+      "payloadFileCount": 4257,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        1,
+        2
+      ],
+      "minimumOS": "15.0",
+      "SDK": "iphoneos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    },
+    {
+      "product": "morro-everest49-tvos",
+      "payloadFileCount": 4251,
+      "everyPayloadByteMatchesApp": true,
+      "appVersion": "0.1.1",
+      "buildNumber": "49",
+      "deviceFamily": [
+        3
+      ],
+      "minimumOS": "16.0",
+      "SDK": "appletvos26.5",
+      "provisioningOrCodeSignatureFiles": false
+    }
+  ],
+  "comparisons": [
+    {
+      "product": "vanilla-ios",
+      "byteIdenticalIpa": false,
+      "referenceSha256": "5b988ec808256d7ead9fccc59b5f6a7a0ce9ad8fdba941ec6a196b6a82e29888",
+      "morroSha256": "8bc874b41b0bc6148dbae0959b239d806b7b44bfb87dfc3044a975ec8afb3404",
+      "samePayloadFiles": 1254,
+      "totalPayloadFiles": 1303,
+      "changedPayloadFiles": [
+        "Payload/CelesteIOSRuntimeHost.app/Celeste.Content.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/Celeste.Content.dll",
+        "Payload/CelesteIOSRuntimeHost.app/Celeste.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/Celeste.dll",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteAppleInput.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteAppleInput.dll",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteIOSFoundation.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteIOSFoundation.dll",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteIOSRuntimeHost",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteIOSRuntimeHost.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/CelesteIOSRuntimeHost.dll",
+        "Payload/CelesteIOSRuntimeHost.app/FNA.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/FNA.dll",
+        "Payload/CelesteIOSRuntimeHost.app/Microsoft.iOS.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/Microsoft.iOS.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Collections.Concurrent.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Collections.NonGeneric.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Collections.Specialized.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Collections.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.ComponentModel.Primitives.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.ComponentModel.TypeConverter.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.ComponentModel.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Console.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Diagnostics.TraceSource.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Drawing.Primitives.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Drawing.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.IO.FileSystem.DriveInfo.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.IO.Pipelines.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Linq.Expressions.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Linq.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Memory.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Net.Http.aotdata.arm64",
+        "Payload/CelesteIOSRuntimeHost.app/System.Net.Http.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Net.Primitives.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Net.Requests.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Net.Security.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.ObjectModel.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Private.CoreLib.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Private.Uri.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Private.Xml.Linq.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Private.Xml.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Runtime.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Security.Cryptography.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Text.Encodings.Web.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Text.Json.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Text.RegularExpressions.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.Xml.Linq.dll",
+        "Payload/CelesteIOSRuntimeHost.app/System.dll",
+        "Payload/CelesteIOSRuntimeHost.app/aot-instances.aotdata.arm64"
+      ],
+      "missing": [],
+      "added": [],
+      "linkedAssemblies": 40,
+      "linkedMethodBodies": 41585,
+      "allInspectedLinkedMethodBodiesMatch": true,
+      "linkedDifferences": {
+        "Celeste.Content.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteAppleInput.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteIOSFoundation.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteIOSRuntimeHost.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        }
+      },
+      "nativeDifferingSections": [
+        "__DATA/__data",
+        "__TEXT/__const",
+        "__TEXT/__cstring",
+        "__TEXT/__text"
+      ],
+      "diagnosticsAreNotAcceptanceNormalization": true
+    },
+    {
+      "product": "vanilla-tvos",
+      "byteIdenticalIpa": false,
+      "referenceSha256": "429d873d963d478cfc283f50b8ed37cf2359dc9aea01c5068f64925ae0d377b6",
+      "morroSha256": "c59d392f5bfdd2af20e373a6d0bd93d306cb3ec8e426dc44f1f8fdd35f17f0bb",
+      "samePayloadFiles": 1248,
+      "totalPayloadFiles": 1290,
+      "changedPayloadFiles": [
+        "Payload/Celeste.app/Celeste.Content.aotdata.arm64",
+        "Payload/Celeste.app/Celeste.Content.dll",
+        "Payload/Celeste.app/Celeste.aotdata.arm64",
+        "Payload/Celeste.app/Celeste.dll",
+        "Payload/Celeste.app/CelesteAppleInput.aotdata.arm64",
+        "Payload/Celeste.app/CelesteAppleInput.dll",
+        "Payload/Celeste.app/CelesteTvOSRuntimeHost",
+        "Payload/Celeste.app/CelesteTvOSRuntimeHost.aotdata.arm64",
+        "Payload/Celeste.app/CelesteTvOSRuntimeHost.dll",
+        "Payload/Celeste.app/FNA.aotdata.arm64",
+        "Payload/Celeste.app/FNA.dll",
+        "Payload/Celeste.app/Microsoft.tvOS.aotdata.arm64",
+        "Payload/Celeste.app/Microsoft.tvOS.dll",
+        "Payload/Celeste.app/System.Collections.Concurrent.dll",
+        "Payload/Celeste.app/System.Collections.NonGeneric.dll",
+        "Payload/Celeste.app/System.Collections.Specialized.dll",
+        "Payload/Celeste.app/System.Collections.dll",
+        "Payload/Celeste.app/System.ComponentModel.Primitives.dll",
+        "Payload/Celeste.app/System.ComponentModel.TypeConverter.dll",
+        "Payload/Celeste.app/System.ComponentModel.dll",
+        "Payload/Celeste.app/System.Console.dll",
+        "Payload/Celeste.app/System.Diagnostics.TraceSource.dll",
+        "Payload/Celeste.app/System.IO.Compression.dll",
+        "Payload/Celeste.app/System.IO.FileSystem.DriveInfo.dll",
+        "Payload/Celeste.app/System.Linq.Expressions.dll",
+        "Payload/Celeste.app/System.Linq.dll",
+        "Payload/Celeste.app/System.Net.Http.aotdata.arm64",
+        "Payload/Celeste.app/System.Net.Http.dll",
+        "Payload/Celeste.app/System.Net.Primitives.dll",
+        "Payload/Celeste.app/System.Net.Requests.dll",
+        "Payload/Celeste.app/System.Net.Security.dll",
+        "Payload/Celeste.app/System.ObjectModel.dll",
+        "Payload/Celeste.app/System.Private.CoreLib.dll",
+        "Payload/Celeste.app/System.Private.Uri.dll",
+        "Payload/Celeste.app/System.Private.Xml.Linq.dll",
+        "Payload/Celeste.app/System.Private.Xml.dll",
+        "Payload/Celeste.app/System.Runtime.dll",
+        "Payload/Celeste.app/System.Security.Cryptography.dll",
+        "Payload/Celeste.app/System.Text.RegularExpressions.dll",
+        "Payload/Celeste.app/System.Xml.Linq.dll",
+        "Payload/Celeste.app/System.dll",
+        "Payload/Celeste.app/aot-instances.aotdata.arm64"
+      ],
+      "missing": [],
+      "added": [],
+      "linkedAssemblies": 34,
+      "linkedMethodBodies": 41893,
+      "allInspectedLinkedMethodBodiesMatch": true,
+      "linkedDifferences": {
+        "Celeste.Content.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteAppleInput.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteTvOSRuntimeHost.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        }
+      },
+      "nativeDifferingSections": [
+        "__DATA/__data",
+        "__TEXT/__const",
+        "__TEXT/__cstring",
+        "__TEXT/__text"
+      ],
+      "diagnosticsAreNotAcceptanceNormalization": true
+    },
+    {
+      "product": "everest49-ios",
+      "byteIdenticalIpa": false,
+      "referenceSha256": "694d17224f60b5b3256b1bec7f494359c58d8a5e9f33c64921c1d8099cbd28e6",
+      "morroSha256": "822e9b6eac1d4745e93dc6c55981b60b913d2af8e01e1ba9981f718245dc4840",
+      "samePayloadFiles": 4202,
+      "totalPayloadFiles": 4257,
+      "changedPayloadFiles": [
+        "Payload/Celeste-Everest-Canary-iOS.app/Celeste.Content.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/Celeste.Content.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/Celeste.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/Celeste.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteAppleInput.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteAppleInput.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteIOSFoundation.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteIOSFoundation.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteIOSRuntimeHost",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteIOSRuntimeHost.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/CelesteIOSRuntimeHost.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/ChronoHelper.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/ChronoHelper.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/DJMapHelper.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/DJMapHelper.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/FNA.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/FNA.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/Microsoft.iOS.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/Microsoft.iOS.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Collections.Concurrent.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Collections.NonGeneric.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Collections.Specialized.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Collections.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.ComponentModel.Primitives.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.ComponentModel.TypeConverter.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.ComponentModel.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Console.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Core.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Diagnostics.TraceSource.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Drawing.Primitives.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Drawing.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.IO.FileSystem.DriveInfo.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.IO.Pipelines.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Linq.Expressions.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Linq.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Memory.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Net.Http.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Net.Http.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Net.Primitives.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Net.Requests.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Net.Security.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.ObjectModel.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Private.CoreLib.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Private.Uri.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Private.Xml.Linq.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Private.Xml.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Runtime.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Security.Cryptography.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Text.Encodings.Web.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Text.Json.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Text.RegularExpressions.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.Xml.Linq.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/System.dll",
+        "Payload/Celeste-Everest-Canary-iOS.app/aot-instances.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-iOS.app/mscorlib.dll"
+      ],
+      "missing": [],
+      "added": [],
+      "linkedAssemblies": 44,
+      "linkedMethodBodies": 49206,
+      "allInspectedLinkedMethodBodiesMatch": true,
+      "linkedDifferences": {
+        "Celeste.Content.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteAppleInput.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteIOSFoundation.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteIOSRuntimeHost.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        }
+      },
+      "nativeDifferingSections": [
+        "__DATA/__data",
+        "__TEXT/__const",
+        "__TEXT/__cstring",
+        "__TEXT/__objc_stubs",
+        "__TEXT/__stubs",
+        "__TEXT/__text"
+      ],
+      "diagnosticsAreNotAcceptanceNormalization": true
+    },
+    {
+      "product": "everest49-tvos",
+      "byteIdenticalIpa": false,
+      "referenceSha256": "247d8083d06ad1dc5af351213577d3957a13108ee1e5d5ce4b57cb53095891a3",
+      "morroSha256": "38f65fecafc9e6b96a67be592d6a283f73a2b806801771aab4d724076cb3bf2e",
+      "samePayloadFiles": 4199,
+      "totalPayloadFiles": 4251,
+      "changedPayloadFiles": [
+        "Payload/Celeste-Everest-Canary-tvOS.app/Celeste.Content.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/Celeste.Content.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/Celeste.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/Celeste.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/CelesteAppleInput.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/CelesteAppleInput.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/CelesteTvOSRuntimeHost",
+        "Payload/Celeste-Everest-Canary-tvOS.app/CelesteTvOSRuntimeHost.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/CelesteTvOSRuntimeHost.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/ChronoHelper.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/ChronoHelper.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/DJMapHelper.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/DJMapHelper.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/FNA.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/FNA.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/Microsoft.tvOS.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/Microsoft.tvOS.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Collections.Concurrent.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Collections.NonGeneric.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Collections.Specialized.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Collections.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.ComponentModel.Primitives.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.ComponentModel.TypeConverter.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.ComponentModel.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Console.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Core.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Diagnostics.TraceSource.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.IO.Compression.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.IO.FileSystem.DriveInfo.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.IO.Pipelines.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Linq.Expressions.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Linq.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Memory.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Net.Http.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Net.Http.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Net.Primitives.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Net.Requests.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Net.Security.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.ObjectModel.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Private.CoreLib.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Private.Uri.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Private.Xml.Linq.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Private.Xml.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Runtime.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Security.Cryptography.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Text.Encodings.Web.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Text.Json.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Text.RegularExpressions.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.Xml.Linq.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/System.dll",
+        "Payload/Celeste-Everest-Canary-tvOS.app/aot-instances.aotdata.arm64",
+        "Payload/Celeste-Everest-Canary-tvOS.app/mscorlib.dll"
+      ],
+      "missing": [],
+      "added": [],
+      "linkedAssemblies": 42,
+      "linkedMethodBodies": 50130,
+      "allInspectedLinkedMethodBodiesMatch": true,
+      "linkedDifferences": {
+        "Celeste.Content.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteAppleInput.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        },
+        "CelesteTvOSRuntimeHost.dll": {
+          "missing": [],
+          "added": [],
+          "changedKeys": [
+            "assembly-attributes"
+          ]
+        }
+      },
+      "nativeDifferingSections": [
+        "__DATA/__data",
+        "__TEXT/__const",
+        "__TEXT/__cstring",
+        "__TEXT/__text"
+      ],
+      "diagnosticsAreNotAcceptanceNormalization": true
+    }
+  ],
+  "finalBuildMeasurements": [
+    {
+      "phase": "morro-vanilla-ios-3",
+      "exitCode": 0,
+      "wallSeconds": 283.299,
+      "timeRealSeconds": 283.3,
+      "userSeconds": 392.43,
+      "systemSeconds": 100.34,
+      "maxRssBytes": 3640168448.0,
+      "beforeFreeGiB": 829.009,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 821.472,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "morro-vanilla-tvos-3",
+      "exitCode": 0,
+      "wallSeconds": 258.709,
+      "timeRealSeconds": 258.71,
+      "userSeconds": 379.0,
+      "systemSeconds": 59.52,
+      "maxRssBytes": 3721584640.0,
+      "beforeFreeGiB": 821.472,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 816.948,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "morro-everest49-ios-3",
+      "exitCode": 0,
+      "wallSeconds": 594.707,
+      "timeRealSeconds": 594.69,
+      "userSeconds": 959.52,
+      "systemSeconds": 169.83,
+      "maxRssBytes": 5180669952.0,
+      "beforeFreeGiB": 816.948,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 812.071,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "morro-everest49-tvos-3",
+      "exitCode": 0,
+      "wallSeconds": 612.763,
+      "timeRealSeconds": 612.76,
+      "userSeconds": 931.44,
+      "systemSeconds": 228.87,
+      "maxRssBytes": 5055926272.0,
+      "beforeFreeGiB": 812.071,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 806.448,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    }
+  ],
+  "nativeMeasurements": [
+    {
+      "phase": "ios-native-fetch-1",
+      "exitCode": 0,
+      "wallSeconds": 116.693,
+      "timeRealSeconds": 116.69,
+      "userSeconds": 26.86,
+      "systemSeconds": 8.68,
+      "maxRssBytes": 696307712.0,
+      "beforeFreeGiB": 872.178,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 871.744,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "ios-native-build-1",
+      "exitCode": 0,
+      "wallSeconds": 33.235,
+      "timeRealSeconds": 33.23,
+      "userSeconds": 11.13,
+      "systemSeconds": 4.16,
+      "maxRssBytes": 136155136.0,
+      "beforeFreeGiB": 871.744,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 871.908,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "ios-native-verify-1",
+      "exitCode": 0,
+      "wallSeconds": 4.367,
+      "timeRealSeconds": 4.36,
+      "userSeconds": 6.85,
+      "systemSeconds": 6.78,
+      "maxRssBytes": 117673984.0,
+      "beforeFreeGiB": 871.908,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 871.905,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "tvos-native-fetch-1",
+      "exitCode": 0,
+      "wallSeconds": 413.049,
+      "timeRealSeconds": 413.05,
+      "userSeconds": 55.89,
+      "systemSeconds": 19.07,
+      "maxRssBytes": 676179968.0,
+      "beforeFreeGiB": 871.905,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 870.058,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "tvos-native-build-1",
+      "exitCode": 0,
+      "wallSeconds": 301.58,
+      "timeRealSeconds": 301.58,
+      "userSeconds": 31.89,
+      "systemSeconds": 10.46,
+      "maxRssBytes": 139911168.0,
+      "beforeFreeGiB": 870.058,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 868.238,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "tvos-native-verify-1",
+      "exitCode": 0,
+      "wallSeconds": 6.198,
+      "timeRealSeconds": 6.19,
+      "userSeconds": 11.76,
+      "systemSeconds": 11.11,
+      "maxRssBytes": 151871488.0,
+      "beforeFreeGiB": 868.238,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 868.213,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    }
+  ],
+  "referenceMeasurements": [
+    {
+      "phase": "reference-vanilla-ios-1",
+      "exitCode": 0,
+      "wallSeconds": 190.886,
+      "timeRealSeconds": 190.88,
+      "userSeconds": 343.24,
+      "systemSeconds": 23.25,
+      "maxRssBytes": 3793129472.0,
+      "beforeFreeGiB": 858.88,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 853.378,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "reference-vanilla-tvos-3",
+      "exitCode": 0,
+      "wallSeconds": 212.595,
+      "timeRealSeconds": 212.59,
+      "userSeconds": 347.93,
+      "systemSeconds": 29.56,
+      "maxRssBytes": 3630624768.0,
+      "beforeFreeGiB": 853.367,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 847.722,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "reference-everest49-ios-3",
+      "exitCode": 0,
+      "wallSeconds": 517.658,
+      "timeRealSeconds": 517.66,
+      "userSeconds": 906.03,
+      "systemSeconds": 93.56,
+      "maxRssBytes": 5216862208.0,
+      "beforeFreeGiB": 846.703,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 841.499,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    },
+    {
+      "phase": "reference-everest49-tvos-1",
+      "exitCode": 0,
+      "wallSeconds": 490.892,
+      "timeRealSeconds": 490.91,
+      "userSeconds": 868.59,
+      "systemSeconds": 89.0,
+      "maxRssBytes": 5065957376.0,
+      "beforeFreeGiB": 841.491,
+      "beforeSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)",
+      "afterFreeGiB": 836.72,
+      "afterSwap": "vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)"
+    }
+  ],
+  "nestedMorroPhases": {
+    "morro-vanilla-ios-3": [
+      {
+        "phase": "host-check",
+        "exitCode": 0,
+        "wallSeconds": 0.659
+      },
+      {
+        "phase": "validate-game",
+        "exitCode": 0,
+        "wallSeconds": 2.024
+      },
+      {
+        "phase": "vanilla-product",
+        "exitCode": 0,
+        "wallSeconds": 280.288
+      }
+    ],
+    "morro-vanilla-tvos-3": [
+      {
+        "phase": "host-check",
+        "exitCode": 0,
+        "wallSeconds": 0.793
+      },
+      {
+        "phase": "validate-game",
+        "exitCode": 0,
+        "wallSeconds": 2.037
+      },
+      {
+        "phase": "verify-tvos-native",
+        "exitCode": 0,
+        "wallSeconds": 7.267
+      },
+      {
+        "phase": "stage-tvos-native",
+        "exitCode": 0,
+        "wallSeconds": 0.486
+      },
+      {
+        "phase": "vanilla-product",
+        "exitCode": 0,
+        "wallSeconds": 247.862
+      }
+    ],
+    "morro-everest49-ios-3": [
+      {
+        "phase": "host-check",
+        "exitCode": 0,
+        "wallSeconds": 0.796
+      },
+      {
+        "phase": "validate-game",
+        "exitCode": 0,
+        "wallSeconds": 2.038
+      },
+      {
+        "phase": "verify-ios-native",
+        "exitCode": 0,
+        "wallSeconds": 3.695
+      },
+      {
+        "phase": "stage-ios-native",
+        "exitCode": 0,
+        "wallSeconds": 1.077
+      },
+      {
+        "phase": "stage-ios-fmod",
+        "exitCode": 0,
+        "wallSeconds": 2.127
+      },
+      {
+        "phase": "canonical-ios",
+        "exitCode": 0,
+        "wallSeconds": 54.731
+      },
+      {
+        "phase": "everest49-product",
+        "exitCode": 0,
+        "wallSeconds": 529.991
+      }
+    ],
+    "morro-everest49-tvos-3": [
+      {
+        "phase": "host-check",
+        "exitCode": 0,
+        "wallSeconds": 0.567
+      },
+      {
+        "phase": "validate-game",
+        "exitCode": 0,
+        "wallSeconds": 2.5
+      },
+      {
+        "phase": "verify-tvos-native",
+        "exitCode": 0,
+        "wallSeconds": 6.694
+      },
+      {
+        "phase": "stage-tvos-native",
+        "exitCode": 0,
+        "wallSeconds": 0.481
+      },
+      {
+        "phase": "stage-tvos-fmod",
+        "exitCode": 0,
+        "wallSeconds": 7.246
+      },
+      {
+        "phase": "canonical-tvos",
+        "exitCode": 0,
+        "wallSeconds": 51.935
+      },
+      {
+        "phase": "canonical-ios",
+        "exitCode": 0,
+        "wallSeconds": 53.674
+      },
+      {
+        "phase": "everest49-product",
+        "exitCode": 0,
+        "wallSeconds": 489.415
+      }
+    ]
+  },
+  "cloud": {
+    "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+    "exampleRepository": "example/morro-celeste",
+    "isPublishedDestination": false,
+    "hostedRun": false,
+    "exportParity": "PASS",
+    "actionlintVersion": "1.7.12",
+    "actionlint": "PASS"
+  },
+  "cloudCleanCheckout": {
+    "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+    "tagsAbsent": true,
+    "pinnedRecursiveSubmodules": true,
+    "actualMorroLayoutVersionAndSaveManagerVerifiers": "PASS",
+    "hostedActionsRun": false,
+    "sourceClean": true
+  },
+  "privacy": {
+    "sourceCommit": "6dc6427d1bdeab1a92987a4a1936235e48b7266b",
+    "trackedEntries": 992,
+    "personalAbsolutePaths": [],
+    "proprietaryBinaryExtensions": [],
+    "credentialPatterns": [],
+    "privateOutputsVerifiedIgnored": true,
+    "diffCheck": "PASS",
+    "rootWorkflows": 0,
+    "customHooks": [],
+    "originConfigured": false,
+    "upstreamPushDisabled": true,
+    "publication": "NOT_RUN"
+  },
+  "physicalAcceptance": "NOT_RUN_STILL_PENDING",
+  "publication": "NOT_RUN",
+  "signing": "NOT_RUN",
+  "actions": "NOT_RUN",
+  "strictByteIdentityRequirementMet": false
+}

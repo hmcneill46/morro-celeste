@@ -68,18 +68,25 @@ receipts; no old SHA, copied generated closure, signed product or PASS is relabe
 Byte-identical ZIPs are claimed only if the bytes actually agree. Product and
 logical-identity verification remain independent of ZIP equality.
 
-Final results and private logs are outside Git. The migrated products do not
-constitute physical acceptance of The Squeeze. Build 49's mandatory iPhone/tvOS
+The [sanitized final report and results](history/morro-migration/README.md) are
+tracked for independent handoff. Private logs and products remain outside Git.
+The migrated products do not constitute physical acceptance of The Squeeze. Build 49's mandatory iPhone/tvOS
 matrix remains pending, and iPad's static-AOT status remains
 `IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY`.
 
-## Publishing later and ancestry
+## Publication and ancestry
 
-The local working branch is `codex/morro-modern-aot-migration`. There is no
-`origin`; inherited `upstream` is fetch-only with an intentionally disabled push
-URL and `push.default=nothing`. No existing repository is renamed or published.
-Choose the GitHub destination before adding `origin`, then push only the intended
-branch explicitly. Never use a mirror or force push for this migration.
+The source destination is [hmcneill46/morro-celeste](https://github.com/hmcneill46/morro-celeste),
+a standalone public repository. `origin` names this destination; the old
+`upstream` remains fetch-only with a disabled push URL. The local migration
+branch is `codex/morro-modern-aot-migration`; initial publication sends that
+branch's HEAD explicitly to the new repository's `main`, preserving all ancestry.
+No old repository is renamed, merged, pushed or mirrored, and no release tags
+are transferred. `push.default=nothing` keeps subsequent pushes explicit.
+
+The publication handoff adds documentation, sanitized migration results and
+ignore rules after the tested `6dc6427` source. Build and product receipts remain
+bound to `6dc6427`, not the later publication commit. See [current progress](MORRO_STATUS.md).
 
 Morro is prepared for a standalone repository, following the owner's preference.
 The ancestry, original licence and explicit README credit are preserved locally.
@@ -95,4 +102,5 @@ The searchable names are **Morro — Celeste for Apple platforms (static AOT)**
 and **Cabrillo — Celeste Mod Loader for Apple Platforms (JIT)**. Morro links to
 the existing Cabrillo repository. Cabrillo already identifies the planned Morro
 companion; its active, dirty working tree is not changed during this migration.
-Update its public link once Morro has an actual published address.
+Morro has its own public address above; the separate Cabrillo working tree is
+not modified by this publication.

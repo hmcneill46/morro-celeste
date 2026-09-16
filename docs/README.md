@@ -5,10 +5,11 @@ Use this page to jump directly to the task or level of detail you need.
 
 ## Getting started
 
+- [Current Morro progress and evidence](MORRO_STATUS.md) — latest vanilla/static Everest status, exact tested revisions and remaining work.
 - [Building Morro](MORRO_BUILDING.md) — standalone modern vanilla and build-49
   static Everest builds, private inputs and the pinned Intel/Apple-silicon tools.
 - [Morro migration](MORRO_MIGRATION.md) — preserved ancestry, file inventory,
-  verification boundaries and later publication.
+  verification boundaries and standalone publication.
 - [Credits](../CREDITS.md) — original port, game, dependencies and mod authors.
 - [Build locally on a Mac](BUILDING.md) — Apple TV prerequisites, builder
   choices, signing, and generated outputs.
@@ -69,4 +70,6 @@ Use this page to jump directly to the task or level of detail you need.
   debugging.
 
 The history explains how decisions were reached. It is not the current user
-workflow; use [Status](STATUS.md) for the present implementation.
+workflow; use [Morro progress](MORRO_STATUS.md) for the current combined
+vanilla/static-Everest status, and [vanilla Status](STATUS.md) for its detailed
+platform capabilities.
