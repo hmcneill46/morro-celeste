@@ -158,6 +158,34 @@ class CloudExport(unittest.TestCase):
     def render(self, repository="example/morro-celeste", revision="a" * 40):
         return self.exporter.render(ROOT / "cloud-builder-template", repository, revision)
 
+    def test_actual_release_ancestry_without_tags_and_wrong_ref_rejection(self):
+        verifier = module("verify-celeste-tvos-stage22b")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            def git(*args):
+                return subprocess.check_output(["git", "-c", "user.name=Synthetic fixture",
+                    "-c", "user.email=fixture@example.invalid", "-c", "core.hooksPath=/dev/null", *args],
+                    cwd=root, stderr=subprocess.DEVNULL, text=True).strip()
+            git("init", "-q")
+            git("commit", "--allow-empty", "-qm", "Owned release fixture")
+            release = git("rev-parse", "HEAD")
+            git("commit", "--allow-empty", "-qm", "Owned successor fixture")
+            successor = git("rev-parse", "HEAD")
+            def check(commit=release):
+                verifier.verify_release_ancestry(verifier.Checks(), root, "owned-release", commit)
+            check()  # exact ancestry exists; no local tag is needed
+            git("tag", "-a", "owned-release", release, "-m", "Owned test annotation")
+            check()
+            git("tag", "-f", "owned-release", successor)
+            with self.assertRaises(SystemExit):
+                check()
+            git("tag", "-d", "owned-release")
+            git("checkout", "-q", "--detach", release)
+            with self.assertRaises(SystemExit):
+                check(successor)  # an available but unrelated descendant is insufficient
+            with self.assertRaises(subprocess.CalledProcessError):
+                check("a" * 40)  # missing object cannot be accepted as an absent tag
+
     def test_binds_both_pin_authorities_and_documentation(self):
         outputs = self.render()
         for name in (".github/workflows/build.yml", "scripts/cloud-common.sh", "README.md"):

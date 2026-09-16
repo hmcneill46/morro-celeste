@@ -24,7 +24,8 @@ CHANGED = {".gitignore", ".gitmodules", "README.md", "build-ios.sh", "build-tvos
            "scripts/verify-celeste-tvos-stage14.py", "scripts/diagnose-tvos-host.sh",
            "scripts/test-apple-everest-desktop-hookgen.sh", "scripts/verify-fmod-tvos.sh",
            "scripts/verify-celeste-tvos-stage6.sh", "scripts/verify-celeste-tvos-stage14.sh",
-           "scripts/verify-repository-stage8b.py", "scripts/verify-celeste-tvos-stage13b.py"}
+           "scripts/verify-repository-stage8b.py", "scripts/verify-celeste-tvos-stage13b.py",
+           "scripts/verify-celeste-tvos-stage22b.py"}
 PURPOSES = {
     "apple-everest": "Static Everest production authorities, runtime, finite compatibility, fixtures and regression proofs",
     "managed": "Canonical source generation, locked game profiles and platform transforms",

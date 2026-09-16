@@ -3139,7 +3139,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_MIGRATION.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_MIGRATION.md",
-      "sha256": "7ef0c75b4c4652e73a654ff48dced424e5e6a4dd135921b039f3fed65d603290"
+      "sha256": "ef393f1d035c8fbe81bc09a5f2649f0ad9a2f2e80796cc79ab91186ad5c0c31a"
     },
     {
       "baselineGitObject": "e7c45733a735e0e2d803ce7b2e9f71d71f3d4791",
@@ -7119,11 +7119,11 @@
     {
       "baselineGitObject": "d7814c70f04e96d996e0b273121deeb8c28b3edb",
       "baselinePath": "scripts/verify-celeste-tvos-stage22b.py",
-      "disposition": "retained",
+      "disposition": "migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-celeste-tvos-stage22b.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-celeste-tvos-stage22b.py",
-      "sha256": "f9d9d4e34f8fa32c977a66d6f73c9d93f521f38c85c710abf1b72fa190dd1afe"
+      "sha256": "7450048e5552e6ed155f9d8a70cffe87e49e513adc0051429c4559e70e1ac5d7"
     },
     {
       "baselineGitObject": "895c003590bf5246112ab67cb7999c66eb0cf856",
@@ -7256,7 +7256,7 @@
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "7abba230c1c2ccc4798d4173e7524f8d8b87b23849949dab07516a49f3e758ad"
+      "sha256": "059e9f75c7a025b34baf23b96074a9a56cf80435b9746f6f8b75eb6097345ce5"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7335,7 +7335,7 @@
       "gitMode": "100644",
       "path": "tests/test_morro_migration.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_morro_migration.py",
-      "sha256": "c449a2c0e9ea7cdf22c06a3aded97fcea63f41a331f427b3f9580f21b58e01a5"
+      "sha256": "ef6a5b28f68e9c242159d7c8c0416995b5d253168108f9573f6b11c54c976397"
     },
     {
       "baselineGitObject": "6532b3f42d76dc0fcaa1f5ffc392bd7bbcd86017",

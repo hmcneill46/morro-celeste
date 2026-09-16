@@ -40,6 +40,21 @@ def git(repo: pathlib.Path, *args: str) -> str:
     ).stdout.strip()
 
 
+def verify_release_ancestry(checks: Checks, repo: pathlib.Path, tag: str, commit: str) -> None:
+    """Bind the immutable release object even in the cloud's no-tags checkout."""
+    checks.equal(git(repo, "rev-parse", commit + "^{commit}"), commit, "immutable " + tag)
+    checks.require(subprocess.run(
+        ["git", "-C", str(repo), "merge-base", "--is-ancestor", commit, "HEAD"],
+        check=False, capture_output=True
+    ).returncode == 0, "accepted release remains in source ancestry: " + tag)
+    ref = "refs/tags/" + tag
+    result = subprocess.run(["git", "-C", str(repo), "show-ref", "--verify", "--quiet", ref],
+                            check=False, capture_output=True)
+    checks.require(result.returncode in (0, 1), "release tag lookup succeeded: " + tag)
+    if result.returncode == 0:
+        checks.equal(git(repo, "rev-parse", ref + "^{}"), commit, "existing release tag: " + tag)
+
+
 def require_tokens(checks: Checks, text: str, tokens: tuple[str, ...], label: str) -> None:
     for token in tokens:
         checks.require(token in text, f"{label}: {token}")
@@ -79,8 +94,8 @@ def main() -> int:
     repo = (args.repo_root or pathlib.Path(__file__).resolve().parents[1]).resolve()
     checks = Checks()
 
-    checks.equal(git(repo, "rev-parse", "v1.0.0-rc.1^{}"), RC1_COMMIT, "immutable RC1")
-    checks.equal(git(repo, "rev-parse", "v1.0.0-rc.2^{}"), RC2_COMMIT, "immutable RC2")
+    verify_release_ancestry(checks, repo, "v1.0.0-rc.1", RC1_COMMIT)
+    verify_release_ancestry(checks, repo, "v1.0.0-rc.2", RC2_COMMIT)
     checks.require(subprocess.run(
         ["git", "-C", str(repo), "merge-base", "--is-ancestor", START_COMMIT, "HEAD"],
         check=False, capture_output=True

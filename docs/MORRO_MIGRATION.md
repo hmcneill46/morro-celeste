@@ -39,6 +39,11 @@ Stage 6 and cloud aggregate callers also replace checks for unused Xamarin
 prebuilt archives with the complete Morro source inventory check. All retained
 prior native/host isolation paths, native hashes, generated-source locks and
 product checks remain enforced against the accepted build-49 source foundation.
+The current Save Manager verifier binds both exact historical release commits
+to source ancestry, including in the cloud workflow's intentional no-tags
+checkout. A present release tag must still resolve to its exact expected commit;
+missing objects, unrelated ancestry and wrong tags fail. No remote ref changes
+or release-identity substitutions are involved.
 The public documentation check recognizes Morro's heading and additionally
 requires its building, migration and credits documents. The original archive checksum record and exact
 historical verifier versions remain in Git history; old manual stage commands
