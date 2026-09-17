@@ -1,5 +1,11 @@
 # The Squeeze — Morro build 50 deployment renewal
 
+The continuation is now [closed within the owner's iPhone scope](MORRO_SQUEEZE_CLOSEOUT.md).
+The text below preserves the original build-50 deployment plan. The later owner
+decision deferred Apple TV and replaced its exhaustive manual checklist with
+focused checks and exploratory play; it is not a pending instruction to repeat
+that plan. Build-50 observations and the build-51 pause fix are recorded separately.
+
 Build 50 continues the pending Stage 25K-N acceptance of the unchanged Beginner
 lobby, Bing and The Squeeze, plus the same 18 regression maps. It requires fresh
 signed iOS/tvOS products and separate physical observations of each product.

@@ -6,6 +6,7 @@ Use this page to jump directly to the task or level of detail you need.
 ## Getting started
 
 - [Current Morro progress and evidence](MORRO_STATUS.md) — latest vanilla/static Everest status, exact tested revisions and remaining work.
+- [The Squeeze stage closeout](testing/MORRO_SQUEEZE_CLOSEOUT.md) — build-50 iPhone playtesting, the confirmed build-51 pause fix and deferred scope.
 - [Building Morro](MORRO_BUILDING.md) — standalone modern vanilla and build-49
   static Everest builds, private inputs and the pinned Intel/Apple-silicon tools.
 - [Morro migration](MORRO_MIGRATION.md) — preserved ancestry, file inventory,

@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "closedDate": "2026-09-17",
+  "stage": "The Squeeze Morro iPhone continuation and lobby Pause correction",
+  "status": "CLOSED_OWNER_SCOPED_IPHONE_ACCEPTANCE",
+  "closureAuthority": "Owner requested stage closeout after confirming the installed build51 fix.",
+  "combinedIPhoneTvOSGreen": false,
+  "products": [
+    {
+      "platform": "ios",
+      "appVersion": "0.1.1",
+      "appBuild": "50",
+      "sourceCommit": "483bca5be2967cf12041d24bd8b875a34d634dba",
+      "ipaSha256": "33fb412a522ffec89c1b5eec40f6552f949989ab23a9b10d0041878a8183e4e7",
+      "nativeImageSha256": "0eae020faabddb737407ab75820c9d3a9c76e0eabb565057b90a379d982579b8",
+      "productVerification": "PASS_AT_RECORDED_VERIFICATION_TIME",
+      "signing": "SIGNED_STRICT_VERIFIED",
+      "ipaPayloadAgreement": true,
+      "profileExpirationUTC": "2026-09-24T10:29:13Z",
+      "platformControls": 15,
+      "aotNegativeControls": 17,
+      "productReceipt": {
+        "record": "ios-final-product-50.json",
+        "sha256": "b46f255bcc3f3da30b024876783b8605fe784a73ee5fb5facb0aae84238e9f68"
+      },
+      "physicalScope": "THE_SQUEEZE_AND_BING_REPORTED_PLAY_PERSISTENCE_FACTORY_LIFECYCLE",
+      "physicalResultsTransferFromOtherBuilds": false
+    },
+    {
+      "platform": "ios",
+      "appVersion": "0.1.1",
+      "appBuild": "51",
+      "sourceCommit": "28a336f4db6bbdd32af52b830005e19f167ea1d2",
+      "ipaSha256": "5524f252fc1288153e9e358461a1392531f9132ecbf09b9cd65820952649e4cd",
+      "nativeImageSha256": "55907f3e052f3ea12cc570aa907b9e89ba1f5f229cb19900f185fcf0680e049b",
+      "productVerification": "PASS_AT_RECORDED_VERIFICATION_TIME",
+      "signing": "SIGNED_STRICT_VERIFIED",
+      "ipaPayloadAgreement": true,
+      "profileExpirationUTC": "2026-09-24T10:29:13Z",
+      "platformControls": 15,
+      "aotNegativeControls": 17,
+      "productReceipt": {
+        "record": "ios-final-product-51.json",
+        "sha256": "bbb6071e897736f2a31a0bb933110004fa6dd5bb49077b339e654306464b2b34"
+      },
+      "physicalScope": "JAR_CARD_PAUSE_RESUME_REOPEN_AND_SAVED_SILVER_DISPLAY",
+      "physicalResultsTransferFromOtherBuilds": false
+    }
+  ],
+  "physicalBuild50": {
+    "sourceCommit": "483bca5be2967cf12041d24bd8b875a34d634dba",
+    "cases": [
+      {
+        "caseId": "real-lobby-entry",
+        "result": "PASS_OWNER_REPORTED"
+      },
+      {
+        "caseId": "room1-death-retry",
+        "result": "PASS_OWNER_REPORTED"
+      },
+      {
+        "caseId": "full-route",
+        "result": "PASS_OWNER_REPORTED_WITH_SAVED_COMPLETION_VERIFIED"
+      },
+      {
+        "caseId": "collectibles",
+        "result": "PASS_COLLECTION_BEHAVIOR_OWNER_AND_SAVED_BYTES_VERIFIED"
+      },
+      {
+        "caseId": "room3-bubble",
+        "result": "PASS_OWNER_REPORTED_WITH_COLD_RESTORE_VERIFIED"
+      },
+      {
+        "caseId": "room3-switch-gate",
+        "result": "PASS_OWNER_REPORTED_WITH_COLD_RESTORE_VERIFIED"
+      },
+      {
+        "caseId": "room5-platforms",
+        "result": "PASS_OWNER_REPORTED"
+      },
+      {
+        "caseId": "music-and-sounds",
+        "result": "PARTIAL_OWNER_REPORTED"
+      },
+      {
+        "caseId": "numbered-save-quit",
+        "result": "PASS_OWNER_REPORTED_AND_SAVED_BYTES_VERIFIED"
+      },
+      {
+        "caseId": "full-cold-continue",
+        "result": "PASS_OWNER_AND_MACHINE_VERIFIED"
+      },
+      {
+        "caseId": "return-to-lobby",
+        "result": "PASS_OWNER_REPORTED_WITH_RUNTIME_ROUTE_VERIFIED"
+      },
+      {
+        "caseId": "completion-persistence",
+        "result": "PASS_TESTED_COMPLETION_HEART_AND_SILVER_COLD_SCOPE"
+      },
+      {
+        "caseId": "prior-progression-isolation",
+        "result": "CURRENT_TESTED_STATE_AND_OTHER_SLOT_BYTES_PASS_HISTORICAL_RESTORE_OWNER_DEFERRED"
+      },
+      {
+        "caseId": "snas-lobby-bing",
+        "result": "PASS_OWNER_AND_MACHINE_VERIFIED"
+      },
+      {
+        "caseId": "regression-maps",
+        "result": "PASS_FACTORY_LIFECYCLE_73_OF_73_SEMANTIC_PLAY_NOT_CERTIFIED"
+      },
+      {
+        "caseId": "excluded-destinations",
+        "result": "PASS_OWNER_REPORTED_AVAILABILITY_CHECKS"
+      },
+      {
+        "caseId": "lifecycle-input",
+        "result": "PASS_SUPPORTED_IOS_SCOPE_OWNER_REPORTED"
+      },
+      {
+        "caseId": "disposable-persistence-controls",
+        "result": "PASS_HOST_SCOPE_DEVICE_MUTATION_CONTROLS_NOT_PERFORMED"
+      },
+      {
+        "caseId": "reference-comparison",
+        "result": "NOT_REPORTED"
+      }
+    ],
+    "observations": [
+      {
+        "record": "ios-observation-001-room1-retries.json",
+        "sha256": "0d341a310b87f81c4b4a41f7ce06401f2a345456ef1772b0b9b972064513be57"
+      },
+      {
+        "record": "ios-observation-002-room3-gate.json",
+        "sha256": "f8f727c9757af9b02f372273946b889eaeabf13a93bce9cd16451a7302940bfc"
+      },
+      {
+        "record": "ios-observation-003-room3-bubble-flight.json",
+        "sha256": "4520bfc320bcc32060cb39dd8e43ad4d772d31c9cd093df9431ff3028937214b"
+      },
+      {
+        "record": "ios-observation-004-room3-bubble-retry-savequit.json",
+        "sha256": "b6d920fa892567565eaa2e31fd6fece5e0cffeadb67511787b29d197ca79a6d1"
+      },
+      {
+        "record": "ios-observation-005-cold-continue-room3.json",
+        "sha256": "1be91c3754e132e2bcb0e7cbaddecbb2ef723cc9128cd03a3ac4325d283677d5"
+      },
+      {
+        "record": "ios-observation-006-room3-reentry-room4-berry.json",
+        "sha256": "ff8754c89951281ec9b40e36fa5b38ed1412a4d5e71ee7d6eecec6492832bf9a"
+      },
+      {
+        "record": "ios-observation-007-room5-and-finish.json",
+        "sha256": "65e2315a912accfa9671bd7a38cd53e96a48235bb124ec1d730a84a48562182e"
+      },
+      {
+        "record": "ios-observation-008-silver-retry-journal-savequit.json",
+        "sha256": "0ae7943e6350ec365824bba8cf5562734e2c2ca10f0894b26b572f1ae4f8bdb7"
+      },
+      {
+        "record": "ios-observation-009-completion-cold-and-bing-gameplay.json",
+        "sha256": "3d278613d0fd87bacb602e3b1226bba8e673058f9ce668415a7a817ff582b408"
+      },
+      {
+        "record": "ios-observation-010-bing-lifecycle-input-savequit.json",
+        "sha256": "816bcdba24ea0f3609f9712abb22bf3532f6029f20b841fc4472929f8a0c08fe"
+      },
+      {
+        "record": "ios-observation-011-bing-cold-lobby-presentation.json",
+        "sha256": "2c653936d88ac1aee550f7912691130de8d17c4dc98aaeca5bd34ae822fbd75a"
+      },
+      {
+        "record": "ios-observation-012-lobby-exclusions.json",
+        "sha256": "b8c3341bcbbcd3a1edc4bb8741439aaa31344664e8fec77f002c558ed49a6a66"
+      },
+      {
+        "record": "ios-observation-013-historical-progression-scope.json",
+        "sha256": "3641277ed021ecd3c89ab639d4f7c1ee5141e902bb001e6653c27da9a3bca418"
+      },
+      {
+        "record": "ios-observation-014-silver-award.json",
+        "sha256": "b425785ffa7e628f95060461c1f9d38731b902c115f3e57ffdd68f446d0b456e"
+      },
+      {
+        "record": "ios-observation-015-silver-savequit.json",
+        "sha256": "47be8fbdf465288b68e7e21c885f4c795c53684a6321ab1642384820d61d4d41"
+      },
+      {
+        "record": "ios-observation-016-silver-cold-and-factory.json",
+        "sha256": "376c998eeebec896c9800d2d09a9cdce34c09c354e47f3c4c35e0db5d6624c07"
+      },
+      {
+        "record": "ios-observation-017-lobby-card-pause-overlap.json",
+        "sha256": "2ac20b2c5fa31ec7debe68360982fb3613e29d233f96df2cef23eaa938220a78"
+      }
+    ],
+    "factoryLifecycle": {
+      "result": "PASS_AUTOMATIC_LIFECYCLE_73_OF_73",
+      "distinctFactories": 73,
+      "scope": "Automatic lifecycle dispatch only. Individual representative gameplay was not requested again or certified.",
+      "evidence": {
+        "record": "result.json",
+        "sha256": "4c145b31abd0e0450889cdf93da59fd3cb3d866eabded9bcb1867997b430c493"
+      }
+    }
+  },
+  "physicalBuild51": {
+    "sourceCommit": "28a336f4db6bbdd32af52b830005e19f167ea1d2",
+    "status": "PASS_OWNER_REPORTED_FOCUSED_PAUSE_FIX_AND_SILVER_DISPLAY",
+    "cases": [
+      {
+        "caseId": "lobby-card-pause-overlap",
+        "result": "PASS_OWNER_REPORTED",
+        "observed": "Card closes when Pause opens; reported overlap is fixed."
+      },
+      {
+        "caseId": "resume-and-reopen-card",
+        "result": "PASS_OWNER_REPORTED",
+        "observed": "Resume and reopening the jar card work normally in the requested check."
+      },
+      {
+        "caseId": "saved-silver-display",
+        "result": "PASS_OWNER_REPORTED",
+        "observed": "Previously saved silver remains displayed after the in-place update and ordinary build51 launch."
+      }
+    ],
+    "observation": {
+      "record": "ios-observation-001-pause-fix-and-silver.json",
+      "sha256": "23a6ccde5016468ee4dbd9f62b0d0b3f1912695a923afa72d21857e717afcd68"
+    },
+    "issueId": "MORRO-LOBBY-CARD-PAUSE-OVERLAP",
+    "issueStatus": "RESOLVED_OWNER_CONFIRMED_ON_IOS_BUILD51",
+    "issueResolution": {
+      "record": "lobby-card-pause-resolution.json",
+      "sha256": "e6a065f83f0cf39d8919f17397ae7684b372115df442fa3da5bdd49f8445f897"
+    },
+    "installationPreservation": {
+      "files": 20,
+      "bytes": 158690,
+      "allBytesIdentical": true,
+      "receipt": {
+        "record": "ios-install-and-launch-result.json",
+        "sha256": "3a4ed8d2eaaf124ec09c1a752e015a0719c85eaebd12f40bc9546baba4104fd2"
+      }
+    },
+    "ordinaryLaunchReceipt": {
+      "record": "ios-build51-launch-1-result.json",
+      "sha256": "6a4b610d7872d98ccd31bb13bcaf64d1d2f55bcd199a4a072b7d7ccca7e78dbf"
+    }
+  },
+  "hostBuild51": {
+    "sourceFreeze": {
+      "record": "source-freeze.json",
+      "sha256": "d5a93362acf3b53342ae20ad691db3cd30d7f2d05d8cec91379bdeb9e1c7f0b8"
+    },
+    "pauseCases": 48,
+    "missingDispatchRejected": true,
+    "originalPauseBodyUnchanged": true,
+    "pauseProbe": {
+      "record": "result.json",
+      "sha256": "353e68ae9280cda543b1749d7d58b244bba79b311e2cf58b61c971e038d393b5"
+    },
+    "portableTests": 75,
+    "contractControls": 103,
+    "actualGeneratedMethods": {
+      "record": "ios-applied-pause-binding.json",
+      "sha256": "77489016dfbcd58e51da9fb4d9f45205f7e2bf222e9f81c8dc73c13b942b5d64"
+    },
+    "identityTransition": {
+      "record": "identity-transition-review.json",
+      "sha256": "7f70772e5f0e01dfa92bdbff7bc5f4e71e6f19f17be127b1e9b32677dff8fc68"
+    },
+    "preservedBuild50Products": {
+      "record": "build50-preservation-after-build51.json",
+      "sha256": "a5ca9d3a0ceb8fab26b52c463cd963294348d6d785f05b6f00dc4c6dbab5029d"
+    }
+  },
+  "selectedOriginalMaps": [
+    "StrawberryJam2021/0-Lobbies/1-Beginner",
+    "StrawberryJam2021/1-Beginner/Bing_Over_Google",
+    "StrawberryJam2021/1-Beginner/snas"
+  ],
+  "existingRegressionMaps": 18,
+  "otherOrdinaryBeginnerMaps": 19,
+  "newMapsEnabledDuringCloseout": 0,
+  "deferredOrUnreported": [
+    "Apple TV explicitly deferred; no build50/51 tvOS product or physical acceptance.",
+    "IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY",
+    "Detailed sound timing and desktop reference comparison.",
+    "Separate physical journal/Pause check on build51.",
+    "Each representative gameplay interaction across all 18 regression maps.",
+    "Historical slot-lineage/restore investigation deferred by owner.",
+    "Device save-corruption controls not performed; host persistence evidence remains separate.",
+    "Historical exact IPA byte-reproduction uncertainty remains unresolved."
+  ],
+  "nextDevelopment": {
+    "approach": "Group shared missing Beginner mechanics and exact authored profiles; deliver playable batches for exploratory owner feedback with focused bug and persistence checks.",
+    "historicalManualChecklist": "DISCONTINUED_BY_OWNER",
+    "planningEvidenceOnly": {
+      "record": "beginner-batch-assessment.json",
+      "sha256": "b8bc2e2c3a78dba93317a5b1756bb8e87a52028644639cfd6ef4e02de49731b9"
+    },
+    "batchMembershipPromised": false
+  },
+  "closeoutChanges": "Documentation and inventory only; tested source revisions and products remain unchanged.",
+  "appRebuiltForCloseout": false,
+  "deviceOperationForCloseout": false,
+  "mergePushActionsTagOrReleasePerformed": false
+}

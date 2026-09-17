@@ -1,5 +1,12 @@
 # Morro build 51 — lobby card pause cleanup
 
+**Closed on 17 September 2026:** signed iPhone build 51 at
+`28a336f4db6bbdd32af52b830005e19f167ea1d2` passed product verification and an
+in-place installation preserving all 20 saved files byte for byte. The owner
+confirmed the jar card closes when Pause opens, Resume/reopening works and the
+saved silver remains visible. See the [stage closeout](MORRO_SQUEEZE_CLOSEOUT.md)
+for exact product hashes, evidence and deferred scope.
+
 On iPhone build 50, opening a lobby level card and pressing Pause opens the
 pause menu underneath the card. CollabUtils2 1.13.4 handles Everest's post-pause
 event by closing its wrapped Overworld and restoring the player. Morro lowered
@@ -31,14 +38,18 @@ asset, audio-bank, profile, native, dependency and persistence authorities stay
 unchanged. The source inventory records exact successor hashes, preserving its
 historical migration checks. Builds 49 and 50 and their evidence remain separate.
 
-The current owner-directed playtest approach supersedes the older exhaustive
-manual checklist for this continuation. After the replacement is verified and
-installed, the focused check is: open a jar's card, Pause, Resume, then reopen
-the card. Check the journal/Pause path and that saved silver remains visible.
-Further play can be exploratory, with a map/room and reproduction steps for
-issues. Do not repeat the six-room route and 73-factory sweep merely for this UI
-correction. Unknown or untested behavior remains explicitly untested; no whole
-matrix GREEN or Apple TV acceptance is implied.
+The 48 focused host cases and omitted-dispatch failure control passed. All 75
+portable tests and 103 K-N contract controls passed. Fresh app generation
+matched the tested Pause/cleanup methods; final product checks passed 15
+platform controls and 17 AOT negative controls. The ordinary installed launch
+and the owner's focused check complete this correction's iPhone acceptance.
+The journal path has host coverage but no separate physical observation.
+
+The owner-directed playtest approach supersedes the older exhaustive manual
+checklist for this continuation. Further play can be exploratory, with a map/room
+and reproduction steps for issues. There is no pending manual check for this
+fix. Build-50 route and factory evidence stays on build 50; no whole matrix
+GREEN or Apple TV acceptance is implied.
 
 Broader Beginner support is the development direction. The existing K-M audit
 lists real missing mechanics/content bindings, so making every jar available is

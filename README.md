@@ -16,22 +16,24 @@ claims. The repositories have independent builds and acceptance decisions.
 
 ## Start here
 
-- [Current progress and evidence](docs/MORRO_STATUS.md) — build-49 results, historical milestones and remaining acceptance gaps.
+- [Current progress and evidence](docs/MORRO_STATUS.md) — The Squeeze closeout, current product evidence and remaining work.
 - [Morro build and private-input guide](docs/MORRO_BUILDING.md) — independent local setup and unsigned vanilla/Everest commands.
 - [Migration and file inventory](docs/MORRO_MIGRATION.md) — retained history, removed legacy files, attribution and publishing choices.
 - [Credits](CREDITS.md) — original port, game, runtime, native and mod contributors.
 - [Static Everest architecture](docs/APPLE_EVEREST_STATIC_AOT.md) and [compatibility scope](docs/APPLE_EVEREST_COMPATIBILITY.md).
 
-Vanilla gameplay has its separate historical acceptance below. **Everest build
-49 is still pending physical acceptance**: lobby + Bing + The Squeeze and 18
-regression maps, not general Everest or all Strawberry Jam. Its original signed
-products remain frozen at source `34c0b933a4cf2252780ec84e5630847809793eab`.
-Fresh unsigned vanilla and build-49 Everest products passed their iOS/tvOS
-checks at `6dc6427d1bdeab1a92987a4a1936235e48b7266b`. Exact IPA byte
+Vanilla gameplay has its separate historical acceptance below. **The Squeeze
+iPhone stage is closed within the owner's tested scope:** build 50 passed the
+reported route, collectibles, save/cold-resume and Bing checks; build 51 fixes
+the lobby card overlapping Pause, with the fix and saved silver confirmed on
+device. See the [closeout and exact product identities](docs/testing/MORRO_SQUEEZE_CLOSEOUT.md).
+Apple TV and static-Everest iPad acceptance remain deferred. The selection is
+the Beginner lobby, Bing, The Squeeze and 18 regression maps; this is not general
+Everest or whole-Beginner support. Each product retains its own observations.
+
+The original build-49 products and migration evidence remain historical;
+later results do not grant them physical acceptance. Exact IPA byte
 reproducibility remains unresolved; see the [migration report](docs/history/morro-migration/MORRO_MIGRATION_REPORT.md).
-A migration build records its actual new tooling revision and does not inherit
-those products' identity or any old device PASS. No build number or application
-identifier is changed merely to rename the source project.
 
 An unofficial community project that builds native Apple versions of Celeste
 from game files you already own. The mature Apple TV product and the modern

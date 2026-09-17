@@ -1,24 +1,32 @@
 # Morro progress and evidence
 
 Morro is the standalone [Celeste Apple full-AOT project](https://github.com/hmcneill46/morro-celeste).
-It contains both vanilla products and the finite static-Everest build-49 pipeline.
+It contains both vanilla products and the finite static-Everest pipeline.
 The companion [Cabrillo](https://github.com/hmcneill46/cabrillo-celeste) owns its
 separate JIT/mod-loader work.
 
-**Four fresh unsigned migration products passed their build/product checks:**
-vanilla iOS, vanilla tvOS, Everest build-49 iOS and Everest build-49 tvOS.
-The exact tested source is `6dc6427d1bdeab1a92987a4a1936235e48b7266b`.
-**Exact IPA byte reproduction remains unresolved, and build-49 physical acceptance
-is still pending.** Publishing source grants neither physical PASS nor release
-approval.
+**The Squeeze iPhone stage is closed within the owner's tested scope on
+17 September 2026.** The [closeout report](testing/MORRO_SQUEEZE_CLOSEOUT.md)
+and [sanitized results](testing/MORRO_SQUEEZE_CLOSEOUT.json) separate each product's
+evidence and retain the untested scope. Apple TV and static-Everest iPad remain
+deferred; this is not the historical combined iPhone/tvOS GREEN verdict.
 
-The [build-50 deployment renewal](testing/MORRO_SQUEEZE_BUILD50.md) reached
-iPhone playtesting: the owner confirmed The Squeeze route, ordinary and silver
-berries, saved completion, cold resumes, Bing, touch/controller input and the
-73/73 factory lifecycle sweep. A lobby card remaining above the pause menu was
-reported. The [build-51 correction](testing/MORRO_LOBBY_PAUSE_BUILD51.md)
-restores the reference cleanup behavior; replacement-product verification is
-separate. Apple TV is deferred. Untested fixture interactions are not certified.
+The [build-50 deployment renewal](testing/MORRO_SQUEEZE_BUILD50.md), at
+`483bca5be2967cf12041d24bd8b875a34d634dba`, passed signed-product checks and
+reported iPhone play: The Squeeze route, ordinary and silver berries, saved
+completion, cold resumes, Bing and touch/controller input. The 73/73 factory
+lifecycle sweep passed its dispatch scope. The owner found the lobby card
+remaining above Pause. The [build-51 correction](testing/MORRO_LOBBY_PAUSE_BUILD51.md),
+at `28a336f4db6bbdd32af52b830005e19f167ea1d2`, passed fresh signed-product checks,
+preserved saved data through installation, and received the focused physical
+confirmation: Pause closes the card, Resume/reopening works, and silver remains
+visible. Build-50 route and factory results are not transferred to build 51.
+
+The four unsigned migration products at
+`6dc6427d1bdeab1a92987a4a1936235e48b7266b` retain their original build/product
+PASS. Original build-49 products remain physically unaccepted historical
+products. Exact IPA byte reproduction remains unresolved. Source publication
+does not grant release approval.
 
 ## What a clone contains
 
@@ -46,9 +54,11 @@ private project checkout. See [Building Morro](MORRO_BUILDING.md).
 | HOST-B | `632a451da2f62928404a2408826747aa6fc55b20` | Native symbol-stream, architecture and deterministic-index corrections; [report](history/migration-evidence/HOST-B_FINAL_REPORT.md). M1 regression is external reviewed evidence. |
 | HOST-C | `b4997fa49f4f8b82f6f2984fe9047396e401ea48` | Qualified Intel serial unsigned full-app path and strict host/signing provenance; [report](history/migration-evidence/HOST-C_FINAL_REPORT.md). |
 | K-M | `b65bedd20016dc3482d7702d7f0a9707bc2b1479` | Complete Beginner expansion audit and decision; [report](history/migration-evidence/STAGE25KM_FINAL_REPORT.md). Audit readiness is not gameplay acceptance. |
-| K-N build 49 | `34c0b933a4cf2252780ec84e5630847809793eab` | Adds unchanged The Squeeze, bounded mechanisms and expanded proofs; [report](history/migration-evidence/STAGE25KN_FINAL_REPORT.md). [Build-47 failure](history/migration-evidence/STAGE25KN_BUILD47_PHYSICAL_FAILURE_REPORT.md) remains separately recorded; build 49 still needs its exact device matrix. |
+| K-N build 49 | `34c0b933a4cf2252780ec84e5630847809793eab` | Adds unchanged The Squeeze, bounded mechanisms and expanded proofs; [report](history/migration-evidence/STAGE25KN_FINAL_REPORT.md). [Build-47 failure](history/migration-evidence/STAGE25KN_BUILD47_PHYSICAL_FAILURE_REPORT.md) remains separately recorded; original build-49 physical acceptance was never completed. |
 | Morro migration | `6dc6427d1bdeab1a92987a4a1936235e48b7266b` | All four fresh unsigned products and applicable product gates PASS; [full report](history/morro-migration/MORRO_MIGRATION_REPORT.md), [results](history/morro-migration/MORRO_MIGRATION_RESULTS.json). Exact IPA equality was not achieved. |
 | Source publication | Documentation/ignore-rule descendant of `6dc6427` | Adds this handoff and tracked sanitized evidence. Production code, toolchain/acceptance locks and build number remain unchanged. Existing AOT receipts still name `6dc6427`; they are not rebound to this later commit. |
+| Morro build 50 | `483bca5be2967cf12041d24bd8b875a34d634dba` | Renewed iPhone deployment and scoped physical acceptance; [closeout](testing/MORRO_SQUEEZE_CLOSEOUT.md). Pause overlap found; Apple TV deferred. |
+| Morro build 51 | `28a336f4db6bbdd32af52b830005e19f167ea1d2` | Fresh signed iPhone product, save-preserving install and owner-confirmed pause fix; [correction](testing/MORRO_LOBBY_PAUSE_BUILD51.md). Later closeout documentation does not change this tested source. |
 
 ## Current static-Everest selection
 
@@ -63,14 +73,17 @@ The 18 existing regression maps remain: 21 custom/regression maps total, with
 module and AEVPSV1 persistence authorities remain unchanged. No general mod
 loader, whole-Beginner or full-SJ support is claimed.
 
-Both fresh Morro products revalidated A 1,309/1,309 occurrences, B 83/83 compiled
+The current iPhone preparation revalidated A 1,309/1,309 occurrences, B 83/83 compiled
 registrations (77 selected profiles plus six separate legacy proofs), C 83/83
 semantic closures and D real composition, all with zero blocked/unknown/missing
 requirements. Actual linked assemblies, AOT objects, native images and packaged
 content were verified. The [frozen K-N identities](../apple-everest/sj-snas-identities-stage25kn.json)
-remain the unchanged acceptance authority.
+bind the current build-51 product. Its reviewed pause correction changes only
+the managed, shared, semantic and composition logical identities; content,
+registry, progression, collab and audio identities remain unchanged. Historical
+products retain the authorities recorded at their own source revisions.
 
-The current migration has the same content and inspected linked method bodies
+The preserved migration comparison has the same content and inspected linked method bodies
 as fresh original-source reference builds, but differing IPA bytes. Build
 metadata and generated native differences are documented; unresolved native
 differences are not dismissed as harmless metadata. No hash normalization or
@@ -78,10 +91,13 @@ acceptance rule was relaxed.
 
 ## Remaining work and operating boundaries
 
-- Complete the exact build-49 iPhone/Apple TV physical matrix: real lobby route,
-  death/retry, bubble/switch/gate/audio behavior, completion, save/cold resume,
-  cross-map restoration and lifecycle. Human observations remain separate from
-  automated host/product checks.
+- Continue Beginner development in playable batches by grouping shared missing
+  mechanics and exact authored profiles from the K-M audit. Only Bing and The
+  Squeeze are currently enabled; no other map was added during this closeout.
+- Use exploratory play and focused bug/save/restart checks for new candidates.
+  The owner discontinued the exhaustive manual fixture checklist. Preserve
+  untested scope without asking for that checklist again. Apple TV remains
+  deferred until the owner resumes it.
 - Resolve byte-level compiler/metadata reproducibility if exact IPA byte equality
   is required. All existing logical/native locks continue to apply.
 - The private vanilla tvOS cloud workflow passed local syntax, orchestration,
@@ -91,8 +107,8 @@ acceptance rule was relaxed.
 `IPADOS_PHYSICAL_DEFERRED_LEGACY_COMPATIBILITY_POLICY` remains in effect for the
 static-Everest candidate. Universal metadata remains validated; modern-device
 quality is not reduced for the old iPad. The M1 remains the signing/install
-fallback. No new signing, installation, gameplay testing, worker tuning, map
-expansion or release is part of source publication.
+fallback. The closeout adds documentation and evidence only: no runtime or
+content change, rebuild, device operation, merge, push, Actions run or release.
 
 The public `main` branch is for the new Morro source. Old protected release refs
 remain in the original repository and are not pushed as Morro tags/releases.

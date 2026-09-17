@@ -122,7 +122,7 @@
       "gitMode": "100644",
       "path": "README.md",
       "purpose": "Morro overview, supported build routes, attribution and Cabrillo link",
-      "sha256": "ff1373c0f6038640829b81352f0e8a3551e3d40743d10fb7109e6d58097606e2"
+      "sha256": "b72c311940fe2d6a979d93ba542bff60638ba3736ec83b4cfda7510f601c0a38"
     },
     {
       "baselineGitObject": "811851fa76c885341aaa54e9ccc6a138db63ded8",
@@ -3146,7 +3146,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_STATUS.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_STATUS.md",
-      "sha256": "8853158aa2d9988233bbfab6f76606d9de19500963fb5ad78943576abc81bb69"
+      "sha256": "6b160547ffba8039d6a9fd20396a3a4162170db4089362b6caab9413288fe37c"
     },
     {
       "baselineGitObject": "e7c45733a735e0e2d803ce7b2e9f71d71f3d4791",
@@ -3155,7 +3155,7 @@
       "gitMode": "100644",
       "path": "docs/README.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: README.md",
-      "sha256": "f65c49c0d4bbef9a7e41cd88145b0cc24d4a4d46f9f1ec84b900c4306e057116"
+      "sha256": "36dc138d6dbc130d2b6321d9bc6342ee5b8c0ac4031c463106e3dd3081dfab91"
     },
     {
       "baselineGitObject": "f5a6725d2fc650c6236999162b065b077384ecf2",
@@ -3938,14 +3938,28 @@
       "gitMode": "100644",
       "path": "docs/testing/MORRO_LOBBY_PAUSE_BUILD51.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_LOBBY_PAUSE_BUILD51.md",
-      "sha256": "2a75555491820700da0257543bffbf70ee356bc6988b4b9cb2aa5c83439ac47a"
+      "sha256": "122168c5f2bdde7910cf908d1f45b40f9e0dac79d19a6c6d4b06a3aa3c9f5adb"
     },
     {
       "disposition": "migration-added",
       "gitMode": "100644",
       "path": "docs/testing/MORRO_SQUEEZE_BUILD50.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_SQUEEZE_BUILD50.md",
-      "sha256": "f6acc39f811d882073d81889e2e11d2ee9dab7d7bc37e98f2e7366f978c56ce3"
+      "sha256": "4a2120ce6c3f46968790a130315828005e038a4c7cd545af3402590b667509a1"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/testing/MORRO_SQUEEZE_CLOSEOUT.json",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_SQUEEZE_CLOSEOUT.json",
+      "sha256": "3e7ccecd1c214bf0adcc933019fee080cfea9e4aafd544bf0eb3b1d8923dee46"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/testing/MORRO_SQUEEZE_CLOSEOUT.md",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_SQUEEZE_CLOSEOUT.md",
+      "sha256": "cf81497b0fd500f2dc4d2fee50c07e04e526ab150759507798a7938ea0cd5371"
     },
     {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",
