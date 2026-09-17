@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Account for every Morro source file and every removal from build 49."""
+"""Account for Morro source, the frozen migration and exact reviewed successors."""
 from __future__ import annotations
 
 import argparse
@@ -10,6 +10,15 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "34c0b933a4cf2252780ec84e5630847809793eab"
+# The original migration rules below remain unchanged. Build 50's deployment
+# renewal is a separate, exact-byte transition; see the build-50 scope report.
+# This is not a general exemption for changes to these production files.
+POST_MIGRATION_CHANGES = {
+    'modern-ios/IOSPortVersion.props': '89ab144b95dfaf5bf5242e0448e969c93b2607ddd2d283a668d2d73fe822cbe7',
+    'apple-everest/sj-snas-identities-stage25kn.json': 'a055126b744c6438e7456a73728848e4d10784d0428a90af7998fb397d5ea75c',
+    'scripts/verify-apple-everest-stage25kn-product-content.py': 'd5d7ed65356a9d9a37084bce1aa5f816da098d0cc528f625e77bec759ba40a0f',
+    'scripts/configure-tvos-personal-team.sh': '516293c3ad2f673bed2eee7acf18bdc55b9c9970cbb0900a35a0e63d78c6b812',
+}
 INVENTORY = "docs/MORRO_FILE_INVENTORY.json"
 ICON_OLD = "celestemeow/Assets.xcassets/AppIcon.appiconset/Icon1024.png"
 ICON_NEW = "modern-ios/Assets/AppIcon/Icon1024.png"
@@ -105,12 +114,17 @@ def make_inventory(root: Path) -> dict:
         elif path != INVENTORY:
             content = target.read_bytes()
             item["sha256"] = hashlib.sha256(content).hexdigest()
+            if path in POST_MIGRATION_CHANGES and item["sha256"] != POST_MIGRATION_CHANGES[path]:
+                raise ValueError("unreviewed post-migration source change: " + path)
             if original:
                 old = git("cat-file", "blob", original["gitObject"])
                 if content != old:
-                    if path not in CHANGED:
+                    if path in POST_MIGRATION_CHANGES:
+                        item["disposition"] = "post-migration-adjusted"
+                    elif path not in CHANGED:
                         raise ValueError("unapproved production/source change: " + path)
-                    item["disposition"] = "migration-adjusted"
+                    else:
+                        item["disposition"] = "migration-adjusted"
         if original:
             item["baselinePath"] = origin
             item["baselineGitObject"] = original["gitObject"]

@@ -12,6 +12,11 @@ The exact tested source is `6dc6427d1bdeab1a92987a4a1936235e48b7266b`.
 is still pending.** Publishing source grants neither physical PASS nor release
 approval.
 
+The pending acceptance is continuing with the [build-50 deployment renewal
+candidate](testing/MORRO_SQUEEZE_BUILD50.md). The original build-49 profiles
+expired on 16 September 2026. Build 50 requires fresh signed products and its
+own physical matrix; the historical products and observations remain separate.
+
 ## What a clone contains
 
 - Modern iOS/tvOS host source, shared controls/persistence, native producers,

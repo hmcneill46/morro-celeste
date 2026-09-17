@@ -1,12 +1,15 @@
 """Migration controls use owned synthetic tools; never sign, install or publish."""
 import importlib.util
 import copy
+import hashlib
+import json
 import os
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
 from unittest import mock
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -88,7 +91,8 @@ class ModernGraph(unittest.TestCase):
                 text = project.replace("\\", "/").replace(old, new)
                 with self.subTest(old=old), self.assertRaises(SystemExit):
                     verifier.verify_version_authority(text, authority)
-            for old, new in (("<IOSPortBuildNumber>49", "<IOSPortBuildNumber>0"),
+            build = ET.fromstring(original).findtext(".//IOSPortBuildNumber")
+            for old, new in (("<IOSPortBuildNumber>" + build, "<IOSPortBuildNumber>0"),
                              ("<IOSPortSemanticVersion>0.1.1", "<IOSPortSemanticVersion>unknown"),
                              ("<PropertyGroup>", '<PropertyGroup Condition="false">')):
                 authority.write_text(original.replace(old, new))
@@ -114,6 +118,44 @@ class ModernGraph(unittest.TestCase):
             project.write_text("<Project>CelesteTvOS.ControllerPrompts</Project>")
             with self.assertRaises(SystemExit):
                 verifier.verify_ios_graph(root)
+
+
+class TvOSProvisioning(unittest.TestCase):
+    def test_xcode_receives_modern_and_legacy_udids_without_relaxing_invalid_input(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            scripts = root / "scripts"
+            scripts.mkdir()
+            helper = scripts / "configure-tvos-personal-team.sh"
+            helper.write_bytes((ROOT / "scripts" / helper.name).read_bytes())
+            tools = root / "tools"
+            tools.mkdir()
+            args_file = root / "xcode-arguments.json"
+            xcode = tools / "xcodebuild"
+            xcode.write_text("#!/usr/bin/env python3\nimport json, os, pathlib, sys\n"
+                             "pathlib.Path(os.environ['MORRO_PROVISIONING_TEST_ARGS']).write_text(json.dumps(sys.argv[1:]))\n")
+            xcode.chmod(0o755)
+            env = dict(os.environ, PATH=str(tools) + ":" + os.environ["PATH"],
+                       MORRO_PROVISIONING_TEST_ARGS=str(args_file))
+            def run(device):
+                return subprocess.run(["bash", str(helper), "--team-id", "AAAAAAAAAA",
+                    "--bundle-id", "io.example.owned-provisioning-fixture", "--device-id", device,
+                    "--output", str(root / ".build/tvos-self-build/provisioning"),
+                    "--props-output", str(root / ".build/signing.props")],
+                    env=env, capture_output=True, text=True)
+            for device in ("00000001-0123456789ABCDEF", "0123456789abcdef" * 2 + "01234567"):
+                with self.subTest(device=device):
+                    result = run(device)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    args = json.loads(args_file.read_text())
+                    self.assertEqual(args[args.index("-destination") + 1], "id=" + device)
+                    self.assertTrue((root / ".build/signing.props").is_file())
+                    args_file.unlink()
+            for device in ("", "00000001-0123456789ABCDE", "00000001-0123456789ABCDEG",
+                           "00000001-0123456789ABCDEF-extra", "A" * 32, "A" * 41):
+                with self.subTest(device=device):
+                    self.assertNotEqual(run(device).returncode, 0)
+                    self.assertFalse(args_file.exists())
 
 
 class SourceInventory(unittest.TestCase):
@@ -148,6 +190,19 @@ class SourceInventory(unittest.TestCase):
                     with self.subTest(path=name), self.assertRaises(ValueError):
                         verifier.make_inventory(root)
                     target.write_bytes(original)
+                path = "modern-ios/OwnedFixture.cs"
+                approved = fixtures[path] + b"// reviewed tooling transition\n"
+                (root / path).write_bytes(approved)
+                with mock.patch.object(verifier, "POST_MIGRATION_CHANGES",
+                                       {path: hashlib.sha256(approved).hexdigest()}):
+                    inventory = verifier.make_inventory(root)
+                    row = next(row for row in inventory["files"] if row["path"] == path)
+                    self.assertEqual(row["disposition"], "post-migration-adjusted")
+                    for unreviewed in (approved + b"unreviewed change", fixtures[path]):
+                        (root / path).write_bytes(unreviewed)
+                        with self.assertRaisesRegex(ValueError, "post-migration"):
+                            verifier.make_inventory(root)
+                (root / path).write_bytes(fixtures[path])
                 git("rm", "managed/RequiredFixture.cs")
                 with self.assertRaisesRegex(ValueError, "unapproved baseline omission"):
                     verifier.make_inventory(root)

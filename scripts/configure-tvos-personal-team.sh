@@ -46,7 +46,9 @@ done
 
 [[ "$TEAM_ID" =~ ^[A-Z0-9]{10}$ ]] || { echo "error: --team-id must be a 10-character Apple team identifier" >&2; exit 2; }
 [[ "$BUNDLE_ID" =~ ^[A-Za-z][A-Za-z0-9-]*(\.[A-Za-z0-9-]+)+$ ]] || { echo "error: invalid --bundle-id" >&2; exit 2; }
-[[ "$DEVICE_ID" =~ ^[A-Fa-f0-9-]{32,40}$ ]] || { echo "error: invalid --device-id" >&2; exit 2; }
+# Xcode exposes modern Apple TV UDIDs as 8 hex digits, a dash and 16 hex
+# digits. Older devices retain the 40-hex-digit form.
+[[ "$DEVICE_ID" =~ ^([A-Fa-f0-9]{8}-[A-Fa-f0-9]{16}|[A-Fa-f0-9]{40})$ ]] || { echo "error: invalid --device-id" >&2; exit 2; }
 case "$OUTPUT" in "$REPO_ROOT/.build/tvos-self-build/"*) ;; *) echo "error: helper output must remain below ignored .build/tvos-self-build" >&2; exit 2 ;; esac
 case "$PROPS_OUTPUT" in "$REPO_ROOT/.build/"*|"$REPO_ROOT/tvos/Local.Build.props") ;; *) echo "error: props output must be the normal ignored file or remain below .build" >&2; exit 2 ;; esac
 for tool in xcodebuild python3 git; do command -v "$tool" >/dev/null || { echo "error: missing required existing tool: $tool" >&2; exit 1; }; done

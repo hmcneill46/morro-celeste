@@ -2602,11 +2602,11 @@
     {
       "baselineGitObject": "4c7350510c51b7c1c65e7bfb19fa65dbe9ff309b",
       "baselinePath": "apple-everest/sj-snas-identities-stage25kn.json",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "apple-everest/sj-snas-identities-stage25kn.json",
       "purpose": "Static Everest production authorities, runtime, finite compatibility, fixtures and regression proofs: sj-snas-identities-stage25kn.json",
-      "sha256": "bf8921c5b322fd07263982e02beef0275ae18e0fa72cdd07c2ab640bd181df10"
+      "sha256": "a055126b744c6438e7456a73728848e4d10784d0428a90af7998fb397d5ea75c"
     },
     {
       "baselineGitObject": "fa28a88f2e6b08d719f93fe5c1c19736b9bfb83d",
@@ -3146,7 +3146,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_STATUS.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_STATUS.md",
-      "sha256": "ec83513162dde2eba9fd9e4791798d13fe6cc8c235bbbdff659c31039c82e49c"
+      "sha256": "53410261ea40b452d075d0580bcc38f86ea10b3bf6605905d58d2e19abde00fe"
     },
     {
       "baselineGitObject": "e7c45733a735e0e2d803ce7b2e9f71d71f3d4791",
@@ -3934,6 +3934,13 @@
       "sha256": "fd37122caa046c01267c917b42119327e5487a8ff9b5a03e9ca4763b806b9beb"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/testing/MORRO_SQUEEZE_BUILD50.md",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_SQUEEZE_BUILD50.md",
+      "sha256": "f6acc39f811d882073d81889e2e11d2ee9dab7d7bc37e98f2e7366f978c56ce3"
+    },
+    {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",
       "baselinePath": "global.json",
       "disposition": "retained",
@@ -4692,11 +4699,11 @@
     {
       "baselineGitObject": "bee7084fa1c7ae96f11002ee89ff2c70060927b7",
       "baselinePath": "modern-ios/IOSPortVersion.props",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/IOSPortVersion.props",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSPortVersion.props",
-      "sha256": "46236c451deb28ed322905a25a61d7935fc23b21da19c6813007a431724f25ff"
+      "sha256": "89ab144b95dfaf5bf5242e0448e969c93b2607ddd2d283a668d2d73fe822cbe7"
     },
     {
       "baselineGitObject": "dc85f6d3d6754e6958244c06eb6521808fae6920",
@@ -5203,11 +5210,11 @@
     {
       "baselineGitObject": "004f33a944fe1a8cd3c76897a5501f750d758ab9",
       "baselinePath": "scripts/configure-tvos-personal-team.sh",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/configure-tvos-personal-team.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: configure-tvos-personal-team.sh",
-      "sha256": "8b7c578d88630729bce37c424f651b5c8238c2b706f578541ab4c4075a786655"
+      "sha256": "516293c3ad2f673bed2eee7acf18bdc55b9c9970cbb0900a35a0e63d78c6b812"
     },
     {
       "baselineGitObject": "9a55053c63259817f41975be5303cc88adc11b0d",
@@ -6722,11 +6729,11 @@
     {
       "baselineGitObject": "27563833671ab54872f7bf3a348d4efdf5c7ee1b",
       "baselinePath": "scripts/verify-apple-everest-stage25kn-product-content.py",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "scripts/verify-apple-everest-stage25kn-product-content.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-apple-everest-stage25kn-product-content.py",
-      "sha256": "3f84778961e9530786d6e4a45aa71f9312ac4333c0fb792d81e770557e97f7ec"
+      "sha256": "d5d7ed65356a9d9a37084bce1aa5f816da098d0cc528f625e77bec759ba40a0f"
     },
     {
       "baselineGitObject": "558a48cfa93617a52963a8d9c5196fabe393a736",
@@ -7291,7 +7298,7 @@
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "059e9f75c7a025b34baf23b96074a9a56cf80435b9746f6f8b75eb6097345ce5"
+      "sha256": "b6ff78a083d0dd32656be3ca2a18d4aad0603f8507401d07e02be315cb02c0b9"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7370,7 +7377,7 @@
       "gitMode": "100644",
       "path": "tests/test_morro_migration.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_morro_migration.py",
-      "sha256": "c3c983ff59672c99e0e71a5f22ca433969ea003a27089f1ec634a1f472a422ad"
+      "sha256": "b16b11a358debb7f8117a6388c042ec0af71de81d7d35c94f2e598a0f62515cb"
     },
     {
       "baselineGitObject": "6532b3f42d76dc0fcaa1f5ffc392bd7bbcd86017",
