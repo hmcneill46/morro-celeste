@@ -140,7 +140,7 @@ def verify_obligations(document, occurrences, root=ROOT):
                     if current != source["sha256"]:
                         check(cid in {"CollabUtils2/ChapterPanelTrigger", "CollabUtils2/JournalTrigger"} and
                               source["path"] == "apple-everest/runtime/AppleEverestCollabRuntime.cs" and
-                              current == "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba",
+                              current == "fadd977fbe8e7e520572ccbe0be0b6a4010957eb0ee506e59f8691d8a5f7fa9a",
                               "unreviewed change to accepted semantic implementation")
                     expected_bindings.append({"path": source["path"], "sha256": current})
             check(row["sourceBindings"] == expected_bindings, "accepted source binding omitted or substituted")

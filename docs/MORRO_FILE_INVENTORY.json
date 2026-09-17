@@ -937,11 +937,11 @@
     {
       "baselineGitObject": "f36801c90592adbca34b845a1349aa18c1d34a77",
       "baselinePath": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
       "purpose": "Static Everest production authorities, runtime, finite compatibility, fixtures and regression proofs: AppleEverestCollabRuntime.cs",
-      "sha256": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba"
+      "sha256": "fadd977fbe8e7e520572ccbe0be0b6a4010957eb0ee506e59f8691d8a5f7fa9a"
     },
     {
       "baselineGitObject": "25e62c5026982ab3f7ab4c9cfdc980e1fd8fff21",
@@ -2606,7 +2606,7 @@
       "gitMode": "100644",
       "path": "apple-everest/sj-snas-identities-stage25kn.json",
       "purpose": "Static Everest production authorities, runtime, finite compatibility, fixtures and regression proofs: sj-snas-identities-stage25kn.json",
-      "sha256": "a055126b744c6438e7456a73728848e4d10784d0428a90af7998fb397d5ea75c"
+      "sha256": "f67d5e3f0d26c585e0eeb445138845793c7f574acc52ac057b6d4a3fa6f83f0e"
     },
     {
       "baselineGitObject": "fa28a88f2e6b08d719f93fe5c1c19736b9bfb83d",
@@ -2638,11 +2638,11 @@
     {
       "baselineGitObject": "01ec5eb8f21727548c7b4f9ac340d510bb73e588",
       "baselinePath": "apple-everest/sj-snas-semantics-stage25kn.json",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "apple-everest/sj-snas-semantics-stage25kn.json",
       "purpose": "Static Everest production authorities, runtime, finite compatibility, fixtures and regression proofs: sj-snas-semantics-stage25kn.json",
-      "sha256": "09084533a2b89e7ea0bb17466be734cab7c007fd772b67490dfa45b8dc721dd3"
+      "sha256": "36fd2a83f952d6f82ab8f7968e9251ee72ff24148d2a2feb97e3bae07c6dda12"
     },
     {
       "baselineGitObject": "1eee5a75ea8d58ecf5ab40e4151106915ef7fc56",
@@ -3146,7 +3146,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_STATUS.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_STATUS.md",
-      "sha256": "53410261ea40b452d075d0580bcc38f86ea10b3bf6605905d58d2e19abde00fe"
+      "sha256": "8853158aa2d9988233bbfab6f76606d9de19500963fb5ad78943576abc81bb69"
     },
     {
       "baselineGitObject": "e7c45733a735e0e2d803ce7b2e9f71d71f3d4791",
@@ -3936,6 +3936,13 @@
     {
       "disposition": "migration-added",
       "gitMode": "100644",
+      "path": "docs/testing/MORRO_LOBBY_PAUSE_BUILD51.md",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_LOBBY_PAUSE_BUILD51.md",
+      "sha256": "2a75555491820700da0257543bffbf70ee356bc6988b4b9cb2aa5c83439ac47a"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
       "path": "docs/testing/MORRO_SQUEEZE_BUILD50.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_SQUEEZE_BUILD50.md",
       "sha256": "f6acc39f811d882073d81889e2e11d2ee9dab7d7bc37e98f2e7366f978c56ce3"
@@ -4703,7 +4710,7 @@
       "gitMode": "100644",
       "path": "modern-ios/IOSPortVersion.props",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSPortVersion.props",
-      "sha256": "89ab144b95dfaf5bf5242e0448e969c93b2607ddd2d283a668d2d73fe822cbe7"
+      "sha256": "97a5c6827e25da3ff74bbb45069c3c998eb47a7e2946f2ac3d84ee844c41d22d"
     },
     {
       "baselineGitObject": "dc85f6d3d6754e6958244c06eb6521808fae6920",
@@ -5640,11 +5647,11 @@
     {
       "baselineGitObject": "28a7cb928b0d548e137be61bdf2b2f3cf32594c8",
       "baselinePath": "scripts/preflight-apple-everest-stage25kn.py",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "scripts/preflight-apple-everest-stage25kn.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: preflight-apple-everest-stage25kn.py",
-      "sha256": "2f1d9cb1cf2e69275f72720a51cd4feecbb7b4d0a9d168ffed3a25545c1a70f4"
+      "sha256": "f9d1332c7d06397c1dbb634c8af87e0ac931fae05752235fe469ff960e7ebbca"
     },
     {
       "baselineGitObject": "fca0063490cd00493cfe35b977e5293b3ffdbc9a",
@@ -6077,6 +6084,13 @@
       "path": "scripts/test-cloud-builder-template.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: test-cloud-builder-template.py",
       "sha256": "6b9d466229d2cc152aa971f2f84b907da747f695600b65b895dff4061ba1c7d8"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "scripts/test-morro-collab-pause.py",
+      "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: test-morro-collab-pause.py",
+      "sha256": "72e7a133ec8a257838ebb08ba756dc34cff3eab719a1b2c91391fa0fabf03092"
     },
     {
       "baselineGitObject": "86906212753c4a9b88fe8161acc71e20ad9674f2",
@@ -6733,7 +6747,7 @@
       "gitMode": "100644",
       "path": "scripts/verify-apple-everest-stage25kn-product-content.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-apple-everest-stage25kn-product-content.py",
-      "sha256": "d5d7ed65356a9d9a37084bce1aa5f816da098d0cc528f625e77bec759ba40a0f"
+      "sha256": "a770bc851922e58efb9f3f5ac14d21509b46f50c177a6019fd0fa51bd8c66fe9"
     },
     {
       "baselineGitObject": "558a48cfa93617a52963a8d9c5196fabe393a736",
@@ -7298,7 +7312,7 @@
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "b6ff78a083d0dd32656be3ca2a18d4aad0603f8507401d07e02be315cb02c0b9"
+      "sha256": "153bdb97c104be388bd286f3446100aace7989e34c14e34aa7be766dadd8867e"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7362,6 +7376,13 @@
       "path": "tests/check_native_payload_rejection.py",
       "purpose": "Owned portable negative and regression controls for current tooling: check_native_payload_rejection.py",
       "sha256": "e575bae018bb76e507d0a482ced45d29aee18c471ea1f29f6bcac932c174253a"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/fixtures/CollabPauseFixture.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: CollabPauseFixture.cs",
+      "sha256": "478680c0429f308773d9a417316ed2a1437caf4dd68bdef66b6064266cba0e33"
     },
     {
       "baselineGitObject": "76b636b5043cd9c6d2097af28e50da86d8ffabc4",
@@ -7481,11 +7502,11 @@
     {
       "baselineGitObject": "d78a76d682d52d57e21dd16b9427f22669eda398",
       "baselinePath": "tools/AppleEverestBuilder/ClosureGenerator.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tools/AppleEverestBuilder/ClosureGenerator.cs",
       "purpose": "Host-only static-AOT generation, closure/type analysis and compiled regression tools: ClosureGenerator.cs",
-      "sha256": "f905679f7a4c1b21c082f48c02a73d84dd6c3e61ee8a49dc5fd4a9ae15165ff3"
+      "sha256": "7fdcc3289040f06063a55144be235f76b321aa6d05660e2133e8db7d858ff0cc"
     },
     {
       "baselineGitObject": "482137c91d636f793f57da23c156b13937138dbb",

@@ -1766,7 +1766,7 @@
       "sourceBindings": [
         {
           "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
-          "sha256": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba"
+          "sha256": "fadd977fbe8e7e520572ccbe0be0b6a4010957eb0ee506e59f8691d8a5f7fa9a"
         }
       ]
     },
@@ -1791,7 +1791,7 @@
       "sourceBindings": [
         {
           "path": "apple-everest/runtime/AppleEverestCollabRuntime.cs",
-          "sha256": "d1b440b2d05ece6515e081e223358f73acf63e7268201aca20001382f4ffe0ba"
+          "sha256": "fadd977fbe8e7e520572ccbe0be0b6a4010957eb0ee506e59f8691d8a5f7fa9a"
         }
       ]
     },
@@ -2535,7 +2535,7 @@
   "generationSourceBindings": [
     {
       "path": "tools/AppleEverestBuilder/ClosureGenerator.cs",
-      "sha256": "f905679f7a4c1b21c082f48c02a73d84dd6c3e61ee8a49dc5fd4a9ae15165ff3"
+      "sha256": "7fdcc3289040f06063a55144be235f76b321aa6d05660e2133e8db7d858ff0cc"
     },
     {
       "path": "tools/AppleEverestBuilder/StaticSemanticLowering.cs",

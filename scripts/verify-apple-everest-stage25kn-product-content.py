@@ -15,7 +15,7 @@ MAPS = {
     "StrawberryJam2021/1-Beginner/snas": "6ad3172d496e8b5b4ce71f1128fe231b162d534419dc823d2af2cea27fc241d9",
 }
 CANONICAL_ASSET_AUTHORITY = "afc1bc9fe0086d802a657b956cc412f6fe2d799e09ac07aab58d4059affcfcb3"
-FROZEN_IDENTITY_AUTHORITY = "a055126b744c6438e7456a73728848e4d10784d0428a90af7998fb397d5ea75c"
+FROZEN_IDENTITY_AUTHORITY = "f67d5e3f0d26c585e0eeb445138845793c7f574acc52ac057b6d4a3fa6f83f0e"
 MANIFEST_IDENTITIES = ("sharedClosureSha256", "managedLogicalSha256", "contentLogicalSha256",
     "registrySha256", "customAudioManifestSha256", "customBankLogicalSetSha256",
     "levelSetProgressionManifestSha256", "collabManifestSha256")
@@ -53,7 +53,7 @@ def verify_authority_version(document, version, build):
 def verify_frozen_readiness(ready, manifest):
     frozen = frozen_authority()
     require(ready["identities"] == frozen["identities"] and ready["census"] == frozen["census"] and
-            ready["contentPlanSha256"] == frozen["contentPlanSha256"], "fresh K-N identities differ from the three-run authority")
+            ready["contentPlanSha256"] == frozen["contentPlanSha256"], "fresh K-N identities differ from the frozen authority")
     for field in MANIFEST_IDENTITIES:
         require(manifest[field] == frozen["identities"][field], "actual closure identity differs: " + field)
     require(logical(ready["gateC"]["authority"]) == frozen["identities"]["semanticLogicalSha256"], "semantic proof content differs from frozen identity")

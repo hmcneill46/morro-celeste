@@ -1097,9 +1097,20 @@ internal static class ClosureGenerator
         "\t\t\tif (SaveQuitDisabled || (player != null && player.StateMachine.State == 18))",
         "\t\t\tif (SaveQuitDisabled || global::Celeste.Mod.AppleEverestStaticRuntime.NonPersistentModSession || (player != null && player.StateMachine.State == 18))");
 
-    private static void PatchCollabPauseMenu(string path) => ReplaceOnce(path,
-        "\t\tif (startIndex > 0)\n\t\t{",
-        "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.AddPauseMenuItem(this, menu);\n\t\tif (startIndex > 0)\n\t\t{");
+    private static void PatchCollabPauseMenu(string path)
+    {
+        ReplaceOnce(path,
+            "\t\tif (startIndex > 0)\n\t\t{",
+            "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.AddPauseMenuItem(this, menu);\n\t\tif (startIndex > 0)\n\t\t{");
+        // Preserve the canonical pause body and its early quick-reset return.
+        // Pinned Everest dispatches CollabUtils2's OnPause after that body.
+        ReplaceOnce(path,
+            "\tpublic void Pause(int startIndex = 0, bool minimal = false, bool quickReset = false)\n\t{",
+            "\tpublic void Pause(int startIndex = 0, bool minimal = false, bool quickReset = false)\n\t{\n" +
+            "\t\tAppleEverestCollabOriginalPause(startIndex, minimal, quickReset);\n" +
+            "\t\tglobal::Celeste.Mod.AppleEverestCollabRuntime.OnPause(this);\n\t}\n\n" +
+            "\tprivate void AppleEverestCollabOriginalPause(int startIndex, bool minimal, bool quickReset)\n\t{");
+    }
 
     private static void PatchCollabOverworldUi(
         string overworldPath, string chapterPanelPath, string chapterSelectPath, string journalPath)

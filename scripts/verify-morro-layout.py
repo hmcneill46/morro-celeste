@@ -11,12 +11,16 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "34c0b933a4cf2252780ec84e5630847809793eab"
 # The original migration rules below remain unchanged. Build 50's deployment
-# renewal is a separate, exact-byte transition; see the build-50 scope report.
+# renewal and build 51's pause cleanup are exact-byte transitions; see their scope reports.
 # This is not a general exemption for changes to these production files.
 POST_MIGRATION_CHANGES = {
-    'modern-ios/IOSPortVersion.props': '89ab144b95dfaf5bf5242e0448e969c93b2607ddd2d283a668d2d73fe822cbe7',
-    'apple-everest/sj-snas-identities-stage25kn.json': 'a055126b744c6438e7456a73728848e4d10784d0428a90af7998fb397d5ea75c',
-    'scripts/verify-apple-everest-stage25kn-product-content.py': 'd5d7ed65356a9d9a37084bce1aa5f816da098d0cc528f625e77bec759ba40a0f',
+    'tools/AppleEverestBuilder/ClosureGenerator.cs': '7fdcc3289040f06063a55144be235f76b321aa6d05660e2133e8db7d858ff0cc',
+    'scripts/preflight-apple-everest-stage25kn.py': 'f9d1332c7d06397c1dbb634c8af87e0ac931fae05752235fe469ff960e7ebbca',
+    'apple-everest/sj-snas-semantics-stage25kn.json': '36fd2a83f952d6f82ab8f7968e9251ee72ff24148d2a2feb97e3bae07c6dda12',
+    'apple-everest/runtime/AppleEverestCollabRuntime.cs': 'fadd977fbe8e7e520572ccbe0be0b6a4010957eb0ee506e59f8691d8a5f7fa9a',
+    'modern-ios/IOSPortVersion.props': '97a5c6827e25da3ff74bbb45069c3c998eb47a7e2946f2ac3d84ee844c41d22d',
+    'apple-everest/sj-snas-identities-stage25kn.json': 'f67d5e3f0d26c585e0eeb445138845793c7f574acc52ac057b6d4a3fa6f83f0e',
+    'scripts/verify-apple-everest-stage25kn-product-content.py': 'a770bc851922e58efb9f3f5ac14d21509b46f50c177a6019fd0fa51bd8c66fe9',
     'scripts/configure-tvos-personal-team.sh': '516293c3ad2f673bed2eee7acf18bdc55b9c9970cbb0900a35a0e63d78c6b812',
 }
 INVENTORY = "docs/MORRO_FILE_INVENTORY.json"

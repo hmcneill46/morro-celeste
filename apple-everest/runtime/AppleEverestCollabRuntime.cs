@@ -251,6 +251,13 @@ internal static class AppleEverestCollabRuntime
         journal.Pages.Add(new AppleEverestCollabJournalProgress(journal, forcedJournalLevelSet));
     }
 
+    internal static void OnPause(Level level)
+    {
+        // CollabUtils2 closes its wrapped chapter panel/journal after Level.Pause,
+        // including quick reset. Otherwise its renderer remains above the menu.
+        if (overworldWrapper != null) CloseOverworld(level, resetPlayer: true);
+    }
+
     internal static void AddPauseMenuItem(Level level, TextMenu menu)
     {
         string sid = AppleEverestProgressionRuntime.Sid(level.Session.Area);
