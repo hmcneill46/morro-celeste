@@ -1,9 +1,9 @@
-# Build Celeste for Apple TV in the cloud
+# Build Celeste for iPhone, iPad or Apple TV in the cloud
 
-The private GitHub cloud builder compiles the same accepted Celeste tvOS port
-without requiring a Mac for compilation. You provide files you already own in
-your own **private** repository, run one manual workflow, and download a
-verified unsigned IPA.
+The private GitHub cloud builder compiles vanilla Celeste for **iOS, tvOS, or
+both** without requiring your own Mac. iOS produces one app for iPhone and iPad.
+Supply files you own in your own **private** repository, choose the platform,
+run the manual workflow, and download the verified unsigned IPA for each target.
 
 > [!IMPORTANT]
 > Your generated builder repository must be **Private** before you upload
@@ -15,22 +15,25 @@ signing path.
 
 ## Morro source selection
 
-The existing public template below remains pinned to its historical source.
-To build Morro, export a separate private builder with both source-pin authorities updated together:
+The [public template](https://github.com/hmcneill46/celeste-tvos-cloud-builder)
+keeps its existing repository name. The current template pins both vanilla
+builders to Morro commit `cc02b0cc697bd620c0dc864d4af3c60d79a95e85`, which retains
+the locally verified migration product source. It does not build Everest or
+load mods. A cloud build is new product evidence, not physical gameplay acceptance.
+
+To export a private builder from a local Morro checkout instead:
 
 ```sh
 python3 scripts/export-morro-cloud-builder.py \
   --destination ../Morro-Private-Builder \
   --source-repository hmcneill46/morro-celeste \
-  --source-sha 6dc6427d1bdeab1a92987a4a1936235e48b7266b
+  --source-sha cc02b0cc697bd620c0dc864d4af3c60d79a95e85
 ```
 
-This pins the source used for the four successful local migration builds.
-The command creates only the five reviewed template files in a new local directory. It does
-not create a GitHub repository, publish, run Actions, or copy private inputs.
-The chosen SHA must be published at that address before the workflow can fetch
-it. Follow the same private-input and cleanup rules below. The preserved cloud
-lane builds **vanilla tvOS**; iOS and build-49 Everest use the local Morro wrapper.
+The exporter creates six reviewed source files in a new directory and updates
+both source-pin locations together. It does not create a repository, publish,
+run Actions, or copy private inputs. Any replacement SHA must already be
+published in the selected source repository and provide both vanilla builders.
 
 ## What you need
 
@@ -54,18 +57,18 @@ IPA, then run Cleanup. The headings below walk through them in order.
 
 ### 1. Create your private builder repository
 
-For Morro, use the five-file export above. It can be generated on any machine
-with Git and Python 3; a Mac is not needed for this preparation. Create an empty
-**private** GitHub repository under your account and push only that exported
-folder to it. Include its hidden `.github` directory. The exporter updates both
-source-pin locations together and preserves the existing private-input guards.
+Open the [public template](https://github.com/hmcneill46/celeste-tvos-cloud-builder),
+choose **Use this template → Create a new repository**, and select **Private**.
+Alternatively, push only the six-file local export above to an empty private
+repository, including its hidden `.github` directory.
 
-The older [public template](https://github.com/hmcneill46/celeste-tvos-cloud-builder)
-remains a historical route and still targets its original source. Copying that
-template without the Morro export does not build Morro. Never upload Celeste,
-FMOD or IPAs to either public source repository. The Build workflow checks
-repository visibility through GitHub's API and refuses private-input processing
-unless both `private` and `visibility=private` are reported.
+Never upload Celeste, FMOD or IPAs to either public source repository. The Build
+workflow checks GitHub's API and requires both `private=true` and
+`visibility=private` before checkout or private-input processing.
+
+Existing private builders do not automatically receive template updates. Copy
+all six current template files into your builder, preserving its private
+visibility. The input/output Release tags and cleanup scope remain unchanged.
 
 ### 2. Prepare exactly two files
 
@@ -107,34 +110,46 @@ wrong-version inputs.
 ### 4. Run the build
 
 1. Open the repository's **Actions** tab.
-2. Select **Build Celeste for Apple TV**.
-3. Click **Run workflow**, then the green **Run workflow** button.
+2. Select **Build Celeste for Apple platforms**.
+3. Click **Run workflow**, choose `tvos`, `ios`, or `both`, then confirm the run.
 
-The optional bundle identifier has a safe default for an unsigned build; most
-users should leave it unchanged. The workflow runs only when manually started,
-serializes concurrent build/cleanup work, and has a two-hour timeout.
+Each platform has an optional bundle identifier with a default; most users
+should leave both unchanged. `tvos` remains the default target. `both` downloads
+the two inputs once, builds tvOS then iOS sequentially, and publishes only after
+both products pass verification. The workflow runs only when manually started,
+serializes build/cleanup operations, and has a three-hour timeout.
 
-The builder reports eight timed phases. Long native or full-AOT operations
+The existing platform builders report timed phases. Long native or full-AOT operations
 print a heartbeat every 60 seconds with elapsed time and free disk space.
 GitHub groups each phase; seeing another heartbeat means the process is still
-alive. Initial acceptance measured roughly 30–35 minutes without cache and
-about 15 minutes with the verified safe cache, but current runner load and
-GitHub images can change those times.
+alive. Historical tvOS acceptance measured roughly 30–35 minutes without cache and
+about 15 minutes with the verified safe cache. Those timings do not predict
+iOS or `both`; runner load and images can also change them. The iOS native
+build currently runs without a cross-run cache.
 
 ### 5. Download the unsigned IPA
 
 After success, the workflow summary links to the private
 `celeste-tvos-output` Release. Download:
 
-`Celeste-tvOS-unsigned.ipa`
+| Selection | Download | Build record |
+| --- | --- | --- |
+| `tvos` | `Celeste-tvOS-unsigned.ipa` | `Celeste-tvOS-build.txt` |
+| `ios` | `Celeste-iOS-unsigned.ipa` | `Celeste-iOS-build.txt` |
+| `both` | Both IPAs above | Both build records |
 
-The Release also contains `Celeste-tvOS-build.txt`, recording the exact public
-source commit, detected game profile, IPA size, and SHA-256. The product is
-Release `tvos-arm64`, fully trimmed, full AOT, and has
-`UseInterpreter=false`.
+Each build record gives the exact public source commit, detected game profile,
+IPA size and SHA-256. Products are Release `tvos-arm64` or `ios-arm64`, fully
+trimmed, full AOT, with `UseInterpreter=false`. The iOS IPA supports both
+arm64 iPhone and iPad devices; it is not a Simulator app.
 
-The IPA is **unsigned and cannot be installed as-is**. Continue with the
-[signing and installation guidance](../README.md#step-4--sign-and-install).
+The IPAs are **unsigned and cannot be installed as-is**. Continue with
+[Apple TV signing](../README.md#step-4--sign-and-install) or
+[iPhone/iPad signing and installation](IOS_BUILDING.md#cloud-build-without-a-mac).
+
+The tags still use `celeste-tvos-` for compatibility with existing builders;
+the output Release can now contain either or both platforms. A draft is
+published only after all expected uploaded assets pass size/digest checks.
 
 ### 6. Remove the private build files
 
@@ -199,8 +214,10 @@ another version will not satisfy validation.
 
 ### The output Release already exists
 
-Download it if needed, run **Clean private build files**, and start Build again.
-The workflow refuses to overwrite an IPA that may not have been downloaded.
+Download it if needed, run **Clean private build files**, and upload the two
+inputs again before starting Build. Cleanup removes inputs as well as outputs.
+The workflow preserves existing published outputs and incomplete output drafts
+instead of overwriting them. A failed upload can leave a draft requiring cleanup.
 
 ### The runner reports too little disk
 
@@ -235,20 +252,24 @@ For more focused remedies, see [Troubleshooting](TROUBLESHOOTING.md).
 - The public template contains only workflow/helper source. Users create a
   separate private repository from it.
 - Build uses manual `workflow_dispatch`, least-privilege `contents: write`, one
-  repository concurrency group, and a 120-minute timeout.
+  repository concurrency group, and a 180-minute timeout.
 - Official `actions/checkout` and `actions/cache` revisions are pinned to full
   immutable commit SHAs.
 - The workflow builds exact public source commit
-  `b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e`, verifies that checkout and its
+  `cc02b0cc697bd620c0dc864d4af3c60d79a95e85`, verifies that checkout and its
   recursive submodules, and never follows a floating branch.
 - The runner is the standard ARM64 `macos-26` image and must match Xcode 26.6,
-  tvOS SDK 26.5, .NET SDK 10.0.302, and workload set 10.0.302.0.
+  iOS/tvOS SDK 26.5, .NET SDK 10.0.302, and workload set 10.0.302.0. Xcode
+  is selected through process-local `DEVELOPER_DIR`; the system selection is
+  unchanged. An ephemeral `global.json` selects the exact SDK before workload
+  setup, even when the runner also includes newer SDKs. The iOS host doctor
+  requires both iOS and tvOS workloads, including for an iOS-only request.
 - ZIP paths, duplicate/case-colliding entries, links, special files, expanded
   size, and extraction containment are checked before the existing exact
   validators run.
 - The only cached paths are `artifacts/tvos-native/self-build` and
   `.build/tvos-host`. Their native logical hash is independently verified after
-  restoration.
+  restoration. They are used only for `tvos` and `both`; iOS has no cloud cache.
 - The output is a private Release, not an Actions artifact. Runner cleanup is
   unconditional, while remote Releases are removed only by the user's explicit
   cleanup workflow.
