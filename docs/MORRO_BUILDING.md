@@ -133,3 +133,6 @@ suite for platform routing and publication failures. The historical Stage 18C
 verifier retains its original tvOS/source scope. Use actionlint for current
 workflow syntax and the exporter's `--check` mode for exact template parity.
 Local controls do not establish a successful hosted build or physical acceptance.
+
+The [Apple cloud-builder acceptance report](testing/MORRO_CLOUD_APPLE_BUILDER.md)
+records the successful hosted `both` run, tested source and exact output identities.

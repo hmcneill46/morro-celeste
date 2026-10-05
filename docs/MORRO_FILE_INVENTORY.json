@@ -3108,7 +3108,7 @@
       "gitMode": "100644",
       "path": "docs/CLOUD_BUILDING.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: CLOUD_BUILDING.md",
-      "sha256": "3cc2b6729b9755fe5a9619bc48f45868cb5a9cce3ba0272200b7c6eb57ad40e1"
+      "sha256": "f795a3f6e8651ecf7e25214e2b74cdeedea402697b97c2a1c3f6a1edb39579e5"
     },
     {
       "baselineGitObject": "9528e37feb173a3438f04339577eee81b83cb0de",
@@ -3133,7 +3133,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_BUILDING.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_BUILDING.md",
-      "sha256": "2fae9497a85ec87d5211f67f151c4f673b61f2524bbe5682b934685519680448"
+      "sha256": "905b72b256b26b426e10d94dac0df0b23589e0bc132ad301afc54445f1612331"
     },
     {
       "disposition": "migration-added",
@@ -3939,6 +3939,13 @@
       "path": "docs/testing/APPLE_EVEREST_STAGE25KL_DEVICE_CHECKLIST.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: APPLE_EVEREST_STAGE25KL_DEVICE_CHECKLIST.md",
       "sha256": "fd37122caa046c01267c917b42119327e5487a8ff9b5a03e9ca4763b806b9beb"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/testing/MORRO_CLOUD_APPLE_BUILDER.md",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_CLOUD_APPLE_BUILDER.md",
+      "sha256": "e7b9735fa9b2444491bfbaa0b2bfacd53f920844276f7f2aca929b78adc14da8"
     },
     {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",

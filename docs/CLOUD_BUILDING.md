@@ -278,3 +278,5 @@ For more focused remedies, see [Troubleshooting](TROUBLESHOOTING.md).
   cloud build, and deliberately publishing the synchronized template.
 
 </details>
+
+Maintainer evidence: [hosted iOS/tvOS acceptance and product identities](testing/MORRO_CLOUD_APPLE_BUILDER.md).
