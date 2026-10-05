@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export the existing private tvOS builder bound to an explicit published revision."""
+"""Export the private Apple builder bound to an explicit published revision."""
 from __future__ import annotations
 
 import argparse
@@ -9,9 +9,9 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ("README.md", ".github/workflows/build.yml", ".github/workflows/cleanup.yml",
-         "scripts/cloud-common.sh", "scripts/prepare-inputs.py")
-OLD_REPOSITORY = "hmcneill46/celeste-ios"
-OLD_REVISION = "b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e"
+         "scripts/cloud-common.sh", "scripts/prepare-inputs.py", "scripts/build-products.py")
+OLD_REPOSITORY = "hmcneill46/morro-celeste"
+OLD_REVISION = "cc02b0cc697bd620c0dc864d4af3c60d79a95e85"
 
 
 def render(template: Path, repository: str, revision: str) -> dict[str, bytes]:
@@ -69,7 +69,7 @@ def main() -> int:
     outputs = render(ROOT / "cloud-builder-template", args.source_repository, args.source_sha)
     subprocess.run(["git", "cat-file", "-e", args.source_sha + "^{commit}"], cwd=ROOT, check=True)
     export(args.destination, outputs, args.check)
-    print("PASS: five-file private tvOS builder bound to the explicit source revision")
+    print("PASS: six-file private Apple builder bound to the explicit source revision")
     print("No publication or hosted build performed; the source commit must be reachable there before running Actions.")
     return 0
 

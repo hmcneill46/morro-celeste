@@ -122,7 +122,7 @@
       "gitMode": "100644",
       "path": "README.md",
       "purpose": "Morro overview, supported build routes, attribution and Cabrillo link",
-      "sha256": "ff1373c0f6038640829b81352f0e8a3551e3d40743d10fb7109e6d58097606e2"
+      "sha256": "875def27dba5b865b39260bf42baebeaec36d956352c464b73630d067821bac1"
     },
     {
       "baselineGitObject": "811851fa76c885341aaa54e9ccc6a138db63ded8",
@@ -2989,11 +2989,11 @@
     {
       "baselineGitObject": "58d1fbff3e12611f4948b1b6a3e646d825a59e0e",
       "baselinePath": "cloud-builder-template/.github/workflows/build.yml",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "cloud-builder-template/.github/workflows/build.yml",
-      "purpose": "Canonical private vanilla tvOS Actions builder, input/privacy controls and cleanup: build.yml",
-      "sha256": "6e20fc2245c767f8ed12b56425030a46d34a274310daf7e70857bba944e85bd1"
+      "purpose": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup: build.yml",
+      "sha256": "ff95752399d0d4a8c8f5c9a455ef7e8550f7133e57452b22ed8133eaf7aa0e51"
     },
     {
       "baselineGitObject": "8a328c9ab28af69ee36b9e5f36be440085016c17",
@@ -3001,26 +3001,33 @@
       "disposition": "retained",
       "gitMode": "100644",
       "path": "cloud-builder-template/.github/workflows/cleanup.yml",
-      "purpose": "Canonical private vanilla tvOS Actions builder, input/privacy controls and cleanup: cleanup.yml",
+      "purpose": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup: cleanup.yml",
       "sha256": "a5fd01ef43b134ac5bca0d081067782a9e9039376943d6e67d52322d1720e1fe"
     },
     {
       "baselineGitObject": "fb57b3afd187421a7d58cfbfe613dea965bd8c94",
       "baselinePath": "cloud-builder-template/README.md",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "cloud-builder-template/README.md",
-      "purpose": "Canonical private vanilla tvOS Actions builder, input/privacy controls and cleanup: README.md",
-      "sha256": "020240a8ba867ade31cdb3d20b27ec000e3cbda82881480717002f714ea9ad38"
+      "purpose": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup: README.md",
+      "sha256": "a1f5a89c6ff47d1436cf5ed47559335f97a7a74022b08c4e78c30d65215e564c"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100755",
+      "path": "cloud-builder-template/scripts/build-products.py",
+      "purpose": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup: build-products.py",
+      "sha256": "3b9bd576b16efc3fd1bcc998a131a9eb7001249ae3598fe9374a5c623f80c7ae"
     },
     {
       "baselineGitObject": "208883d6000fa46fb4ddad7a579174cecf69cb19",
       "baselinePath": "cloud-builder-template/scripts/cloud-common.sh",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "cloud-builder-template/scripts/cloud-common.sh",
-      "purpose": "Canonical private vanilla tvOS Actions builder, input/privacy controls and cleanup: cloud-common.sh",
-      "sha256": "ecb4d89bfb5ee25887452ae02819e079608152d013dfed11fc3fde132f09e9df"
+      "purpose": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup: cloud-common.sh",
+      "sha256": "7965c6a731944bda0218f4099730d9d72179091aa646595ef87dee45fd2c469d"
     },
     {
       "baselineGitObject": "3a3f4160cfbe333eb3492c0b3218721d5df91631",
@@ -3028,7 +3035,7 @@
       "disposition": "retained",
       "gitMode": "100755",
       "path": "cloud-builder-template/scripts/prepare-inputs.py",
-      "purpose": "Canonical private vanilla tvOS Actions builder, input/privacy controls and cleanup: prepare-inputs.py",
+      "purpose": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup: prepare-inputs.py",
       "sha256": "8dae0f62b6a6e26d37e09fb9c09678d1e108dc68e5f8beb59d0c3ab41617e415"
     },
     {
@@ -3101,7 +3108,7 @@
       "gitMode": "100644",
       "path": "docs/CLOUD_BUILDING.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: CLOUD_BUILDING.md",
-      "sha256": "bfa082b73cc56d26cbd583fda43304667bb240ccfb0611cbbd61cc614e77c924"
+      "sha256": "f795a3f6e8651ecf7e25214e2b74cdeedea402697b97c2a1c3f6a1edb39579e5"
     },
     {
       "baselineGitObject": "9528e37feb173a3438f04339577eee81b83cb0de",
@@ -3110,7 +3117,7 @@
       "gitMode": "100644",
       "path": "docs/IOS_BUILDING.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: IOS_BUILDING.md",
-      "sha256": "66348c6bd24e55696a1a66e71c785fd08b6ee5d428721ce1ba74ab188e19910f"
+      "sha256": "54a6e757b0549d79b51756c0762dfbcd1662a01ec570c3d79f3ed55e2d4f209e"
     },
     {
       "baselineGitObject": "db53323b8f61b4c9f9afe32ba6a627ebb36727e1",
@@ -3126,7 +3133,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_BUILDING.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_BUILDING.md",
-      "sha256": "7d1ec80d604370ff50b40ad576521ad836b38ae520741ec6561995bd4e137a0f"
+      "sha256": "905b72b256b26b426e10d94dac0df0b23589e0bc132ad301afc54445f1612331"
     },
     {
       "disposition": "migration-added",
@@ -3932,6 +3939,13 @@
       "path": "docs/testing/APPLE_EVEREST_STAGE25KL_DEVICE_CHECKLIST.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: APPLE_EVEREST_STAGE25KL_DEVICE_CHECKLIST.md",
       "sha256": "fd37122caa046c01267c917b42119327e5487a8ff9b5a03e9ca4763b806b9beb"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/testing/MORRO_CLOUD_APPLE_BUILDER.md",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_CLOUD_APPLE_BUILDER.md",
+      "sha256": "e7b9735fa9b2444491bfbaa0b2bfacd53f920844276f7f2aca929b78adc14da8"
     },
     {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",
@@ -5230,18 +5244,18 @@
     {
       "baselineGitObject": "b74643a833ccb0aad28fe4d91a0e7a91c66e31fe",
       "baselinePath": "scripts/export-cloud-builder-template.sh",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/export-cloud-builder-template.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: export-cloud-builder-template.sh",
-      "sha256": "46fe43b025086ffbb7cd3023d203c1ffb573bbc8f46d66a55a5fd6b8668508b9"
+      "sha256": "8dc33a74566c5518cee11570c0a001821429183d6d82e237f8a76921b9be862a"
     },
     {
       "disposition": "migration-added",
       "gitMode": "100755",
       "path": "scripts/export-morro-cloud-builder.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: export-morro-cloud-builder.py",
-      "sha256": "a134313adc9b2e6f262301ced235db7683309b92fd7ef2e2a4f3568c9ebf5189"
+      "sha256": "5e57547ef9d4569cc7d57567ad025ba13c6c6c4cb75adf91f0ba4bee3bf7c77c"
     },
     {
       "baselineGitObject": "f48873c06d77375d77c752c59ed9ef4eebd5a1d7",
@@ -7291,7 +7305,7 @@
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "059e9f75c7a025b34baf23b96074a9a56cf80435b9746f6f8b75eb6097345ce5"
+      "sha256": "d21ef721d61e4b9ee427d4f1b686c1df82c5fbb387f5d7deadac6a3c91d8ac23"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7364,6 +7378,13 @@
       "path": "tests/test_apple_aot_host_verification.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_apple_aot_host_verification.py",
       "sha256": "b83bf3096cb4daf03d00447c4900b0ab3eee3de931211480ec638a16582de11e"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/test_cloud_products.py",
+      "purpose": "Owned portable negative and regression controls for current tooling: test_cloud_products.py",
+      "sha256": "1d675d60616cb918f55e33f9b6cdc161b9ae5a9f7778f9eae486cb527b6426ad"
     },
     {
       "disposition": "migration-added",

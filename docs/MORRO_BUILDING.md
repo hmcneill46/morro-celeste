@@ -118,15 +118,21 @@ The existing `scripts/regress-apple-everest-stage25kn.py` runs the complete
 current host suite with an owned fresh output root. It does not replace final
 linked-product verification or device observations.
 
-The existing private **vanilla tvOS** GitHub builder and its cleanup/privacy
-controls remain under `cloud-builder-template/`. Export for a published Morro
-revision using `scripts/export-morro-cloud-builder.py`; it binds an explicit
-public repository and immutable source SHA instead of silently building the old
-repository. Its exact private inputs, permissions, Xcode/workload checks,
-safe-cache restrictions and product verification are preserved. See
-[cloud building](CLOUD_BUILDING.md). The template does not claim an Everest/iOS
-cloud lane. Those products have the tested local commands above.
+The private **vanilla iOS/tvOS** GitHub builder and its cleanup/privacy controls
+live under `cloud-builder-template/`. Choose `ios`, `tvos`, or `both`; `both`
+builds serially and publishes only after both products pass verification.
+Export for another published Morro revision with
+`scripts/export-morro-cloud-builder.py`, which binds the explicit public
+repository and immutable source SHA in both locations. See
+[cloud building](CLOUD_BUILDING.md) for inputs, output names, cleanup and signing.
+Everest continues to use the local commands above.
 
-No hosted Actions run is performed by local migration testing. Workflow syntax,
-export parity, orchestration and negative controls can be tested locally; the
-first remote end-to-end run needs publication and private input setup separately.
+Run `python3 scripts/test-cloud-builder-template.py` for the retained input,
+privacy, cleanup and cache controls, and the `tests/test_cloud_products.py`
+suite for platform routing and publication failures. The historical Stage 18C
+verifier retains its original tvOS/source scope. Use actionlint for current
+workflow syntax and the exporter's `--check` mode for exact template parity.
+Local controls do not establish a successful hosted build or physical acceptance.
+
+The [Apple cloud-builder acceptance report](testing/MORRO_CLOUD_APPLE_BUILDER.md)
+records the successful hosted `both` run, tested source and exact output identities.

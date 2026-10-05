@@ -59,8 +59,9 @@ supply both from your own accounts; the builders validate them locally.
 
 Both products accept the same [nine exact Celeste 1.4.0.0 FNA
 profiles](docs/CELESTE_INPUTS.md). The pinned device build path supports Intel x86_64 and Apple silicon arm64
-macOS hosts. Unsigned compilation requires no connected device. The Apple TV
-product additionally has the private unsigned cloud compilation route.
+macOS hosts. Unsigned compilation requires no connected device. Both products
+can also be built with the [private GitHub cloud builder](docs/CLOUD_BUILDING.md):
+choose `tvos`, `ios` (iPhone and iPad), or `both` to download unsigned IPAs.
 
 ## Apple TV start here
 

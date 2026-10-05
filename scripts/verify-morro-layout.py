@@ -10,6 +10,14 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "34c0b933a4cf2252780ec84e5630847809793eab"
+# Exact reviewed cloud-orchestration changes; original game/native authorities
+# and historical stage verifiers retain their existing scope.
+POST_MIGRATION_CHANGES = {
+    'cloud-builder-template/.github/workflows/build.yml': 'ff95752399d0d4a8c8f5c9a455ef7e8550f7133e57452b22ed8133eaf7aa0e51',
+    'cloud-builder-template/README.md': 'a1f5a89c6ff47d1436cf5ed47559335f97a7a74022b08c4e78c30d65215e564c',
+    'cloud-builder-template/scripts/cloud-common.sh': '7965c6a731944bda0218f4099730d9d72179091aa646595ef87dee45fd2c469d',
+    'scripts/export-cloud-builder-template.sh': '8dc33a74566c5518cee11570c0a001821429183d6d82e237f8a76921b9be862a',
+}
 INVENTORY = "docs/MORRO_FILE_INVENTORY.json"
 ICON_OLD = "celestemeow/Assets.xcassets/AppIcon.appiconset/Icon1024.png"
 ICON_NEW = "modern-ios/Assets/AppIcon/Icon1024.png"
@@ -37,7 +45,7 @@ PURPOSES = {
     "tools": "Host-only static-AOT generation, closure/type analysis and compiled regression tools",
     "tests": "Owned portable negative and regression controls for current tooling",
     "scripts": "Preparation, build, verification, reproduction, deployment or historical regression entry point",
-    "cloud-builder-template": "Canonical private vanilla tvOS Actions builder, input/privacy controls and cleanup",
+    "cloud-builder-template": "Canonical private vanilla iOS/tvOS Actions builder, input/privacy controls and cleanup",
     "docs": "Modern project guidance, architecture, acceptance history or immutable historical evidence",
     ".github": "Source contribution and issue-reporting templates; no root push workflow",
     ".config": "Pinned host-only decompiler tool manifest",
@@ -105,12 +113,17 @@ def make_inventory(root: Path) -> dict:
         elif path != INVENTORY:
             content = target.read_bytes()
             item["sha256"] = hashlib.sha256(content).hexdigest()
+            if path in POST_MIGRATION_CHANGES and item["sha256"] != POST_MIGRATION_CHANGES[path]:
+                raise ValueError("unreviewed post-migration source change: " + path)
             if original:
                 old = git("cat-file", "blob", original["gitObject"])
                 if content != old:
-                    if path not in CHANGED:
+                    if path in POST_MIGRATION_CHANGES:
+                        item["disposition"] = "post-migration-adjusted"
+                    elif path not in CHANGED:
                         raise ValueError("unapproved production/source change: " + path)
-                    item["disposition"] = "migration-adjusted"
+                    else:
+                        item["disposition"] = "migration-adjusted"
         if original:
             item["baselinePath"] = origin
             item["baselineGitObject"] = original["gitObject"]

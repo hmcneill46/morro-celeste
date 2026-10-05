@@ -12,6 +12,7 @@ readonly TEMPLATE_FILES=(
   .github/workflows/cleanup.yml
   scripts/cloud-common.sh
   scripts/prepare-inputs.py
+  scripts/build-products.py
 )
 
 usage() {
@@ -21,7 +22,7 @@ Usage: scripts/export-cloud-builder-template.sh --export TARGET
 
 Export or compare the tracked canonical cloud-builder template. TARGET may be
 an empty directory or an existing clone dedicated to the template. The export
-overwrites only the five allow-listed template files; it does not initialise a
+overwrites only the six allow-listed template files; it does not initialise a
 Git repository, push, copy build inputs, or remove unrelated paths.
 EOF
 }
@@ -49,7 +50,7 @@ if [[ "$MODE" == --export ]]; then
     mkdir -p "$TARGET/$(dirname -- "$relative")"
     cp "$SOURCE_ROOT/$relative" "$TARGET/$relative"
   done
-  chmod +x "$TARGET/scripts/cloud-common.sh" "$TARGET/scripts/prepare-inputs.py"
+  chmod +x "$TARGET/scripts/cloud-common.sh" "$TARGET/scripts/prepare-inputs.py" "$TARGET/scripts/build-products.py"
   printf 'Exported %d canonical cloud-builder files to %s\n' "${#TEMPLATE_FILES[@]}" "$TARGET"
   exit 0
 fi

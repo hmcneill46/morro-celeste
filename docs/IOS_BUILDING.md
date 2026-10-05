@@ -8,6 +8,24 @@ Files import/export.
 This is an unofficial personal self-build. The repository contains no Celeste
 game files or FMOD SDK files and does not download either one for you.
 
+## Cloud build without a Mac
+
+The [private GitHub cloud builder](CLOUD_BUILDING.md) can compile vanilla Celeste
+for iPhone and iPad. Choose `ios` in **Build Celeste for Apple platforms**, or
+`both` to also build Apple TV. Supply the same Celeste ZIP and official FMOD
+DMG once; download `Celeste-iOS-unsigned.ipa` and `Celeste-iOS-build.txt` from
+the private output Release. No Apple signing credentials are used in the cloud.
+
+The cloud IPA must still be signed and installed with an iOS-capable signing
+tool and appropriate provisioning. It cannot be installed directly while
+unsigned. Keep the final bundle identifier stable for replacement installs
+and export saves before changing app identity or uninstalling. The local
+`build-ios.sh --signed` route below builds and signs from source; it does not
+re-sign an arbitrary downloaded IPA. The cloud workflow's product checks are
+separate from testing that signed app on your device.
+
+The rest of this guide covers local compilation, signing and device use.
+
 ## What you need
 
 - An Intel or Apple-silicon Mac running the toolchain checked by the builder:
