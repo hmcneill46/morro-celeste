@@ -47,7 +47,12 @@ The current Save Manager verifier binds both exact historical release commits
 to source ancestry, including in the cloud workflow's intentional no-tags
 checkout. A present release tag must still resolve to its exact expected commit;
 missing objects, unrelated ancestry and wrong tags fail. No remote ref changes
-or release-identity substitutions are involved.
+or release-identity substitutions are involved. The current Save Manager cloud-template checks
+remain exact and bind the accepted Morro export
+`cc02b0cc697bd620c0dc864d4af3c60d79a95e85`, matching both template files
+introduced by the shared iOS/tvOS cloud workflow. The historical RC1/RC2
+release-object and ancestry checks are unchanged; the original RC2 cloud pin
+is retained in historical verifier versions, not imposed on the current template.
 The public documentation check recognizes Morro's heading and additionally
 requires its building, migration and credits documents. The original archive checksum record and exact
 historical verifier versions remain in Git history; old manual stage commands

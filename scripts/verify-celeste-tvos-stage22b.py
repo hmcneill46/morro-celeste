@@ -16,7 +16,7 @@ import zipfile
 START_COMMIT = "4c07843d8b8069be00aba3626b58f6053299bdaa"
 RC1_COMMIT = "ee52b0868df091746f134d95d4f020f94f23d4fb"
 RC2_COMMIT = "641e86e4ed164cdf93f602ce2f11436449654d6e"
-CLOUD_PRODUCT_SOURCE = "b5f2ec2fdd5c65c533d86aae750ee60dcaf5009e"
+CLOUD_PRODUCT_SOURCE = "cc02b0cc697bd620c0dc864d4af3c60d79a95e85"
 NATIVE_HASH = "6286e0545b32e9c56732955d4cf816ed8f5dc0d816ab610dd9fe1752090a01fc"
 REPORT = "docs/history/stages/TVOS_SAVE_MANAGER_CONTINUITY_STAGE22B_REPORT.md"
 
@@ -188,9 +188,9 @@ def main() -> int:
     cloud_workflow = (repo / "cloud-builder-template/.github/workflows/build.yml").read_text(encoding="utf-8")
     cloud_common = (repo / "cloud-builder-template/scripts/cloud-common.sh").read_text(encoding="utf-8")
     checks.equal(cloud_workflow.count(f"CLOUD_PUBLIC_SOURCE_SHA: {CLOUD_PRODUCT_SOURCE}"), 1,
-                 "cloud workflow remains pinned to RC2 product source")
+                 "cloud workflow remains pinned to the accepted Morro source export")
     checks.equal(cloud_common.count(f'CLOUD_PUBLIC_SOURCE_SHA="{CLOUD_PRODUCT_SOURCE}"'), 1,
-                 "cloud helper remains pinned to RC2 product source")
+                 "cloud helper remains pinned to the accepted Morro source export")
 
     require_tokens(checks, text["builder"], (
         "verify-save-manager-continuity-source", "verify-stage22b-unsigned", "verify-stage22b-signed",

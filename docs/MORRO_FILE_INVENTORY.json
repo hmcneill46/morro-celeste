@@ -3146,7 +3146,7 @@
       "gitMode": "100644",
       "path": "docs/MORRO_MIGRATION.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_MIGRATION.md",
-      "sha256": "77b5951655096c746252350cd757ac5b8f33cade34dd6e4dea1410c09cdc031b"
+      "sha256": "13d9faad4013092e2953c28af3826681b5c338db7c88b4ce6d5c0da3171918ef"
     },
     {
       "disposition": "migration-added",
@@ -7172,7 +7172,7 @@
       "gitMode": "100755",
       "path": "scripts/verify-celeste-tvos-stage22b.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-celeste-tvos-stage22b.py",
-      "sha256": "7450048e5552e6ed155f9d8a70cffe87e49e513adc0051429c4559e70e1ac5d7"
+      "sha256": "73cf1c632e34143f67bf19c00642a7c86e6a6b15a009b47e7c5d160a5e5cdf0f"
     },
     {
       "baselineGitObject": "895c003590bf5246112ab67cb7999c66eb0cf856",
