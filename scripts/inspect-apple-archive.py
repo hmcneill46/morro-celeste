@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import functools
 import hashlib
 import json
 import os
@@ -24,6 +25,21 @@ MACHO_MAGICS = {
 
 def command(*args: str) -> str:
     return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT).strip()
+
+
+@functools.lru_cache(maxsize=2)
+def inspection_tool(name: str) -> str:
+    """Resolve read-only inspection tools once from the selected Apple tools.
+
+    Keep compiler invocations on their normal path, including any job limiter.
+    Repeated member checks need neither that wrapper nor another xcrun process.
+    """
+    if name not in ("vtool", "lipo"):
+        raise ValueError(f"not an archive inspection tool: {name}")
+    path = command("/usr/bin/xcrun", "--find", name)
+    if not pathlib.Path(path).is_absolute():
+        raise ValueError(f"xcrun returned a non-absolute path for {name}: {path!r}")
+    return path
 
 
 def archive_members(data: bytes):
@@ -71,11 +87,11 @@ def inspect_member(
     elif payload[:4] in MACHO_MAGICS:
         member = work / f"{architecture}-{index}.o"
         member.write_bytes(payload)
-        vtool = command("xcrun", "vtool", "-show-build", str(member))
+        vtool = command(inspection_tool("vtool"), "-show-build", str(member))
         platform = re.search(r"^\s*platform\s+(\S+)", vtool, re.MULTILINE)
         minos = re.search(r"^\s*minos\s+(\S+)", vtool, re.MULTILINE)
         sdk = re.search(r"^\s*sdk\s+(\S+)", vtool, re.MULTILINE)
-        member_archs = command("xcrun", "lipo", "-archs", str(member)).split()
+        member_archs = command(inspection_tool("lipo"), "-archs", str(member)).split()
         record.update(
             {
                 "type": "mach-o",
@@ -108,7 +124,11 @@ def main() -> int:
     args = parser.parse_args()
 
     archive = args.archive.resolve()
-    architectures = command("xcrun", "lipo", "-archs", str(archive)).split()
+    # Resolve before starting the inspection pool, avoiding duplicate lookups
+    # and inheriting the caller's DEVELOPER_DIR without touching global settings.
+    inspection_tool("vtool")
+    lipo = inspection_tool("lipo")
+    architectures = command(lipo, "-archs", str(archive)).split()
     if not architectures:
         raise SystemExit(f"no architectures reported for {archive}")
 
@@ -121,7 +141,7 @@ def main() -> int:
                 thin.write_bytes(archive.read_bytes())
             else:
                 subprocess.check_call(
-                    ["xcrun", "lipo", str(archive), "-thin", architecture, "-output", str(thin)]
+                    [lipo, str(archive), "-thin", architecture, "-output", str(thin)]
                 )
             slices.append(
                 {

@@ -5145,11 +5145,11 @@
     {
       "baselineGitObject": "0472d5d41cb2c066bd3cdc67189710a0cf63e4c1",
       "baselinePath": "scripts/celeste-stage3b.py",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/celeste-stage3b.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: celeste-stage3b.py",
-      "sha256": "f8b9129c5a160252153ae0d60f69c01bd700839e7b3d75ff52b810d0085b2e8f"
+      "sha256": "94995b31edfefc63d0746d047760d1b731d5720ee182b7b6bebe53420cf04f5a"
     },
     {
       "baselineGitObject": "7b512035f6248eea0f3b65a335a54f8654edead6",
@@ -5611,11 +5611,11 @@
     {
       "baselineGitObject": "5c1918c18f76389511f315bc8a899ccb64c1e6d5",
       "baselinePath": "scripts/inspect-apple-archive.py",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/inspect-apple-archive.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: inspect-apple-archive.py",
-      "sha256": "a32a9050074cd24710d1be88f1ac5f7b9e14d05a6e4e28d4197c023b896bda02"
+      "sha256": "500e606643e7889e7116755730acdd9e0865d4626fc7f76c8381f9aa9b206a5c"
     },
     {
       "baselineGitObject": "ca2a3e85aa9f43f8ae657777ad051cd11ea99ded",
@@ -7305,7 +7305,7 @@
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "d21ef721d61e4b9ee427d4f1b686c1df82c5fbb387f5d7deadac6a3c91d8ac23"
+      "sha256": "1b9391ab698e8f48712bc5d12bd6682cf10e30760ffd8e8cae8525cc1953a5e3"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7412,6 +7412,13 @@
       "sha256": "3b3b13543dc1c4d66079c1872b614dcec9def5b2868b60c4960fa1f779868d37"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/test_native_archive_inspection.py",
+      "purpose": "Owned portable negative and regression controls for current tooling: test_native_archive_inspection.py",
+      "sha256": "f8bd541ef07bcb3e90924a9c9391dd31f4c121091b71570d17640d60d216e61a"
+    },
+    {
       "baselineGitObject": "24e4b86c06c97b0b2635934c722b79cb41eb26da",
       "baselinePath": "tests/test_native_symbol_streams.py",
       "disposition": "retained",
@@ -7428,6 +7435,13 @@
       "path": "tests/test_stage25km_audit.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_stage25km_audit.py",
       "sha256": "42377c993403e4675f7d8f84fbb24b53edf448b4fadc1c6e584258a9419a99c2"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/test_stage3b_content_copy.py",
+      "purpose": "Owned portable negative and regression controls for current tooling: test_stage3b_content_copy.py",
+      "sha256": "1eb4202f9152d577f9e4e774e72f27f5911f4551764f8d87c38bb254d4c1ea41"
     },
     {
       "baselineGitObject": "55e58772605ba311674cdc2d509d409b8713ec6c",

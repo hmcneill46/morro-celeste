@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
+import functools
 import hashlib
 import json
 import os
@@ -11,6 +13,7 @@ import pathlib
 import re
 import shutil
 import subprocess
+import sys
 from typing import Any, Iterable
 
 
@@ -261,8 +264,28 @@ def cmd_transform(args: argparse.Namespace) -> None:
     print("centralized 490 FMOD fail-fast guards; installed explicit no-audio and Settings paths")
 
 
+@functools.lru_cache(maxsize=1)
+def _get_clonefile():
+    """Resolve the optional macOS clone primitive once per staging process."""
+    if sys.platform != "darwin":
+        return None
+    try:
+        clonefile = ctypes.CDLL(None, use_errno=True).clonefile
+    except (AttributeError, OSError):
+        return None
+    clonefile.argtypes = (ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int)
+    clonefile.restype = ctypes.c_int
+    return clonefile
+
+
 def clone_or_copy(source: pathlib.Path, destination: pathlib.Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
+    # clonefile is atomic and requires an absent destination. Avoid a cp process
+    # per asset on APFS; retain the existing cp/copyfile path for all failures,
+    # including unsupported volumes, existing destinations and older hosts.
+    clonefile = _get_clonefile()
+    if clonefile is not None and clonefile(os.fsencode(source), os.fsencode(destination), 0) == 0:
+        return
     result = subprocess.run(["cp", "-c", str(source), str(destination)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if result.returncode != 0:
         shutil.copyfile(source, destination)

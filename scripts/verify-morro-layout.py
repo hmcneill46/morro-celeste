@@ -10,9 +10,11 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "34c0b933a4cf2252780ec84e5630847809793eab"
-# Exact reviewed cloud-orchestration changes; original game/native authorities
+# Exact reviewed orchestration and build-tool optimizations; game/native authorities
 # and historical stage verifiers retain their existing scope.
 POST_MIGRATION_CHANGES = {
+    'scripts/celeste-stage3b.py': '94995b31edfefc63d0746d047760d1b731d5720ee182b7b6bebe53420cf04f5a',
+    'scripts/inspect-apple-archive.py': '500e606643e7889e7116755730acdd9e0865d4626fc7f76c8381f9aa9b206a5c',
     'cloud-builder-template/.github/workflows/build.yml': 'ff95752399d0d4a8c8f5c9a455ef7e8550f7133e57452b22ed8133eaf7aa0e51',
     'cloud-builder-template/README.md': 'a1f5a89c6ff47d1436cf5ed47559335f97a7a74022b08c4e78c30d65215e564c',
     'cloud-builder-template/scripts/cloud-common.sh': '7965c6a731944bda0218f4099730d9d72179091aa646595ef87dee45fd2c469d',
