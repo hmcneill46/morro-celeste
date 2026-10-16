@@ -10,9 +10,18 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "34c0b933a4cf2252780ec84e5630847809793eab"
-# Exact reviewed orchestration and build-tool optimizations; game/native authorities
-# and historical stage verifiers retain their existing scope.
+# Exact reviewed tooling and vanilla achievement host/package integration.
+# Canonical generated game/native authorities and historical stage verifiers
+# retain their existing scope; achievements use a separate derived product.
 POST_MIGRATION_CHANGES = {
+    'build-ios.sh': '4eb22dc1ac67d92c0fb8d7030e301f42d7146d71ae58bb5b2e026e328053b6a6',
+    'build-tvos.sh': '278ca1e4735d7cf4e42488098fe95a06c8096ff7a1e49697b6ecefffc58f736f',
+    'scripts/build-ios-celeste.sh': '3b5a6a9cf09a501c22f6c678f851d8327539766d5e4d5137bcd9162f51eea179',
+    'scripts/verify-ios-package.py': '148f4043e1513a6b7795fa3d9e8d12464e87a3080a2ae42a5c0bce311470a21f',
+    'modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj': 'd22774176aa2274ae5c7c4cbb0020a31d3aa969b74f4735443c410df199ae6d6',
+    'modern-ios/CelesteIOSRuntimeHost/Program.cs': 'a095984a9c5d7ed95a9514da28bf706e6031675614aafb2a9c555f0f0c279e0e',
+    'tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj': 'ab3af8e1119ee2dddc97e8724ecf5ae1556e0060967c9534e8f1497cab4511c2',
+    'tvos/CelesteTvOSRuntimeHost/Main.cs': 'c0aa3c71b2dcb55ac4d475ba28c4d6bef45d6e3c2e0b92ca7baf6b032693a53b',
     'scripts/celeste-stage3b.py': '94995b31edfefc63d0746d047760d1b731d5720ee182b7b6bebe53420cf04f5a',
     'scripts/inspect-apple-archive.py': '500e606643e7889e7116755730acdd9e0865d4626fc7f76c8381f9aa9b206a5c',
     'cloud-builder-template/.github/workflows/build.yml': 'ff95752399d0d4a8c8f5c9a455ef7e8550f7133e57452b22ed8133eaf7aa0e51',

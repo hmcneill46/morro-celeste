@@ -454,7 +454,7 @@ ui_phase_success
 begin_phase 7 "Verifying and promoting the package"
 APP="$(find "$WORK_OUTPUT/publish" -maxdepth 1 -type d -name '*.app' -print -quit)"
 [[ -n "$APP" && -d "$APP" ]] || stop_build "The full-AOT build produced no app bundle." "Inspect artifacts/ios/logs/build-ios-product.log."
-run_logged verify-ios-final python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$APP" --lane device --product celeste --signing "$SIGNING" --output "$WORK_OUTPUT/final-package-verification.json"
+run_logged verify-ios-final python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$APP" --lane device --product celeste --signing "$SIGNING" --morro-achievements --output "$WORK_OUTPUT/final-package-verification.json"
 run_logged verify-ipa-zip unzip -tq "$WORK_OUTPUT/Celeste-modern-iOS.ipa"
 suffix=development; [[ "$SIGNING" == unsigned ]] && suffix=unsigned
 FINAL_IPA="$OUTPUT_ROOT/Celeste-iOS-v$VERSION-build$BUILD_NUMBER-$suffix.ipa"

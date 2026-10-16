@@ -46,6 +46,9 @@ internal static class Program
             IOSCelesteRuntimeContext.Prepare();
             using IOSCelesteLifecycle lifecycle = new();
             using IOSFilePortabilityCoordinator filePortability = new();
+#if MORRO_VANILLA_ACHIEVEMENTS
+            using Morro.Achievements.AppleAchievementStorage achievements = new("production");
+#endif
             RuntimeLog.Info("celeste-run-loop-enter; fna-game-count=1; celeste-runtime-count=1; fmod-owner=Celeste");
             global::Celeste.Celeste.Run(Array.Empty<string>());
             AppleRuntimeBridge.ThrowIfFatal();

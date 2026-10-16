@@ -4,7 +4,9 @@ set -euo pipefail
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 REPO_ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)"
 PROJECT="$REPO_ROOT/modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj"
+MORRO_ACHIEVEMENT_ROOT="$REPO_ROOT/.build/morro-achievements/ios/current"
 OUTPUT_DIR="$REPO_ROOT/artifacts/ios-celeste/device"
+export MSBUILDDISABLENODEREUSE=1 DOTNET_CLI_USE_MSBUILD_SERVER=0
 CLEAN=0
 VERBOSE=0
 SIGNING=development
@@ -100,6 +102,14 @@ fi
 mkdir -p "$OUTPUT_DIR/logs"
 touch "$OUTPUT_DIR/$MARKER"
 
+# Preserve the checked historical tree; only the public vanilla product consumes
+# this final derived stage. Static Everest supplies its own source root directly.
+python3 "$REPO_ROOT/scripts/prepare-morro-achievements.py" --platform ios \
+  --source-root "$REPO_ROOT/.build/celeste-ios/current" \
+  --output-root "$MORRO_ACHIEVEMENT_ROOT" --clean
+python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" \
+  --root "$MORRO_ACHIEVEMENT_ROOT" --platform ios
+
 start="$(date +%s)"
 phase() { printf '[%s] %s (elapsed %ss; free %s)\n' "$(date '+%H:%M:%S')" "$1" "$(( $(date +%s)-start ))" "$(df -h "$REPO_ROOT" | awk 'NR==2 {print $4}')"; }
 phase "Publishing canonical Celeste for ios-arm64 (full AOT/trim/LLVM)"
@@ -107,6 +117,7 @@ log="$OUTPUT_DIR/logs/publish.log"
 args=(publish "$PROJECT" -c Release -r ios-arm64 --self-contained true -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false
   -p:IOSProductMode=Celeste -p:EnableFmodDeviceFoundation=true
   -p:CelesteAppleRepoRoot="$REPO_ROOT"
+  -p:CelesteIOSRuntimeRoot="$MORRO_ACHIEVEMENT_ROOT"
   -p:ArchiveOnBuild=false -p:UseInterpreter=false -p:RunAOTCompilation=true
   -p:MtouchLink=Full -p:TrimMode=full -p:MtouchUseLlvm=true -p:PublishTrimmed=true)
 [[ -z "$BUNDLE_ID" ]] || args+=(-p:ApplicationId="$BUNDLE_ID")
@@ -137,19 +148,27 @@ cp -R "$published" "$OUTPUT_DIR/ipa/Payload/"
 (cd "$OUTPUT_DIR/ipa" && /usr/bin/zip -qry "$OUTPUT_DIR/Celeste-modern-iOS.ipa" Payload)
 phase "Verifying package"
 python3 "$REPO_ROOT/scripts/verify-ios-package.py" --app "$published" --lane device --product celeste \
-  --signing "$SIGNING" \
+  --signing "$SIGNING" --morro-achievements \
   --output "$OUTPUT_DIR/package-verification.json"
+python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" \
+  --root "$MORRO_ACHIEVEMENT_ROOT" --platform ios --app "$published"
 
 elapsed="$(( $(date +%s)-start ))"
 python3 - "$OUTPUT_DIR/build-manifest.json" "$OUTPUT_DIR/Celeste-modern-iOS.ipa" "$elapsed" "$SIGNING" \
   "$REPO_ROOT/artifacts/ios-celeste/current/preparation-result.json" \
-  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24e1.json" <<'PY'
+  "$REPO_ROOT/artifacts/ios-celeste/current/ios-managed-stage24e1.json" \
+  "$MORRO_ACHIEVEMENT_ROOT/achievement-manifest.json" <<'PY'
 import hashlib,json,pathlib,sys
 out,ipa,elapsed,signing,prep,managed=pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2]),int(sys.argv[3]),sys.argv[4],pathlib.Path(sys.argv[5]),pathlib.Path(sys.argv[6])
-p=json.loads(prep.read_text()); m=json.loads(managed.read_text())
+p=json.loads(prep.read_text()); m=json.loads(managed.read_text()); achievement_manifest=pathlib.Path(sys.argv[7])
+a=json.loads(achievement_manifest.read_text())
+if a["input"] != m["output"]:
+    raise SystemExit("error: achievement source provenance differs from the validated iOS baseline")
 out.write_text(json.dumps({"schemaVersion":1,"product":"Celeste","rid":"ios-arm64","configuration":"Release",
  "profileId":p["profileId"],"canonicalClass":p["canonicalClass"],"fullAOT":True,"fullTrim":True,
  "useInterpreter":False,"jit":False,"signing":signing,"elapsedSeconds":elapsed,"ipaBytes":ipa.stat().st_size,
- "ipaSha256":hashlib.sha256(ipa.read_bytes()).hexdigest(),"generated":m["output"]},indent=2,sort_keys=True)+"\n")
+ "ipaSha256":hashlib.sha256(ipa.read_bytes()).hexdigest(),"generated":a["output"],"baselineGenerated":m["output"],
+ "achievements":{"feature":a["feature"],"catalogSha256":a["catalogSha256"],"icons":a["icons"],
+ "manifestSha256":hashlib.sha256(achievement_manifest.read_bytes()).hexdigest()}},indent=2,sort_keys=True)+"\n")
 PY
 phase "PASS: modern-iOS Celeste product ($SIGNING)"

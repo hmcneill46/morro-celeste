@@ -80,6 +80,9 @@ internal static class Program
             using SoftReloadCoordinator? softReloadCoordinator = saveManager == null || persistence == null
                 ? null : new SoftReloadCoordinator(persistence, saveManager);
             using QuitCoordinator? quitCoordinator = saveManager == null ? null : new QuitCoordinator(saveManager);
+#if MORRO_VANILLA_ACHIEVEMENTS
+            using Morro.Achievements.AppleAchievementStorage achievements = new(PersistenceNamespace);
+#endif
 #else
             PrepareCelesteRuntimeContext(enablePersistence: false);
 #endif

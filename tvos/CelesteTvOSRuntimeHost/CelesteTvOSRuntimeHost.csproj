@@ -29,6 +29,7 @@
     <CelesteRuntimeRoot Condition="'$(CelesteRuntimeRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\celeste-runtime\stage3c-current</CelesteRuntimeRoot>
     <CelesteRuntimeManagedRoot>$(CelesteRuntimeRoot)\managed</CelesteRuntimeManagedRoot>
     <CelesteRuntimeContentRoot>$(CelesteRuntimeRoot)\content\Content</CelesteRuntimeContentRoot>
+    <MorroVanillaAchievementsEnabled Condition="'$(CelesteRuntimeEnabled)' == 'true' and '$(PersistenceEnabled)' == 'true' and Exists('$(CelesteRuntimeManagedRoot)\Celeste\MorroAchievements.cs') and !Exists('$(CelesteRuntimeManagedRoot)\AppleEverestExternalAssemblyRoots.props')">true</MorroVanillaAchievementsEnabled>
     <FmodDiagnosticStageRoot Condition="'$(FmodDiagnosticStageRoot)' == ''">$(CelesteTvOSRepoRoot)\.build\fmod-tvos\current</FmodDiagnosticStageRoot>
     <FmodNativeEnabled Condition="'$(FmodDiagnosticEnabled)' == 'true' or '$(CelesteAudioEnabled)' == 'true'">true</FmodNativeEnabled>
     <CelesteBrandingEnabled Condition="'$(CelesteBrandingEnabled)' == ''">false</CelesteBrandingEnabled>
@@ -48,6 +49,7 @@
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'CelestePreflight'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_PREFLIGHT</DefineConstants>
     <DefineConstants Condition="'$(CelesteLaunchMode)' == 'Celeste'">$(DefineConstants);CELESTE_RUNTIME;CELESTE_GAME</DefineConstants>
     <DefineConstants Condition="'$(PersistenceEnabled)' == 'true'">$(DefineConstants);TVOS_CELESTE_RUNTIME_HOST</DefineConstants>
+    <DefineConstants Condition="'$(MorroVanillaAchievementsEnabled)' == 'true'">$(DefineConstants);MORRO_VANILLA_ACHIEVEMENTS</DefineConstants>
     <DefineConstants Condition="'$(SaveManagerAutomation)' == 'true'">$(DefineConstants);TVOS_SAVE_MANAGER_AUTOMATION</DefineConstants>
     <DefineConstants Condition="'$(PersistenceEnabled)' == 'true' and '$(PersistenceStorageNamespace)' == 'acceptance'">$(DefineConstants);STAGE6_NAMESPACE_ACCEPTANCE</DefineConstants>
     <DefineConstants Condition="'$(PersistenceEnabled)' == 'true' and '$(PersistenceStorageNamespace)' == 'restart'">$(DefineConstants);STAGE6_NAMESPACE_RESTART</DefineConstants>
@@ -95,6 +97,13 @@
     <BundleResource Include="$(CelesteRuntimeContentRoot)\**\*"
                     LogicalName="Content\%(RecursiveDir)%(Filename)%(Extension)" />
     <TrimmerRootDescriptor Include="CelesteLinker.xml" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MorroVanillaAchievementsEnabled)' == 'true'">
+    <Compile Include="$(CelesteTvOSRepoRoot)\shared\MorroAchievements\AppleAchievementStorage.cs"
+             Link="MorroAchievements\AppleAchievementStorage.cs" />
+    <BundleResource Include="$(CelesteTvOSRepoRoot)\docs\licenses\ACHIEVEMENT_HELPER_LICENSE.txt"
+                    LogicalName="Licenses/AchievementHelper.txt" />
   </ItemGroup>
 
   <!-- Present only in the closed Apple Everest lane. The generated file roots

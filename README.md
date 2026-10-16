@@ -232,6 +232,23 @@ for unsigned-package help.
 - Download/backup, validated replacement, slot deletion, and Settings reset
 - Confirm-driven verified soft reload without restarting the FNA runtime
 
+### In-game achievements
+
+- **Options → Achievements** in vanilla iOS/iPadOS and tvOS, with all 32 original
+  Steam achievements, an illustrated list, progress count, and queued unlock
+  notifications
+- Steam's 30 hidden achievements stay concealed until unlocked or explicitly
+  revealed; revealing details does not unlock anything
+- Progress belongs to this app installation and is stored separately from
+  vanilla saves and Settings; opening the page or selecting a save restores achievements
+  that its recorded progress can establish
+
+Achievement text is initially English. Achievements work without a Steam login
+or an internet connection at runtime. They are not included in ordinary save
+exports and do not survive uninstalling the app. This is a new source feature;
+its build and physical acceptance status is recorded in the
+[vanilla achievements report](docs/testing/MORRO_VANILLA_ACHIEVEMENTS.md).
+
 ### Building
 
 - Local Mac build, signing, and direct install

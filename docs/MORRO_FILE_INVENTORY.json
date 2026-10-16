@@ -86,7 +86,7 @@
       "gitMode": "100644",
       "path": "CREDITS.md",
       "purpose": "Explicit game, original port, runtime, native and mod attribution",
-      "sha256": "a88bf6e7a1755a2b876d4c8cf994ebd383e97df7be690ca11c55e241eae29b3a"
+      "sha256": "f7da0d2a5279ab605cc1064457c276d2afef6fb758e818142b1b306dab909443"
     },
     {
       "baselineGitObject": "d52b4ce61e4086b785c51a96d331dbf106975a58",
@@ -122,7 +122,7 @@
       "gitMode": "100644",
       "path": "README.md",
       "purpose": "Morro overview, supported build routes, attribution and Cabrillo link",
-      "sha256": "875def27dba5b865b39260bf42baebeaec36d956352c464b73630d067821bac1"
+      "sha256": "8ed886eb0ad54bd0097c577b1fff2ab8d5287c0e13c7f0454e2b382fad629f74"
     },
     {
       "baselineGitObject": "811851fa76c885341aaa54e9ccc6a138db63ded8",
@@ -2971,20 +2971,20 @@
     {
       "baselineGitObject": "b0ea6dee2212a4a06b7d8a593a03590941b1ec80",
       "baselinePath": "build-ios.sh",
-      "disposition": "migration-adjusted",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "build-ios.sh",
       "purpose": "Public modern vanilla iOS build entry point",
-      "sha256": "f384a1c656b801cecad1a26d5585f7ce86272d51faee9a21a8487ef7b6dbdfa7"
+      "sha256": "4eb22dc1ac67d92c0fb8d7030e301f42d7146d71ae58bb5b2e026e328053b6a6"
     },
     {
       "baselineGitObject": "aa87b681a01edf159be8bfe6cc223870b46ec706",
       "baselinePath": "build-tvos.sh",
-      "disposition": "migration-adjusted",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "build-tvos.sh",
       "purpose": "Public modern vanilla tvOS build entry point",
-      "sha256": "2e4487b67654b4b831d065c2a5c095e12f6d02a1c729b1d1fda104a95983a55a"
+      "sha256": "278ca1e4735d7cf4e42488098fe95a06c8096ff7a1e49697b6ecefffc58f736f"
     },
     {
       "baselineGitObject": "58d1fbff3e12611f4948b1b6a3e646d825a59e0e",
@@ -3905,6 +3905,13 @@
       "sha256": "c4b6f8d7278f2d7dfefb741d1d6970be90e7a25c926dc2adc93e92893d4b1147"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/licenses/ACHIEVEMENT_HELPER_LICENSE.txt",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: ACHIEVEMENT_HELPER_LICENSE.txt",
+      "sha256": "3574c5f9594a076c317d5560ee3ff8049c17ab5041dd6e5775a674ba9d49977b"
+    },
+    {
       "baselineGitObject": "3301a8d82b4c964703c4481a9e1b5ee5518c87a8",
       "baselinePath": "docs/releases/ios-v0.1.1-rc.1.md",
       "disposition": "retained",
@@ -3946,6 +3953,13 @@
       "path": "docs/testing/MORRO_CLOUD_APPLE_BUILDER.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_CLOUD_APPLE_BUILDER.md",
       "sha256": "e7b9735fa9b2444491bfbaa0b2bfacd53f920844276f7f2aca929b78adc14da8"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "docs/testing/MORRO_VANILLA_ACHIEVEMENTS.md",
+      "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_VANILLA_ACHIEVEMENTS.md",
+      "sha256": "08ad39f41e0eb71377e35aa55831b8d844e9da324e09f5fd9f07db4d19e1a998"
     },
     {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",
@@ -4063,6 +4077,13 @@
       "path": "managed/celeste-stage6-policy.json",
       "purpose": "Canonical source generation, locked game profiles and platform transforms: celeste-stage6-policy.json",
       "sha256": "4c5f165c03dc06f4e7ef26f71d2bf047092c05d662d39a62e9281d27b108f803"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "managed/morro-achievements.json",
+      "purpose": "Canonical source generation, locked game profiles and platform transforms: morro-achievements.json",
+      "sha256": "fd1d44eacab2f4695a1a40dc28078beaa1252c9952188ac292ddd4db571f03ca"
     },
     {
       "baselineGitObject": "13881871589c3319eb62c3d9ca30c44a2f6a3052",
@@ -4207,6 +4228,20 @@
       "path": "managed/templates/IOSTouchControlsUID3.cs",
       "purpose": "Canonical source generation, locked game profiles and platform transforms: IOSTouchControlsUID3.cs",
       "sha256": "1e3877fd0de20a330b47af48311f1fe72e4e53876a086a47ac87bc22b7267859"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "managed/templates/MorroAchievementUI.cs",
+      "purpose": "Canonical source generation, locked game profiles and platform transforms: MorroAchievementUI.cs",
+      "sha256": "90c71242744b8de4dc88caa31ee7bc42a037e2dc4b456c2d44ccbdb8a7098fa1"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "managed/templates/MorroAchievements.cs",
+      "purpose": "Canonical source generation, locked game profiles and platform transforms: MorroAchievements.cs",
+      "sha256": "c3498c958289d40138b78530452e8be07bc96b1719bfef99929755e42758d92f"
     },
     {
       "baselineGitObject": "7126e76af1982ef15a1a3576b4d13ac000954acb",
@@ -4562,11 +4597,11 @@
     {
       "baselineGitObject": "57bcaa7a045f28e278ec88696c8cf05e8a80a61a",
       "baselinePath": "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSRuntimeHost/CelesteIOSRuntimeHost.csproj",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: CelesteIOSRuntimeHost.csproj",
-      "sha256": "69934917d12bcf7cdbc7ab043167f03f6ce2102d6e6164dad1328345ab1196b8"
+      "sha256": "d22774176aa2274ae5c7c4cbb0020a31d3aa969b74f4735443c410df199ae6d6"
     },
     {
       "baselineGitObject": "121572cb7768e8347784c96ea347f4990cb5d009",
@@ -4661,11 +4696,11 @@
     {
       "baselineGitObject": "43dcf5072576b3bf4587608cfc1a156ec12e262e",
       "baselinePath": "modern-ios/CelesteIOSRuntimeHost/Program.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSRuntimeHost/Program.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: Program.cs",
-      "sha256": "b92f2edd277879a6e614e38c2034937af3b353e25bd851833460fb3b2258e99c"
+      "sha256": "a095984a9c5d7ed95a9514da28bf706e6031675614aafb2a9c555f0f0c279e0e"
     },
     {
       "baselineGitObject": "d7fc551868e36a974ce0aaf39538274ea6e90f41",
@@ -5048,11 +5083,11 @@
     {
       "baselineGitObject": "b70d778bc2e18a99f5ca4dc4fc42b7d5e193904c",
       "baselinePath": "scripts/build-ios-celeste.sh",
-      "disposition": "migration-adjusted",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/build-ios-celeste.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: build-ios-celeste.sh",
-      "sha256": "7ccb83285ff0d144010894ac21d8d6956216ef66ab41f64ee7f937df49b2ce2a"
+      "sha256": "3b5a6a9cf09a501c22f6c678f851d8327539766d5e4d5137bcd9162f51eea179"
     },
     {
       "baselineGitObject": "4029b7c1be3143099fc71c794624ab6a64a4c08a",
@@ -5760,6 +5795,13 @@
       "path": "scripts/prepare-ios-foundation.sh",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: prepare-ios-foundation.sh",
       "sha256": "007b7d48b6377c2637f50c70a76b0d05cd4d1dfd0a65ca23a8cc93ef686375f0"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "scripts/prepare-morro-achievements.py",
+      "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: prepare-morro-achievements.py",
+      "sha256": "c483fb08f4eaa7c76c2b7b30b4f5a6ef56e2e82a6fd6ccfbffd092f0297b1b5b"
     },
     {
       "baselineGitObject": "7ad4b1915b6c84f5a028f47f2529ade1119ca99e",
@@ -7285,11 +7327,11 @@
     {
       "baselineGitObject": "0de7f4b9e018c49ecd86c7630e0c19c8ea8c1ba6",
       "baselinePath": "scripts/verify-ios-package.py",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100755",
       "path": "scripts/verify-ios-package.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-ios-package.py",
-      "sha256": "ff700dad6531276d76adc9e6576dc4880b58ef4f035e5fcfe9d48fdd53943180"
+      "sha256": "148f4043e1513a6b7795fa3d9e8d12464e87a3080a2ae42a5c0bce311470a21f"
     },
     {
       "baselineGitObject": "f498bb48198042197b796dddaf2d0fca5cb85bd4",
@@ -7302,10 +7344,17 @@
     },
     {
       "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "scripts/verify-morro-achievements.py",
+      "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-achievements.py",
+      "sha256": "40f43129d0781643f2c3840982e74968e1379acce74ea4bc0fa5e7fa6f94050c"
+    },
+    {
+      "disposition": "migration-added",
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "1b9391ab698e8f48712bc5d12bd6682cf10e30760ffd8e8cae8525cc1953a5e3"
+      "sha256": "495809909e8995890bebfcaa32c793058540dc7cc3fec3057a9d8b78cb159e25"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7362,6 +7411,55 @@
       "sha256": "85e739a7ad26c3bef0a0e2755457aebc479af56555b1c10f1c4b3f580552c3b1"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "shared/MorroAchievements/AchievementLedger.cs",
+      "purpose": "Platform-neutral product version and shared Apple runtime contracts: AchievementLedger.cs",
+      "sha256": "ad204c3340b7d2225ab12b7eb2e4bd3b9bea50696b1bad89e57e91d1c3732fa9"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "shared/MorroAchievements/AppleAchievementStorage.cs",
+      "purpose": "Platform-neutral product version and shared Apple runtime contracts: AppleAchievementStorage.cs",
+      "sha256": "a7e57c9482ccb19e72a7cc9a525d6f97c2cd86526138f10b1f7153d5ec568983"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroAchievementBridgeTests/GameFixture.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: GameFixture.cs",
+      "sha256": "d5d4404241421bb3a655622af041e54b3d31929ef4927198a7eea3bf2c0afb77"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroAchievementBridgeTests/MorroAchievementBridgeTests.csproj",
+      "purpose": "Owned portable negative and regression controls for current tooling: MorroAchievementBridgeTests.csproj",
+      "sha256": "ac697eb8b0c8ffdf150c6f96c7b5917accee0fc5f4cc0172be9c9e006688f89c"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroAchievementBridgeTests/Program.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: Program.cs",
+      "sha256": "0564a81b230158dbceb747c9337e9696beeb79c7cc12e75418ee4c086ae17220"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroAchievementTests/MorroAchievementTests.csproj",
+      "purpose": "Owned portable negative and regression controls for current tooling: MorroAchievementTests.csproj",
+      "sha256": "705abb8e5c97314e0f813a40b7c6dc72e36626876f8914c5ae067124d1a17bae"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroAchievementTests/Program.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: Program.cs",
+      "sha256": "1e148b1a5c33af07618ed71d3401ca18b0e5e4f15b1b1863e5e22fe5b004a672"
+    },
+    {
       "baselineGitObject": "23e41d5d2c586ead9b96f71c5c9c7af559dcd902",
       "baselinePath": "tests/check_native_payload_rejection.py",
       "disposition": "retained",
@@ -7385,6 +7483,13 @@
       "path": "tests/test_cloud_products.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_cloud_products.py",
       "sha256": "1d675d60616cb918f55e33f9b6cdc161b9ae5a9f7778f9eae486cb527b6426ad"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/test_morro_achievements.py",
+      "purpose": "Owned portable negative and regression controls for current tooling: test_morro_achievements.py",
+      "sha256": "7449bb6c1ce612c2fa669a5854e434065510e88a74c003f0c00182a9c93ed8a4"
     },
     {
       "disposition": "migration-added",
@@ -8508,11 +8613,11 @@
     {
       "baselineGitObject": "940aa5c2a7502cbe2a10a6e0ade8f53a81d181e1",
       "baselinePath": "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: CelesteTvOSRuntimeHost.csproj",
-      "sha256": "a535cbe2fb5f498c403783e3f0d9179dc245a147c82f502ed42de8c7988f7d2c"
+      "sha256": "ab3af8e1119ee2dddc97e8724ecf5ae1556e0060967c9534e8f1497cab4511c2"
     },
     {
       "baselineGitObject": "d11a67ddd3f4da09f2e7555f22fa1d5da21033d8",
@@ -8589,11 +8694,11 @@
     {
       "baselineGitObject": "25fdb2d69940d3447fb71ed666cb3f1462f3e679",
       "baselinePath": "tvos/CelesteTvOSRuntimeHost/Main.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/Main.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: Main.cs",
-      "sha256": "0d450724e32f3b0facd9a8e2a0a3dd0dfe1db5af713f5137fa12d9b50cc7b860"
+      "sha256": "c0aa3c71b2dcb55ac4d475ba28c4d6bef45d6e3c2e0b92ca7baf6b032693a53b"
     },
     {
       "baselineGitObject": "ddee8ffa60c1e451c6fa47bf3e66f8aab06f7607",

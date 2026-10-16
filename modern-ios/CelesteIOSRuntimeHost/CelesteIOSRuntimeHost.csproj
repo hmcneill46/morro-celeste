@@ -30,7 +30,9 @@
     <CelesteIOSManagedRoot>$(CelesteIOSRuntimeRoot)\managed</CelesteIOSManagedRoot>
     <CelesteIOSContentRoot>$(CelesteIOSRuntimeRoot)\content\Content</CelesteIOSContentRoot>
     <CelesteIOSBankRoot>$(CelesteIOSRuntimeRoot)\banks\Content\FMOD</CelesteIOSBankRoot>
+    <MorroVanillaAchievementsEnabled Condition="'$(IOSProductMode)' == 'Celeste' and Exists('$(CelesteIOSManagedRoot)\Celeste\MorroAchievements.cs') and !Exists('$(CelesteIOSManagedRoot)\AppleEverestExternalAssemblyRoots.props')">true</MorroVanillaAchievementsEnabled>
     <DefineConstants Condition="'$(IOSProductMode)' == 'Celeste'">$(DefineConstants);CELESTE_RUNTIME;IOS_CELESTE_RUNTIME_HOST;IOS_CELESTE_PRODUCT</DefineConstants>
+    <DefineConstants Condition="'$(MorroVanillaAchievementsEnabled)' == 'true'">$(DefineConstants);MORRO_VANILLA_ACHIEVEMENTS</DefineConstants>
     <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);IOS_SIMULATOR_NO_FMOD</DefineConstants>
     <DefineConstants Condition="'$(RuntimeIdentifier)' == 'ios-arm64' and '$(EnableFmodDeviceFoundation)' == 'true'">$(DefineConstants);IOS_DEVICE_FMOD</DefineConstants>
   </PropertyGroup>
@@ -57,6 +59,13 @@
     <BundleResource Include="$(CelesteIOSBankRoot)\**\*.bank"
                     LogicalName="Content\FMOD\%(RecursiveDir)%(Filename)%(Extension)" />
     <TrimmerRootDescriptor Include="$(RepoRoot)\tvos\CelesteTvOSRuntimeHost\CelesteLinker.xml" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MorroVanillaAchievementsEnabled)' == 'true'">
+    <Compile Include="$(RepoRoot)\shared\MorroAchievements\AppleAchievementStorage.cs"
+             Link="MorroAchievements\AppleAchievementStorage.cs" />
+    <BundleResource Include="$(RepoRoot)\docs\licenses\ACHIEVEMENT_HELPER_LICENSE.txt"
+                    LogicalName="Licenses/AchievementHelper.txt" />
   </ItemGroup>
 
   <!-- Present only in the closed Apple Everest lane. The generated file roots

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import pathlib
 import plistlib
@@ -31,7 +32,11 @@ def main() -> int:
     parser.add_argument("--product", choices=("foundation", "celeste"), default="foundation")
     parser.add_argument("--signing", choices=("auto", "unsigned", "development"), default="auto")
     parser.add_argument("--output", type=pathlib.Path)
+    parser.add_argument("--morro-achievements", action="store_true",
+                        help="validate the separate pinned vanilla achievement artwork and runtime")
     args = parser.parse_args()
+    require(not args.morro_achievements or args.product == "celeste",
+            "Morro achievements require the vanilla Celeste product")
     app = args.app.resolve()
     require(app.is_dir(), "application bundle is missing")
     with (app / "Info.plist").open("rb") as stream:
@@ -186,12 +191,21 @@ def main() -> int:
                 "shared iOS durability policy or its AOT image is absent")
         content = app / "Content"
         require(content.is_dir(), "canonical Content directory is absent")
+        feature_paths = set()
+        if args.morro_achievements:
+            spec = importlib.util.spec_from_file_location("morro_achievements", REPO_ROOT / "scripts/verify-morro-achievements.py")
+            achievements = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(achievements)
+            achievements.validate_app(app)
+            feature_paths = achievements.validate_icons(content)
         records = []
         logical = hashlib.sha256()
         total = 0
         for path in sorted((item for item in content.rglob("*") if item.is_file()),
                            key=lambda item: item.relative_to(content).as_posix()):
             relative = path.relative_to(content).as_posix()
+            if relative in feature_paths:
+                continue
             data = path.read_bytes()
             sha = hashlib.sha256(data).hexdigest()
             total += len(data)
@@ -277,6 +291,7 @@ def main() -> int:
         "canonicalContentSha256": "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46" if args.product == "celeste" else None,
         "fmodBankCount": 7 if args.product == "celeste" else 0,
         "touchUiIncluded": args.product == "celeste",
+        "morroAchievementsIncluded": args.morro_achievements,
         "signing": signing,
         "portVersion": port_version,
         "bundleBuild": int(port_build),

@@ -52,6 +52,8 @@ LAST_ERROR="$LOG_ROOT/last-error.txt"
 DIST_ROOT="$REPO_ROOT/dist"
 ARTWORK_ROOT="$CONFIG_ROOT/artwork/Assets.xcassets"
 PROJECT="$REPO_ROOT/tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj"
+MORRO_ACHIEVEMENT_ROOT="$REPO_ROOT/.build/morro-achievements/tvos/current"
+export MSBUILDDISABLENODEREUSE=1 DOTNET_CLI_USE_MSBUILD_SERVER=0
 BUILDER_UI="$REPO_ROOT/scripts/tvos-builder-ui.sh"
 COMMAND_LAUNCHER="$REPO_ROOT/scripts/tvos-builder-command.py"
 NON_INTERACTIVE=0
@@ -643,11 +645,17 @@ run_logged verify-save-manager-continuity-source "$REPO_ROOT/scripts/verify-cele
   --generated-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio/managed" \
   --native-manifest "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" \
   --output "$REPO_ROOT/artifacts/celeste-runtime/stage6-current/stage22b-verification.json"
+run_logged prepare-morro-achievements python3 "$REPO_ROOT/scripts/prepare-morro-achievements.py" \
+  --platform tvos --source-root "$REPO_ROOT/.build/celeste-runtime/stage6-current/audio" \
+  --output-root "$MORRO_ACHIEVEMENT_ROOT" --clean
+run_logged verify-morro-achievement-source python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" \
+  --root "$MORRO_ACHIEVEMENT_ROOT" --platform tvos
 ui_phase_success
 
-COMMON_PUBLISH=(dotnet publish "$PROJECT" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false
+COMMON_PUBLISH=(dotnet publish "$PROJECT" -c Release -r tvos-arm64 -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false
   -p:CelesteLaunchMode=CelesteAudio -p:Stage5BAudioScenario=normal
   -p:PersistenceEnabled=true -p:PersistenceStorageNamespace=production
+  -p:CelesteRuntimeRoot="$MORRO_ACHIEVEMENT_ROOT"
   -p:CelesteBrandingEnabled=true -p:CelesteBrandAssetsRoot="$ARTWORK_ROOT"
   -p:ApplicationId="$BUNDLE_ID" -p:UseInterpreter=false -p:RunAOTCompilation=true
   -p:PublishTrimmed=true -p:TrimMode=full -p:MtouchLink=Full)
@@ -657,9 +665,10 @@ COMMON_PUBLISH=(dotnet publish "$PROJECT" -c Release -r tvos-arm64 -m:1 -p:Build
 # accepted native/generated manifests still agree.
 INPUT_KEY="$({
   git -C "$REPO_ROOT" rev-parse HEAD
-  git -C "$REPO_ROOT" diff --no-ext-diff -- tvos scripts managed native global.json build-tvos.sh | shasum -a 256 | awk '{print $1}'
+  git -C "$REPO_ROOT" diff --no-ext-diff -- tvos scripts managed shared/MorroAchievements native global.json build-tvos.sh | shasum -a 256 | awk '{print $1}'
   shasum -a 256 "$REPO_ROOT/build-tvos.sh" "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost/CelesteTvOSRuntimeHost.csproj" "$REPO_ROOT/tvos/CelesteTvOSRuntimeHost/Info.plist" | awk '{print $1}'
   shasum -a 256 "$VALIDATION_ROOT/celeste-input.json" "$REPO_ROOT/.build/fmod-tvos/stage8a-validation/sdk-manifest.json" "$REPO_ROOT/.build/tvos-host/normalized-manifest.json" "$REPO_ROOT/.build/fmod-tvos/current/logical-manifest.json" | awk '{print $1}'
+  shasum -a 256 "$MORRO_ACHIEVEMENT_ROOT/achievement-manifest.json" "$REPO_ROOT/managed/morro-achievements.json" "$REPO_ROOT/shared/MorroAchievements/AppleAchievementStorage.cs" "$REPO_ROOT/scripts/prepare-morro-achievements.py" "$REPO_ROOT/scripts/verify-morro-achievements.py" | awk '{print $1}'
   find "$REPO_ROOT/artifacts/celeste-runtime/stage6-current" -type f -name '*.json' -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 | awk '{print $1}'
   find "$ARTWORK_ROOT" -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 | awk '{print $1}'
   printf '%s\n' "$BUNDLE_ID" 'Release' 'tvos-arm64' 'CelesteAudio' 'full-AOT' 'full-trim' 'no-interpreter'
@@ -672,7 +681,8 @@ if [[ "$MODE" == ipa || "$MODE" == both ]]; then
   unsigned_key="$BUILD_ROOT/unsigned/self-build-input-key.txt"
   if [[ -f "$unsigned_key" && "$(<"$unsigned_key")" == "$INPUT_KEY:unsigned" ]]; then
     UNSIGNED_APP="$(locate_app "$BUILD_ROOT/unsigned" "$BUNDLE_ID" 2>/dev/null || true)"
-    if [[ -n "$UNSIGNED_APP" ]] && "$REPO_ROOT/scripts/verify-celeste-tvos-stage8a.py" --app "$UNSIGNED_APP" --repo-root "$REPO_ROOT" > "$LOG_ROOT/reuse-unsigned.log" 2>&1; then
+    if [[ -n "$UNSIGNED_APP" ]] && "$REPO_ROOT/scripts/verify-celeste-tvos-stage8a.py" --app "$UNSIGNED_APP" --repo-root "$REPO_ROOT" > "$LOG_ROOT/reuse-unsigned.log" 2>&1 &&
+      python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" --root "$MORRO_ACHIEVEMENT_ROOT" --platform tvos --app "$UNSIGNED_APP" >> "$LOG_ROOT/reuse-unsigned.log" 2>&1; then
       echo "  reusing matching verified unsigned full-AOT build"
     else
       UNSIGNED_APP=""
@@ -683,6 +693,8 @@ if [[ "$MODE" == ipa || "$MODE" == both ]]; then
     run_logged publish-unsigned "${COMMON_PUBLISH[@]}" --artifacts-path "$BUILD_ROOT/unsigned" -p:EnableCodeSigning=false
     UNSIGNED_APP="$(locate_app "$BUILD_ROOT/unsigned" "$BUNDLE_ID")"
     run_logged sanitize-unsigned "$REPO_ROOT/scripts/sanitize-dotnet-debug-paths.py" --app "$UNSIGNED_APP" --private-root "$REPO_ROOT"
+    run_logged verify-morro-achievement-unsigned python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" \
+      --root "$MORRO_ACHIEVEMENT_ROOT" --platform tvos --app "$UNSIGNED_APP"
     printf '%s\n' "$INPUT_KEY:unsigned" > "$BUILD_ROOT/unsigned/self-build-input-key.txt"
   fi
 fi
@@ -691,7 +703,8 @@ if [[ "$MODE" == install || "$MODE" == both ]]; then
   signed_key="$BUILD_ROOT/signed/self-build-input-key.txt"
   if [[ -f "$signed_key" && "$(<"$signed_key")" == "$INPUT_KEY:signed" ]]; then
     SIGNED_APP="$(locate_app "$BUILD_ROOT/signed" "$BUNDLE_ID" 2>/dev/null || true)"
-    if [[ -n "$SIGNED_APP" ]] && "$REPO_ROOT/scripts/verify-celeste-tvos-stage8a.py" --app "$SIGNED_APP" --signed --repo-root "$REPO_ROOT" > "$LOG_ROOT/reuse-signed.log" 2>&1; then
+    if [[ -n "$SIGNED_APP" ]] && "$REPO_ROOT/scripts/verify-celeste-tvos-stage8a.py" --app "$SIGNED_APP" --signed --repo-root "$REPO_ROOT" > "$LOG_ROOT/reuse-signed.log" 2>&1 &&
+      python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" --root "$MORRO_ACHIEVEMENT_ROOT" --platform tvos --app "$SIGNED_APP" >> "$LOG_ROOT/reuse-signed.log" 2>&1; then
       echo "  reusing matching verified signed full-AOT build"
     else
       SIGNED_APP=""
@@ -702,6 +715,8 @@ if [[ "$MODE" == install || "$MODE" == both ]]; then
     run_logged publish-signed "${COMMON_PUBLISH[@]}" --artifacts-path "$BUILD_ROOT/signed" -p:EnableCodeSigning=true -p:DevelopmentTeam="$TEAM_ID" -p:CodesignKey="Apple Development" -p:CodesignProvision=Automatic -p:ProvisioningType=automatic
     SIGNED_APP="$(locate_app "$BUILD_ROOT/signed" "$BUNDLE_ID")"
     run_logged sanitize-resign-signed "$REPO_ROOT/scripts/sanitize-dotnet-debug-paths.py" --app "$SIGNED_APP" --private-root "$REPO_ROOT" --resign-team "$TEAM_ID"
+    run_logged verify-morro-achievement-signed python3 "$REPO_ROOT/scripts/verify-morro-achievements.py" \
+      --root "$MORRO_ACHIEVEMENT_ROOT" --platform tvos --app "$SIGNED_APP"
     printf '%s\n' "$INPUT_KEY:signed" > "$BUILD_ROOT/signed/self-build-input-key.txt"
   fi
 fi
