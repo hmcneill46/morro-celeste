@@ -1,10 +1,11 @@
 # Vanilla Morro achievements
 
-Status: **IMPLEMENTED — portable logic verification passed; adapted UI, full-AOT, and physical acceptance pending.**
+Status: **IMPLEMENTED — portable checks, adapted UI fixtures, both unsigned full-AOT builds, and both package/archive verifications passed; physical acceptance pending.**
 
-This report describes the new vanilla iOS/iPadOS and tvOS feature. It records no
-new product or hardware PASS. Historical vanilla, HOST, and static-Everest
-results remain evidence for their original products only.
+This report describes the new vanilla iOS/iPadOS and tvOS feature. The build and
+host-fixture results below establish no hardware or physical gameplay PASS.
+Historical vanilla, HOST, and static-Everest results remain evidence for their
+original products only.
 
 ## Player experience
 
@@ -114,8 +115,9 @@ build caches and staged private products. They are not checked into this
 repository. Build-time artwork staging verifies all 64 pinned files. The first
 build needs an internet connection to populate its private cache; a populated
 cache allows subsequent offline preparation. The game loads only bundled
-content, with a simple text badge as a defensive fallback if an image cannot
-be loaded. Hidden entries use the game's existing locked-chapter icon. It never downloads icons on device.
+content, with a `*` text badge as a defensive fallback if an image cannot be
+loaded. Hidden entries use the game's existing locked-chapter icon, with `?`
+as its fallback. It never downloads icons on device.
 The supplied game atlases contain useful chapter and collectible artwork, but
 not the complete set of these exact Steam achievement composites.
 
@@ -170,12 +172,51 @@ acceptance.
 | Bounded ledger, duplicate awards, corruption recovery, and failed-write retry | PASS — 33 ledger checks |
 | Existing-save recovery and exact moon-berry matching | PASS — 52 bridge checks plus one 30-award batch recovery check |
 | Vanilla save/Settings and static-Everest isolation | PASS — strict derived-source/content verification and 19 tooling regressions |
-| iOS and tvOS full-AOT compilation and package checks | PENDING — actual new products |
-| Host UI compilation, navigation, secret reveal, queue concurrency, modal suspension | PENDING — revalidation after adapting Achievement Helper presentation |
-| Phone/tablet default control geometry | PENDING — new presentation requires layout validation |
+| Existing Stage 22B source gate | PASS — 91 source checks |
+| iOS unsigned full-AOT compilation | PASS — 329.331 seconds, exit code 0 |
+| iOS final package and achievement checks | PASS — sanitized final app, full AOT/full trim, canonical original content, achievement content/notice, and IPA ZIP integrity |
+| tvOS unsigned full-AOT compilation | PASS — 244.54 seconds, exit code 0 |
+| tvOS final package and achievement checks | PASS — sanitized final app passed Stage 8A and achievement package verifiers, plus final IPA ZIP integrity |
+| Adapted UI compilation against actual Celeste/FNA references | PASS — 0 warnings and 0 errors |
+| Host UI navigation, secret reveal, queue concurrency, modal suspension | PASS — current adapted presentation fixture |
+| Controller and phone/tablet default control geometry | PASS — source-backed host previews; no device or GPU result |
 | iPhone/iPad touch and controller interaction | PENDING — physical acceptance |
 | Apple TV controller interaction and visual layout | PENDING — physical acceptance |
 | Cold relaunch, soft reload, import/delete, and Settings-reset continuity | PENDING — exact-product acceptance |
+
+Both unsigned build receipts record frozen source
+`316ae922f8db7f5bfe46021cf3ac07acd111c402`. No installation or device execution
+was performed. The verified iOS package retains the canonical original-content
+SHA-256 `30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46`;
+the 64 achievement images and exact bundled license are checked separately.
+The final copied tvOS app passed `scripts/verify-celeste-tvos-stage8a.py` and
+`scripts/verify-morro-achievements.py --app`, with its report stored privately
+at `artifacts/morro-achievements/tvos/package-verification.json`. Sanitization
+fixed five CodeView records, and no local repository paths remained in the app.
+
+Both builds used the pinned .NET SDK 10.0.302/runtime 10.0.10, Xcode 26.6
+(17F113), and Apple SDKs 26.5, with process-local Xcode selection and serial app
+AOT. They used unsigned test bundle identities `io.example.morro.ios` and
+`io.example.morro.tvos`; neither was signed or installed. The existing port
+version 0.1.1/build 49 remains unchanged and does not transfer historical
+build-49 device evidence to these new products. Original build outputs were
+preserved; sanitization and final repackaging used separate copied apps.
+
+The verified private archives are
+`artifacts/morro-achievements/ios/Morro-Achievements-iOS-unsigned.ipa` and
+`artifacts/morro-achievements/tvos/Morro-Achievements-tvOS-unsigned.ipa`.
+The private `artifacts/morro-achievements/verification-receipt.json` records
+their byte sizes, SHA-256 hashes, source revision, and verification results.
+
+The adapted UI fixture uses the iOS compile definition and verifies hidden
+names/descriptions, explicit reveal without unlocking, navigation through all
+32 entries, touch/controller reflow, close/reset behavior, 1,000 concurrent
+queue calls with duplicate suppression, and modal suspension. The inspected
+controller, phone, tablet, and popup previews use the actual presentation
+source, the supplied game's Renogare bitmap font, and the pinned original
+Steam icons. Directional glyph placeholders appear only in that host fixture.
+These previews establish source-backed layout evidence, not rendering or
+input acceptance on a GPU or an Apple device.
 
 Physical acceptance must check the page from supported Options routes, scrolling
 and paging, reveal/hide behavior, return focus, touch/controller prompts, and
@@ -197,7 +238,9 @@ dotnet run --no-build --project tests/MorroAchievementBridgeTests/MorroAchieveme
 ```
 
 The full portable Python suite passed 117 tests, including the 19 feature
-regressions. Source verification checks the entire derived tree against a fresh
+regressions. The C# ledger and bridge suites passed 86 checks in total, including
+the separate batch-recovery process. Source verification checks the entire
+derived tree against a fresh
 application of the exact transform and verifies all original content bytes,
 separately from the 64 new private artwork files. The optional iOS package flag
 keeps the original canonical content hash/count/size requirement intact.
