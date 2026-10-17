@@ -296,11 +296,27 @@ public static class MorroAchievementUI
         Text(label, x + 34f, y, 0.44f, Muted);
     }
 
+    private static void CenteredPrompt(VirtualButton button, string label, float y)
+    {
+        const float glyphScale = 0.65f;
+        const float textScale = 0.44f;
+        MTexture glyph = Input.GuiButton(button);
+        float glyphWidth = glyph == null ? 0f : glyph.Width * glyphScale;
+        float gap = glyph == null ? 0f : 12f;
+        float left = (1920f - glyphWidth - gap - ActiveFont.Measure(label).X * textScale) / 2f;
+        if (glyph != null)
+            glyph.DrawCentered(new Vector2(left + glyphWidth / 2f, y), Color.White, glyphScale);
+        Text(label, left + glyphWidth + gap, y, textScale, Muted);
+    }
+
     private sealed class AchievementPage : Entity
     {
         private static int VisibleRows => CompactForTouch ? 5 : 6;
         private readonly Action onClose;
         private readonly HashSet<string> revealed = new(StringComparer.Ordinal);
+        private readonly MorroAchievementDefinition[] definitions;
+        private readonly MorroAchievementDefinition[] ordered;
+        private readonly bool[] unlockedSnapshot;
         private int selection;
         private int first;
         private bool closed;
@@ -310,6 +326,10 @@ public static class MorroAchievementUI
         public AchievementPage(Action onClose)
         {
             this.onClose = onClose;
+            definitions = MorroAchievements.Definitions;
+            ordered = new MorroAchievementDefinition[definitions.Length];
+            unlockedSnapshot = new bool[definitions.Length];
+            RefreshOrder();
             Tag = (int)Tags.PauseUpdate | (int)Tags.FrozenUpdate;
             Depth = -1000000;
             // Rendering is done by the global post-scene pass, which also
@@ -321,6 +341,7 @@ public static class MorroAchievementUI
         {
             base.Update();
             ease = Calc.Approach(ease, 1f, Engine.RawDeltaTime * 7f);
+            RefreshOrder();
             if (firstUpdate) { firstUpdate = false; return; }
             if (closed) return;
             if (Input.MenuCancel.Pressed || Input.ESC.Pressed)
@@ -331,31 +352,64 @@ public static class MorroAchievementUI
                 Close();
                 return;
             }
-            int count = MorroAchievements.Definitions.Length;
+            int count = ordered.Length;
             if (count == 0) return;
-            int movement = 0;
-            if (Input.MenuDown.Pressed) movement = 1;
-            else if (Input.MenuUp.Pressed) movement = -1;
-            else if (Input.MenuRight.Pressed) movement = VisibleRows;
-            else if (Input.MenuLeft.Pressed) movement = -VisibleRows;
-            if (movement != 0)
+            int previous = selection;
+            // Match TextMenu: repeated input stops at the end; a fresh press
+            // wraps once, then a continued hold scrolls toward the other end.
+            if (Input.MenuDown.Pressed)
             {
-                int previous = selection;
-                selection = Math.Max(0, Math.Min(count - 1, selection + movement));
-                if (selection < first) first = selection;
-                if (selection >= first + VisibleRows) first = selection - VisibleRows + 1;
-                if (previous != selection) Audio.Play("event:/ui/main/rollover_up");
+                if (selection < count - 1) selection++;
+                else if (!Input.MenuDown.Repeating) selection = 0;
             }
+            else if (Input.MenuUp.Pressed)
+            {
+                if (selection > 0) selection--;
+                else if (!Input.MenuUp.Repeating) selection = count - 1;
+            }
+            else if (Input.MenuRight.Pressed) selection = Math.Min(count - 1, selection + VisibleRows);
+            else if (Input.MenuLeft.Pressed) selection = Math.Max(0, selection - VisibleRows);
+            ClampViewport();
+            if (previous != selection) Audio.Play("event:/ui/main/rollover_up");
             if (Input.MenuConfirm.Pressed)
             {
                 Input.MenuConfirm.ConsumePress();
-                MorroAchievementDefinition definition = MorroAchievements.Definitions[selection];
+                MorroAchievementDefinition definition = ordered[selection];
                 if (definition.Hidden && !MorroAchievements.Has(definition.Id))
                 {
                     if (!revealed.Add(definition.Id)) revealed.Remove(definition.Id);
                     Audio.Play("event:/ui/main/button_select");
                 }
             }
+        }
+
+        private void RefreshOrder()
+        {
+            string selectedId = ordered.Length == 0 ? null : ordered[selection]?.Id;
+            for (int i = 0; i < definitions.Length; i++)
+                unlockedSnapshot[i] = MorroAchievements.Has(definitions[i].Id);
+            // Take one state snapshot so an unlock between the two passes
+            // cannot duplicate or omit an entry. The catalog stays untouched.
+            int next = 0;
+            for (int i = 0; i < definitions.Length; i++)
+                if (unlockedSnapshot[i]) ordered[next++] = definitions[i];
+            for (int i = 0; i < definitions.Length; i++)
+                if (!unlockedSnapshot[i]) ordered[next++] = definitions[i];
+            for (int i = 0; i < ordered.Length; i++)
+                if (string.Equals(ordered[i].Id, selectedId, StringComparison.Ordinal))
+                {
+                    selection = i;
+                    break;
+                }
+            ClampViewport();
+        }
+
+        private void ClampViewport()
+        {
+            selection = Math.Max(0, Math.Min(selection, ordered.Length - 1));
+            if (selection < first) first = selection;
+            if (selection >= first + VisibleRows) first = selection - VisibleRows + 1;
+            first = Math.Max(0, Math.Min(first, Math.Max(0, ordered.Length - VisibleRows)));
         }
 
         public void Close()
@@ -382,6 +436,7 @@ public static class MorroAchievementUI
 
         public void DrawPage()
         {
+            RefreshOrder();
             float fade = Ease.CubeOut(ease);
             // OuiAchievementMenu uses the normal Celeste translucent menu
             // backdrop, keeping the mountain or paused game visible behind it.
@@ -390,7 +445,7 @@ public static class MorroAchievementUI
             bool compact = CompactForTouch;
             float left = compact ? CompactListLeft : 370f;
             float width = compact ? (left > 500f ? 650f : 1160f) : 1180f;
-            int count = MorroAchievements.Definitions.Length;
+            int count = ordered.Length;
             if (compact && left > 500f)
             {
                 // Keep the phone's top-center Pause control clear as well as
@@ -406,9 +461,6 @@ public static class MorroAchievementUI
                     960f, 183f, 0.5f, Muted * fade, 0.5f);
             }
 
-            first = Math.Max(0, Math.Min(first, Math.Max(0, count - VisibleRows)));
-            if (selection < first) first = selection;
-            if (selection >= first + VisibleRows) first = selection - VisibleRows + 1;
             for (int row = 0; row < VisibleRows && first + row < count; row++)
                 DrawRow(first + row, row, left, width, fade);
             DrawScrollArrows(left + width + 30f, first > 0, first + VisibleRows < count, fade);
@@ -419,7 +471,7 @@ public static class MorroAchievementUI
             Prompt(Input.MenuCancel, "Back", compact ? 1050f : 1135f, footerY);
             Text(count == 0 ? "0 / 0" : (selection + 1) + " / " + count,
                 compact ? 520f : 370f, footerY, 0.39f, Muted * fade);
-            if (count > 0) DrawSelectedHint(MorroAchievements.Definitions[selection], compact ? 844f : 970f, fade);
+            if (count > 0) DrawSelectedHint(ordered[selection], compact ? 844f : 970f, fade);
             if (MorroAchievements.StoragePending)
                 Text("Saving progress...", 960f, compact ? 914f : 1055f, 0.34f, Muted * fade, 0.5f);
         }
@@ -429,7 +481,7 @@ public static class MorroAchievementUI
         // are retained; bounds adapt to the fixed Apple controller/touch layouts.
         private void DrawRow(int index, int row, float x, float width, float fade)
         {
-            MorroAchievementDefinition definition = MorroAchievements.Definitions[index];
+            MorroAchievementDefinition definition = ordered[index];
             bool unlocked = MorroAchievements.Has(definition.Id);
             bool secret = definition.Hidden && !unlocked && !revealed.Contains(definition.Id);
             bool compact = CompactForTouch;
@@ -465,8 +517,7 @@ public static class MorroAchievementUI
             bool unlocked = MorroAchievements.Has(definition.Id);
             if (definition.Hidden && !unlocked)
             {
-                Prompt(Input.MenuConfirm, revealed.Contains(definition.Id) ? "Hide details" : "Reveal details",
-                    760f, y);
+                CenteredPrompt(Input.MenuConfirm, revealed.Contains(definition.Id) ? "Hide details" : "Reveal details", y);
                 return;
             }
             string label = "Locked";

@@ -239,6 +239,8 @@ for unsigned-package help.
   notifications
 - Steam's 30 hidden achievements stay concealed until unlocked or explicitly
   revealed; revealing details does not unlock anything
+- Unlocked achievements appear first, with the original order preserved within
+  both groups; held scrolling stops at either end and a fresh press wraps around
 - Progress belongs to this app installation and is stored separately from
   vanilla saves and Settings; opening the page or selecting a save restores achievements
   that its recorded progress can establish

@@ -1,9 +1,10 @@
 # Vanilla Morro achievements
 
-Status: **IMPLEMENTED — portable checks, adapted UI fixtures, both unsigned full-AOT builds, and both package/archive verifications passed; physical acceptance pending.**
+Status: **IMPLEMENTED — initial full-AOT products verified; viewer refinements checked on the host, with fresh product and physical acceptance pending.**
 
-This report describes the new vanilla iOS/iPadOS and tvOS feature. The build and
-host-fixture results below establish no hardware or physical gameplay PASS.
+This report describes the new vanilla iOS/iPadOS and tvOS feature. Build and
+host-fixture results establish no hardware or physical gameplay PASS. The initial
+products and later viewer refinements have separate validation records below.
 Historical vanilla, HOST, and static-Everest results remain evidence for their
 original products only.
 
@@ -16,12 +17,29 @@ existing Celeste scene. Use the existing menu controls to move through the
 list, page through it, reveal a selected secret, or go back. The same game UI is
 used by the vanilla iPhone/iPad and Apple TV builds.
 
+Unlocked achievements appear first, followed by locked achievements. Each group
+keeps the original catalog order, so an entirely locked or unlocked list has the
+same original order. A new unlock moves into its original position within the
+unlocked group. Selection stays on the same achievement if the list changes
+while open. Holding up or down stops at the end of the list; releasing and
+pressing again wraps to the opposite end. Left/right paging stops at the ends.
+
 Steam marks only **Celeste** and **1UP!** as public before unlocking; the other
-30 achievements are hidden. Locked hidden entries retain their place in the
-list while concealing their name, description, and artwork. **Reveal details**
+30 achievements are hidden. Locked hidden entries remain in the list while
+concealing their name, description, and artwork. **Reveal details**
 is an explicit spoiler choice for the selected entry. It does not award an
 achievement, and the reveal choice lasts only while that page is open. Earned
 achievements always show their details.
+
+This policy was checked against Valve's current presentation on 2026-10-17.
+The [Steamworks spoiler-achievement guide](https://partner.steamgames.com/doc/features/achievements/ach_guide?l=english#spoiler_achievements)
+says names and descriptions stay hidden until unlock or explicit reveal. The
+[current Celeste web page](https://steamcommunity.com/achievements/504230?l=english)
+also substitutes a question mark for hidden artwork; Valve's delivered row
+renderer reveals all three fields together. That web page is marked beta; this
+check does not claim every historical or stable native client uses the same
+presentation. Morro keeps its existing per-entry reveal choice. The button glyph
+and reveal/hide label are measured and centered together below the list.
 
 New awards appear as queued, animated notifications, one at a time. A repeated
 event for an already earned achievement does not create another notification.
@@ -162,11 +180,11 @@ compilation/build-server policies still apply.
 
 ## Validation record
 
-The following results describe this implementation and its new products. A
+The following results describe the initial implementation and its products. A
 source review, unit test, or successful build cannot establish physical gameplay
 acceptance.
 
-| Gate | Current result |
+| Gate | Initial implementation result |
 | --- | --- |
 | Catalog count, enum order, hidden flags, and artwork checksums | PASS — 32 exact IDs, 30 hidden entries, 64 pinned icons |
 | Bounded ledger, duplicate awards, corruption recovery, and failed-write retry | PASS — 33 ledger checks |
@@ -186,7 +204,7 @@ acceptance.
 
 Both unsigned build receipts record frozen source
 `316ae922f8db7f5bfe46021cf3ac07acd111c402`. No installation or device execution
-was performed. The verified iOS package retains the canonical original-content
+was performed during those unsigned build checks. The verified iOS package retains the canonical original-content
 SHA-256 `30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46`;
 the 64 achievement images and exact bundled license are checked separately.
 The final copied tvOS app passed `scripts/verify-celeste-tvos-stage8a.py` and
@@ -197,7 +215,7 @@ fixed five CodeView records, and no local repository paths remained in the app.
 Both builds used the pinned .NET SDK 10.0.302/runtime 10.0.10, Xcode 26.6
 (17F113), and Apple SDKs 26.5, with process-local Xcode selection and serial app
 AOT. They used unsigned test bundle identities `io.example.morro.ios` and
-`io.example.morro.tvos`; neither was signed or installed. The existing port
+`io.example.morro.tvos`; those products were unsigned. The existing port
 version 0.1.1/build 49 remains unchanged and does not transfer historical
 build-49 device evidence to these new products. Original build outputs were
 preserved; sanitization and final repackaging used separate copied apps.
@@ -217,6 +235,26 @@ source, the supplied game's Renogare bitmap font, and the pinned original
 Steam icons. Directional glyph placeholders appear only in that host fixture.
 These previews establish source-backed layout evidence, not rendering or
 input acceptance on a GPU or an Apple device.
+
+### Viewer refinements, 2026-10-17
+
+The later viewer changes center the full reveal/hide prompt, partition the list
+by unlock state while retaining catalog order, and use Celeste's native
+fresh-press versus repeat behavior for wrapping. The existing hidden flags,
+gameplay unlock rules, storage, and original catalog order are unchanged.
+
+The 19 achievement preparation and verification regressions and 51 source-backed
+UI assertions pass for this revision. The UI fixture covers all-locked, all-unlocked,
+and mixed order; selected-achievement preservation across unlocks; both held
+boundary stops and fresh-press wraps; clamped page jumps; and measured centering
+of both prompt labels. Both platform preprocessing paths compile against the
+actual Celeste/FNA references with zero errors. The iOS host fixture reports
+three warnings from its intentional Apple API stubs; the tvOS path reports none.
+The refreshed controller, phone, and tablet previews use the real font and icons.
+Host compilation and previews are evidence for the presentation source only.
+The initial full-AOT and package results above do not
+transfer to these refinements; a fresh build and physical interaction check are
+still required for this revision.
 
 Physical acceptance must check the page from supported Options routes, scrolling
 and paging, reveal/hide behavior, return focus, touch/controller prompts, and
