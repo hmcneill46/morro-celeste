@@ -161,6 +161,62 @@ try
     try { store.Load("../settings"); } catch (ArgumentException) { passed++; }
     try { store.Delete("/tmp/0"); } catch (ArgumentException) { passed++; }
 
+    Dictionary<string, byte[]?> sessionA = new(StringComparer.Ordinal)
+    { ["settings"] = Settings(8), ["0"] = Save(800), ["1"] = Save(801), ["2"] = Save(802) };
+    Dictionary<string, byte[]?> sessionB = new(StringComparer.Ordinal)
+    { ["settings"] = Settings(9), ["0"] = Save(900), ["1"] = null, ["2"] = null };
+    void VerifySession(IReadOnlyDictionary<string, byte[]?> expected, string label)
+    {
+        foreach ((string name, byte[]? bytes) in expected)
+            foreach (CelesteFileCopy copy in Enum.GetValues<CelesteFileCopy>())
+            {
+                byte[]? actual = backend.Read(name, copy);
+                Check(bytes is null ? actual is null : actual is not null && actual.AsSpan().SequenceEqual(bytes),
+                    $"{label} exact {name}/{copy}");
+            }
+    }
+    store.SetSessionReplacementPending(true);
+    store.ReplaceSessionFiles(sessionA);
+    VerifySession(sessionA, "session A");
+    store.ReplaceSessionFiles(sessionB);
+    VerifySession(sessionB, "session B clears missing slots and previous-good");
+    store.ReplaceSessionFiles(sessionA);
+    VerifySession(sessionA, "session A restored independently");
+    int beforeInvalid = backend.AtomicWriteCount;
+    Dictionary<string, byte[]?> invalid = new(sessionB) { ["0"] = Settings(99) };
+    try { store.ReplaceSessionFiles(invalid); } catch (InvalidDataException) { passed++; }
+    Check(backend.AtomicWriteCount == beforeInvalid, "invalid complete session causes no writes");
+    invalid.Remove("2");
+    try { store.ReplaceSessionFiles(invalid); } catch (InvalidDataException) { passed++; }
+    Check(backend.AtomicWriteCount == beforeInvalid, "incomplete session causes no writes");
+    try { store.Commit("0", Save(999)); } catch (IOException) { passed++; }
+    try { store.Delete("0"); } catch (IOException) { passed++; }
+    try { store.RestorePreviousGood("0"); } catch (IOException) { passed++; }
+    try { store.Load("0"); } catch (IOException) { passed++; }
+    VerifySession(sessionA, "pending journal blocks old state access");
+    for (int failureAt = 1; failureAt <= 8; failureAt++)
+    {
+        store.ReplaceSessionFiles(sessionA);
+        backend.FailMutationAt = backend.MutationAttemptCount + failureAt;
+        bool faulted = false;
+        try { store.ReplaceSessionFiles(sessionB); } catch (IOException) { faulted = true; }
+        Check(faulted, $"session target fault {failureAt} reported");
+        // The durable host journal still contains B. A fresh authority replays
+        // that same target before any load, repair or old gameplay write.
+        store = new CelesteFileDurabilityStore(backend, validator);
+        store.SetSessionReplacementPending(true);
+        store.ReplaceSessionFiles(sessionB);
+        VerifySession(sessionB, $"cold target replay after fault {failureAt}");
+    }
+    store.SetSessionReplacementPending(false);
+    Check(store.Load("1").Data is null && store.LoadPreviousGood("1") is null,
+        "missing slot cannot resurrect from outgoing session");
+    IReadOnlyDictionary<string, byte[]?> snapshot = store.CreateSnapshot();
+    Check(snapshot.Count == 4 && snapshot["1"] is null && snapshot["2"] is null,
+        "snapshot explicitly records absent slots");
+    snapshot["0"]![0] = 0;
+    Check(store.Load("0").Data!.SequenceEqual(Save(900)), "snapshot cannot mutate live state");
+
     string escape = Path.Combine(root, "escape");
     Directory.CreateDirectory(escape);
     string link = Path.Combine(root, "symlink-backend");
@@ -209,6 +265,12 @@ internal sealed class TestBackend : ICelesteFileDurabilityBackend
     private readonly string root;
     internal TestFault NextFault { get; set; }
     internal int AtomicWriteCount { get; private set; }
+    internal int MutationAttemptCount { get; private set; }
+    internal int FailMutationAt { get; set; } = -1;
+    private void CheckMutationFault()
+    {
+        if (++MutationAttemptCount == FailMutationAt) throw new IOException("Injected session mutation fault.");
+    }
     internal bool HasTemps => Directory.Exists(root) && Directory.EnumerateFiles(root, "*.tmp", SearchOption.AllDirectories).Any();
 
     internal TestBackend(string root) => this.root = Path.GetFullPath(root);
@@ -227,6 +289,7 @@ internal sealed class TestBackend : ICelesteFileDurabilityBackend
 
     public void WriteAtomic(string logicalName, CelesteFileCopy copy, ReadOnlyMemory<byte> data)
     {
+        CheckMutationFault();
         string path = Resolve(logicalName, copy);
         string directory = Path.GetDirectoryName(path)!;
         Directory.CreateDirectory(directory);
@@ -264,6 +327,7 @@ internal sealed class TestBackend : ICelesteFileDurabilityBackend
 
     public void Delete(string logicalName, CelesteFileCopy copy)
     {
+        CheckMutationFault();
         string path = Resolve(logicalName, copy);
         if (File.Exists(path)) File.Delete(path);
     }

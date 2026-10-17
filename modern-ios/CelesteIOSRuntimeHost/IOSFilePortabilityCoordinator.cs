@@ -49,8 +49,9 @@ internal sealed class IOSFilePortabilityCoordinator : IDisposable
                 return;
             }
 
-            UTType type = UTType.CreateFromIdentifier(kind == IOSPortableDocumentKind.TouchLayout
-                ? TouchLayoutShareDocument.TypeIdentifier : CelesteSaveType) ?? UTTypes.Data;
+            UTType type = kind == IOSPortableDocumentKind.FullBackup ? UTTypes.Zip :
+                UTType.CreateFromIdentifier(kind == IOSPortableDocumentKind.TouchLayout
+                    ? TouchLayoutShareDocument.TypeIdentifier : CelesteSaveType) ?? UTTypes.Data;
             UIDocumentPickerViewController picker = new(new[] { type }, asCopy: true)
             {
                 AllowsMultipleSelection = false,

@@ -7,6 +7,7 @@ public enum IOSPortableDocumentKind
 {
     CelesteLogicalFile,
     TouchLayout,
+    FullBackup,
 }
 
 public readonly record struct IOSPortableDocument(

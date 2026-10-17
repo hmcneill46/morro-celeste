@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DefineConstants>$(DefineConstants);CELESTE_RUNTIME;TVOS_CELESTE_RUNTIME_HOST</DefineConstants>
+    <DefineConstants Condition="'$(MorroBackupProtocolTests)' == 'true'">$(DefineConstants);MORRO_VANILLA_ACHIEVEMENTS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CelesteTvOSRuntimeHost\SaveManagerHttpProtocol.cs" Link="SaveManagerHttpProtocol.cs" />

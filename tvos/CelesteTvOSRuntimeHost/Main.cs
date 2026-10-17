@@ -73,6 +73,10 @@ internal static class Program
 #elif CELESTE_GAME
 #if TVOS_CELESTE_RUNTIME_HOST
             using PersistenceStore? persistence = PrepareCelesteRuntimeContext(enablePersistence: true);
+#if MORRO_VANILLA_ACHIEVEMENTS
+            using Morro.Achievements.AppleAchievementStorage achievements = new(PersistenceNamespace);
+            persistence?.RecoverMorroBackup(startup: true);
+#endif
             using PersistenceLifecycle? persistenceLifecycle = persistence == null ? null : new PersistenceLifecycle(persistence);
             using SaveManagerService? saveManager = persistence == null ? null : new SaveManagerService(persistence);
             using ControllerPromptPreferences? controllerPrompts = persistence == null ? null : new ControllerPromptPreferences();
@@ -80,9 +84,6 @@ internal static class Program
             using SoftReloadCoordinator? softReloadCoordinator = saveManager == null || persistence == null
                 ? null : new SoftReloadCoordinator(persistence, saveManager);
             using QuitCoordinator? quitCoordinator = saveManager == null ? null : new QuitCoordinator(saveManager);
-#if MORRO_VANILLA_ACHIEVEMENTS
-            using Morro.Achievements.AppleAchievementStorage achievements = new(PersistenceNamespace);
-#endif
 #else
             PrepareCelesteRuntimeContext(enablePersistence: false);
 #endif

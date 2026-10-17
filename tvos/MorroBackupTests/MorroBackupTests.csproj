@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DefineConstants>CELESTE_RUNTIME;TVOS_CELESTE_RUNTIME_HOST;MORRO_VANILLA_ACHIEVEMENTS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../CelesteTvOSRuntimeHost/PersistenceStore.cs" Link="PersistenceStore.cs" />
+    <Compile Include="../CelesteTvOSRuntimeHost/PersistenceStore.MorroBackups.cs" Link="PersistenceStore.MorroBackups.cs" />
+    <Compile Include="../CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs" Link="SaveManagerHttpProtocol.cs" />
+    <Compile Include="../CelesteTvOSRuntimeHost/SaveManagerContinuityPolicy.cs" Link="SaveManagerContinuityPolicy.cs" />
+    <Compile Include="../CelesteTvOSRuntimeHost/SaveManagerLanAddressPolicy.cs" Link="SaveManagerLanAddressPolicy.cs" />
+    <Compile Include="../CelesteTvOSRuntimeHost/ControllerPromptPolicy.cs" Link="ControllerPromptPolicy.cs" />
+    <Compile Include="../CelesteTvOSRuntimeHost/PerformanceHudPolicy.cs" Link="PerformanceHudPolicy.cs" />
+    <Compile Include="../../shared/CelesteAppleInput/ControllerPromptPolicy.cs" Link="AppleControllerPromptPolicy.cs" />
+    <Compile Include="../../shared/MorroAchievements/AchievementLedger.cs" Link="AchievementLedger.cs" />
+    <Compile Include="../../shared/MorroBackups/FullBackupArchive.cs" Link="FullBackupArchive.cs" />
+  </ItemGroup>
+</Project>

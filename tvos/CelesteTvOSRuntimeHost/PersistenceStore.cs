@@ -8,7 +8,7 @@ using Foundation;
 
 namespace CelesteTvOSHost;
 
-internal sealed class PersistenceStore : IDisposable
+internal sealed partial class PersistenceStore : IDisposable
 {
     internal const ushort FormatVersion = 2;
     internal const ushort PreviousFormatVersion = 1;

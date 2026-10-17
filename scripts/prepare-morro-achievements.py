@@ -24,7 +24,16 @@ SOURCES = {
     "managed/templates/MorroAchievements.cs": "Celeste/MorroAchievements.cs",
     "managed/templates/MorroAchievementUI.cs": "Celeste/MorroAchievementUI.cs",
     "shared/MorroAchievements/AchievementLedger.cs": "Celeste/AchievementLedger.cs",
+    "shared/MorroBackups/FullBackupArchive.cs": "Celeste/FullBackupArchive.cs",
 }
+IOS_SOURCES = {"managed/templates/MorroIOSBackups.cs": "Celeste/MorroIOSBackups.cs"}
+IOS_BACKUP_TRANSFORM = "scripts/morro-backups-ios.py"
+
+
+def tracked_sources(platform: str | None) -> list[str]:
+    return list(SOURCES) + (list(IOS_SOURCES) + [IOS_BACKUP_TRANSFORM] if platform == "ios" else [])
+
+
 CONTENT_PIN = (1216, 1158665183, "30a1c147d1a3ab0aa45762094e393ed7fd69951dd66e5af063447641e0699c46")
 # tvOS keeps its seven FMOD banks in the existing separate accepted FMOD stage.
 TVOS_SOURCE_CONTENT_PIN = (1209, 492943607, "0c2802322adb06f2281ca7f8358d56c75e6a5c48ba759171f4dc51a5c049d348")
@@ -116,7 +125,7 @@ def replace(path: pathlib.Path, old: str, new: str) -> None:
     path.write_text(text.replace(old, new))
 
 
-def transform(managed: pathlib.Path, catalog: list[dict]) -> None:
+def transform(managed: pathlib.Path, catalog: list[dict], platform: str | None = None) -> None:
     enum = (managed / "Celeste/Achievement.cs").read_text()
     ids = re.findall(r"^\s*([A-Z][A-Z0-9]+),?\s*$", enum, re.MULTILINE)
     if ids != [row["id"] for row in catalog]:
@@ -153,6 +162,13 @@ def transform(managed: pathlib.Path, catalog: list[dict]) -> None:
             "\t\t\t\t\t\tsaveData.AfterInitialize();\n\t\t\t\t\t\tMorroAchievements.Recover(saveData);")
     for source, target in SOURCES.items():
         shutil.copyfile(ROOT / source, managed / target)
+    if platform == "ios":
+        for source, target in IOS_SOURCES.items():
+            shutil.copyfile(ROOT / source, managed / target)
+        spec = importlib.util.spec_from_file_location("morro_ios_backups", ROOT / IOS_BACKUP_TRANSFORM)
+        backups = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(backups)
+        backups.transform(managed)
     lines = ["namespace Celeste;", "internal static class MorroAchievementCatalog", "{",
              "    internal static readonly MorroAchievementDefinition[] Entries =", "    {"]
     for row in catalog:
@@ -236,11 +252,11 @@ def main() -> int:
             manifest(source / name) # Reject links before copy; never follow a private input escape.
             shutil.copytree(source / name, output / name, ignore=shutil.ignore_patterns("bin", "obj"),
                             copy_function=lambda a, b: copier.clone_or_copy(pathlib.Path(a), pathlib.Path(b)))
-    transform(output / "managed", catalog)
+    transform(output / "managed", catalog, args.platform)
     icons = stage_icons(catalog, cache, output / "content/Content/Graphics/MorroAchievements", args.offline)
     report = {"schemaVersion": 1, "feature": "morro-vanilla-achievements-v1", "platform": args.platform,
               "input": before, "output": manifest(output / "managed"), "icons": icons,
-              "catalogSha256": sha(CATALOG), "trackedSources": {p: sha(ROOT / p) for p in SOURCES},
+              "catalogSha256": sha(CATALOG), "trackedSources": {p: sha(ROOT / p) for p in tracked_sources(args.platform)},
               "baseContent": resources,
               "achievementCount": 32, "hiddenCount": sum(r["hidden"] for r in catalog),
               "vanillaSaveFormatsChanged": False, "runtimeNetworkAccess": False,

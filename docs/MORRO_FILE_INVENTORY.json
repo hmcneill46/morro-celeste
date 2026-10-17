@@ -122,7 +122,7 @@
       "gitMode": "100644",
       "path": "README.md",
       "purpose": "Morro overview, supported build routes, attribution and Cabrillo link",
-      "sha256": "7f09c7f02ce4c8d9ee592d588363f5800d6941758c1b00e2ac35a145aece5c9f"
+      "sha256": "82a40ae52c8344c035395ba03380b43aff9c38569a1aeb353a9f8895d2e5479c"
     },
     {
       "baselineGitObject": "811851fa76c885341aaa54e9ccc6a138db63ded8",
@@ -3959,7 +3959,7 @@
       "gitMode": "100644",
       "path": "docs/testing/MORRO_VANILLA_ACHIEVEMENTS.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_VANILLA_ACHIEVEMENTS.md",
-      "sha256": "7451ba487cefa9a9263f5e10f94faa595994ff204dbc3145eb4b4d8eaea92ecc"
+      "sha256": "182cc2aa466981a314034d45c07f9546eea23294afe8ddac78b594bc3d6a6c30"
     },
     {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",
@@ -4241,7 +4241,14 @@
       "gitMode": "100644",
       "path": "managed/templates/MorroAchievements.cs",
       "purpose": "Canonical source generation, locked game profiles and platform transforms: MorroAchievements.cs",
-      "sha256": "c3498c958289d40138b78530452e8be07bc96b1719bfef99929755e42758d92f"
+      "sha256": "40f328bdea96cc045163fde9e73470d03eefe30227c8dba7939598bd2b1d75a8"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "managed/templates/MorroIOSBackups.cs",
+      "purpose": "Canonical source generation, locked game profiles and platform transforms: MorroIOSBackups.cs",
+      "sha256": "1149e027b917a51f372b6810566dc3a70a7462e56be598df771bc8e96c55f174"
     },
     {
       "baselineGitObject": "7126e76af1982ef15a1a3576b4d13ac000954acb",
@@ -4462,11 +4469,11 @@
     {
       "baselineGitObject": "b57be087e4564eb7b3ce72b905c10090574f1859",
       "baselinePath": "modern-ios/CelesteIOSDurabilityTests/Program.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSDurabilityTests/Program.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: Program.cs",
-      "sha256": "141e509d37728e13da5d0ad3f899b4bae19803810da6d0ff7736d51821ea9d48"
+      "sha256": "00042fe67044ff99240bd90a55f4c716bb466135ae9786e0f12e0ef17dca53b7"
     },
     {
       "baselineGitObject": "805ace11f927cd2eea014da6b3bf02c031945aae",
@@ -4480,11 +4487,11 @@
     {
       "baselineGitObject": "68b290121ea0bb70eeb2ba9bd8fab730474d186d",
       "baselinePath": "modern-ios/CelesteIOSFoundation/CelesteFileDurabilityStore.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSFoundation/CelesteFileDurabilityStore.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: CelesteFileDurabilityStore.cs",
-      "sha256": "d34129a7abbe6e521c6f9955e1e275d03b5106910baa063206ce0b012574e291"
+      "sha256": "af0ba0a2dc58f81928da8ccd019eb96b956fd88d3895954fa9c56b5229667df3"
     },
     {
       "baselineGitObject": "9b20f8c36f3c5ecf7cc853b03849fcba10b6b57b",
@@ -4505,13 +4512,20 @@
       "sha256": "14c0f1f676c951262d3c829961f7221d3b751a51c296ba8fe99963113d7d5292"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "modern-ios/CelesteIOSFoundation/IOSBackupPreferences.cs",
+      "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSBackupPreferences.cs",
+      "sha256": "4aab638f12c3abb1a0f12aa3e437376e195100628e9c6147a598128783de9925"
+    },
+    {
       "baselineGitObject": "187ee012d2061ab52a4a5a65f361a68b20fa32c0",
       "baselinePath": "modern-ios/CelesteIOSFoundation/IOSDataPortabilityPolicy.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSFoundation/IOSDataPortabilityPolicy.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSDataPortabilityPolicy.cs",
-      "sha256": "fc5472fe80a2b2f35081a1e7adb0cc1d79d13a100da2688f6d70f7665c12e70e"
+      "sha256": "03aea4f4cfb23946742b1dfa0176c79d5594e0b21ef46dce59b0a1602658a847"
     },
     {
       "baselineGitObject": "8411b07488772693174fd004beed3d67d574a29b",
@@ -4561,11 +4575,11 @@
     {
       "baselineGitObject": "224066f69481cfc1a7458e513ad7a21f28238fa8",
       "baselinePath": "modern-ios/CelesteIOSFoundationTests/Program.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSFoundationTests/Program.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: Program.cs",
-      "sha256": "6790721f038847d6d988e34577c97aa7e9d8adcb67bc89281e4d51a26ce75ca7"
+      "sha256": "5bb897a4bb139410f9a63daa4c7dace7504c1418145bbd6326714749eabb5b04"
     },
     {
       "baselineGitObject": "0baa9fc202892d1112bb7888c8c8e5526ad9cc93",
@@ -4660,11 +4674,11 @@
     {
       "baselineGitObject": "86129ef71db8a74f60924afa6208cae927f9ef48",
       "baselinePath": "modern-ios/CelesteIOSRuntimeHost/IOSFilePortabilityCoordinator.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSRuntimeHost/IOSFilePortabilityCoordinator.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSFilePortabilityCoordinator.cs",
-      "sha256": "81116994ffe0129816a1a553bd8a9d9548bdfe2a5d86abc3fb68ce02c11fa0d9"
+      "sha256": "0383bdf34f6b10c07f06f651951692ac0f356fc9420e236a0f614df208b423c0"
     },
     {
       "baselineGitObject": "f7d3404cf3a6a35437bd1d84f8e869831b0965f4",
@@ -4674,6 +4688,13 @@
       "path": "modern-ios/CelesteIOSRuntimeHost/IOSFnaExtension.targets",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSFnaExtension.targets",
       "sha256": "9742dee1d03a70ed33ae6023ab9fd78c20d8861476acd1a27c4fb784330f0577"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "modern-ios/CelesteIOSRuntimeHost/IOSMorroBackupStorage.cs",
+      "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: IOSMorroBackupStorage.cs",
+      "sha256": "8d85ce88d402759a07554d9fb5e91cc1ddd007b62147968ceb72abf6f377b2c7"
     },
     {
       "baselineGitObject": "245d2694ce089897ba572cfcf6724e1e9119a88b",
@@ -4700,7 +4721,7 @@
       "gitMode": "100644",
       "path": "modern-ios/CelesteIOSRuntimeHost/Program.cs",
       "purpose": "Modern vanilla/static Everest iOS hosts, resources and platform contracts: Program.cs",
-      "sha256": "a095984a9c5d7ed95a9514da28bf706e6031675614aafb2a9c555f0f0c279e0e"
+      "sha256": "4da3fa929099a8db7bebb86684ee69ec361712ae6a185ff11285c0eedf90472e"
     },
     {
       "baselineGitObject": "d7fc551868e36a974ce0aaf39538274ea6e90f41",
@@ -5680,6 +5701,13 @@
       "sha256": "6eacb8b82bb48a28a9fcaac7013880556a4b779508aa9e956fea2eb85666c534"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "scripts/morro-backups-ios.py",
+      "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: morro-backups-ios.py",
+      "sha256": "d77e899e039f3e11ba5de5c9882238a0b03f2c5cd5d1f7e22adb544b8e33cbb9"
+    },
+    {
       "baselineGitObject": "28a7cb928b0d548e137be61bdf2b2f3cf32594c8",
       "baselinePath": "scripts/preflight-apple-everest-stage25kn.py",
       "disposition": "retained",
@@ -5801,7 +5829,7 @@
       "gitMode": "100644",
       "path": "scripts/prepare-morro-achievements.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: prepare-morro-achievements.py",
-      "sha256": "c483fb08f4eaa7c76c2b7b30b4f5a6ef56e2e82a6fd6ccfbffd092f0297b1b5b"
+      "sha256": "13a7d8ff37d04208875a53a3ece690e519a264675ef0c3380b3a5942a7df8a8f"
     },
     {
       "baselineGitObject": "7ad4b1915b6c84f5a028f47f2529ade1119ca99e",
@@ -7347,14 +7375,14 @@
       "gitMode": "100644",
       "path": "scripts/verify-morro-achievements.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-achievements.py",
-      "sha256": "40f43129d0781643f2c3840982e74968e1379acce74ea4bc0fa5e7fa6f94050c"
+      "sha256": "c92660fc26d43c11810077291fd45f549b4fc85e7f54bc2c1a5f2dd651a9dae9"
     },
     {
       "disposition": "migration-added",
       "gitMode": "100755",
       "path": "scripts/verify-morro-layout.py",
       "purpose": "Preparation, build, verification, reproduction, deployment or historical regression entry point: verify-morro-layout.py",
-      "sha256": "495809909e8995890bebfcaa32c793058540dc7cc3fec3057a9d8b78cb159e25"
+      "sha256": "a0d3286c52eb9fa9ce4d34762114dacac355b873971a8efe45bd480cb80940b7"
     },
     {
       "baselineGitObject": "fbb35256185f94661bdc6e1887b90957bd9dc5bc",
@@ -7415,7 +7443,7 @@
       "gitMode": "100644",
       "path": "shared/MorroAchievements/AchievementLedger.cs",
       "purpose": "Platform-neutral product version and shared Apple runtime contracts: AchievementLedger.cs",
-      "sha256": "ad204c3340b7d2225ab12b7eb2e4bd3b9bea50696b1bad89e57e91d1c3732fa9"
+      "sha256": "7caa52b40134f20b6462f8e50d64b257674411cc176b67b612d221e5a9f15c46"
     },
     {
       "disposition": "migration-added",
@@ -7427,9 +7455,16 @@
     {
       "disposition": "migration-added",
       "gitMode": "100644",
+      "path": "shared/MorroBackups/FullBackupArchive.cs",
+      "purpose": "Platform-neutral product version and shared Apple runtime contracts: FullBackupArchive.cs",
+      "sha256": "b02d1a13b39ca32e7a873a99c8398f0e52a429cb7bf7f648a0bc6687cc58f625"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
       "path": "tests/MorroAchievementBridgeTests/GameFixture.cs",
       "purpose": "Owned portable negative and regression controls for current tooling: GameFixture.cs",
-      "sha256": "d5d4404241421bb3a655622af041e54b3d31929ef4927198a7eea3bf2c0afb77"
+      "sha256": "a6334eb79e03fc43fc4b57deee27db21232e300a51ba2d4ab6ba482a4814f8b2"
     },
     {
       "disposition": "migration-added",
@@ -7443,7 +7478,7 @@
       "gitMode": "100644",
       "path": "tests/MorroAchievementBridgeTests/Program.cs",
       "purpose": "Owned portable negative and regression controls for current tooling: Program.cs",
-      "sha256": "0564a81b230158dbceb747c9337e9696beeb79c7cc12e75418ee4c086ae17220"
+      "sha256": "aa7c082e0db395d36083bd1175b96779ee7e84912e066c83f276c386c12e7e5d"
     },
     {
       "disposition": "migration-added",
@@ -7457,7 +7492,42 @@
       "gitMode": "100644",
       "path": "tests/MorroAchievementTests/Program.cs",
       "purpose": "Owned portable negative and regression controls for current tooling: Program.cs",
-      "sha256": "1e148b1a5c33af07618ed71d3401ca18b0e5e4f15b1b1863e5e22fe5b004a672"
+      "sha256": "100307428f5884c750bc518645769b3b7b1013d8d8e6738870e45e41239cf25e"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroBackupTests/MorroBackupTests.csproj",
+      "purpose": "Owned portable negative and regression controls for current tooling: MorroBackupTests.csproj",
+      "sha256": "6beb6305d6f56d395b064a2bc6a0d1dda58c24ed241b7c66e18df41002617b64"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroBackupTests/Program.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: Program.cs",
+      "sha256": "262cb246f56454aa77c5b75e9b2a9c2b666f1fa75666c4fa39afb2e6fdacb8ab"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroIOSBackupTests/GameFixture.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: GameFixture.cs",
+      "sha256": "94c294c46a29a583575bdad14d8cb2fb819baaaff816897316647fba2d9479ec"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroIOSBackupTests/MorroIOSBackupTests.csproj",
+      "purpose": "Owned portable negative and regression controls for current tooling: MorroIOSBackupTests.csproj",
+      "sha256": "1dd5806cb64326b534c6bb8da3bee2e25dfe9ea1e74e4e4248ebfb9b6584cf62"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tests/MorroIOSBackupTests/Program.cs",
+      "purpose": "Owned portable negative and regression controls for current tooling: Program.cs",
+      "sha256": "c9bc74e71b9e474396c634ec7a1db937b2be800fc8b32fdef2bffb194a35f3ad"
     },
     {
       "baselineGitObject": "23e41d5d2c586ead9b96f71c5c9c7af559dcd902",
@@ -7489,7 +7559,7 @@
       "gitMode": "100644",
       "path": "tests/test_morro_achievements.py",
       "purpose": "Owned portable negative and regression controls for current tooling: test_morro_achievements.py",
-      "sha256": "7449bb6c1ce612c2fa669a5854e434065510e88a74c003f0c00182a9c93ed8a4"
+      "sha256": "41693d260edb3f7d900f5c7d5060fa134214787e5d0fd2ee3f58bf413f011068"
     },
     {
       "disposition": "migration-added",
@@ -8698,7 +8768,7 @@
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/Main.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: Main.cs",
-      "sha256": "c0aa3c71b2dcb55ac4d475ba28c4d6bef45d6e3c2e0b92ca7baf6b032693a53b"
+      "sha256": "c4e57974eb2dc4b35bb77a29f6574c606e12441b3f22036d9c653d465c43ab5d"
     },
     {
       "baselineGitObject": "ddee8ffa60c1e451c6fa47bf3e66f8aab06f7607",
@@ -8737,13 +8807,20 @@
       "sha256": "862011a5cb26cc3ba69493c852ce5f318d8be37bef0bc83e16408621d912943c"
     },
     {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tvos/CelesteTvOSRuntimeHost/PersistenceStore.MorroBackups.cs",
+      "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: PersistenceStore.MorroBackups.cs",
+      "sha256": "0056f38e697e161b03b0f3477a2475d8fc4c27e9cb65cf8da31437a924d036fc"
+    },
+    {
       "baselineGitObject": "efe81293475ccc1c91bf06ef5f3b474a17c19920",
       "baselinePath": "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/PersistenceStore.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: PersistenceStore.cs",
-      "sha256": "d5e414383153060b23bfa2c20057297f04976f8af941f7f5009af9a168671b95"
+      "sha256": "747609c5b32992205620c87915b7e3c22364fd62a5ebde0e827c87e3c69fd3f8"
     },
     {
       "baselineGitObject": "b27b41f334161aa89e7b08359e73154573c8c83d",
@@ -8793,11 +8870,11 @@
     {
       "baselineGitObject": "2bd1b589178b419578be36a8daa2f20abba0c865",
       "baselinePath": "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/SaveManagerHttpProtocol.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: SaveManagerHttpProtocol.cs",
-      "sha256": "2686be9ae4fbf12137605db6305b314a5d26c1df8118fb4c483cfc3bd3402fe4"
+      "sha256": "3fdbb3217eac05681d6923172dc065732ba1c0740531c6e982e42417862bb86b"
     },
     {
       "baselineGitObject": "9dae113b0331a28abc9e0d5117df4eef50144385",
@@ -8820,20 +8897,20 @@
     {
       "baselineGitObject": "d40465a1ce6b8f8b62b9c79df50c146b41112f21",
       "baselinePath": "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/SaveManagerService.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: SaveManagerService.cs",
-      "sha256": "183c2dd552b989396c9bfc79109c1a0da668d5d4dab54f1c332b900c201a11b5"
+      "sha256": "ff10c45cc45d1a1055ec09f9af40e7ef72b83f96c2db631542e8c10ec69c6dcd"
     },
     {
       "baselineGitObject": "41bc3a749484994d8ccf2eca2580178987f8aad4",
       "baselinePath": "tvos/CelesteTvOSRuntimeHost/SoftReloadCoordinator.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/CelesteTvOSRuntimeHost/SoftReloadCoordinator.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: SoftReloadCoordinator.cs",
-      "sha256": "4b8070f00d00e439faa7b7240740b32e22f97f638a68fe2275474e05ad34ac72"
+      "sha256": "b36dc0f79b61bb05e288db6d394a4f578a99f7b72afde53c8163f85d55148ec3"
     },
     {
       "baselineGitObject": "c32a80d87ead1a6f8b4ddc63745a8a50be5c2376",
@@ -8897,6 +8974,27 @@
       "path": "tvos/Local.Build.props.example",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: Local.Build.props.example",
       "sha256": "bbb1753e4d3f35edd8bb35a0cc77df522d4e5df5dc2f033fef5efeb23cc3bfba"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tvos/MorroBackupTests/MorroBackupTests.csproj",
+      "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: MorroBackupTests.csproj",
+      "sha256": "d11b9a1739f0adad8d722b2f43c9c8b18577a460aa234357eb56b04b32adb92f"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tvos/MorroBackupTests/PlatformFixture.cs",
+      "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: PlatformFixture.cs",
+      "sha256": "b6a945124326c735c698332967b03f739f3ef7e01f56ca4e160c5eb9272fe61b"
+    },
+    {
+      "disposition": "migration-added",
+      "gitMode": "100644",
+      "path": "tvos/MorroBackupTests/Program.cs",
+      "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: Program.cs",
+      "sha256": "190825ffd07f9f95dae97a0e99af39c97e9fcc33ed63a01cffcf337de80dd709"
     },
     {
       "baselineGitObject": "2d1d9b0245ade3f102c47e2255689c2756f2a4fa",
@@ -8973,20 +9071,20 @@
     {
       "baselineGitObject": "50ebc9bf7e2387ae45ae0c8b1a3496a1ed1b50bf",
       "baselinePath": "tvos/SaveManagerProtocolTests/Program.cs",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/SaveManagerProtocolTests/Program.cs",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: Program.cs",
-      "sha256": "be6c911281154a300cbd6d8505d9b37c9d6ad7ce8f6d056f7e6952f10c24dec9"
+      "sha256": "f54a077d1fe8fa7bc26815764604e0d36fdf0718302d1f40b94588fbaa9e0903"
     },
     {
       "baselineGitObject": "306fd1cd669e0b3e86289b6af185386d507abef9",
       "baselinePath": "tvos/SaveManagerProtocolTests/SaveManagerProtocolTests.csproj",
-      "disposition": "retained",
+      "disposition": "post-migration-adjusted",
       "gitMode": "100644",
       "path": "tvos/SaveManagerProtocolTests/SaveManagerProtocolTests.csproj",
       "purpose": "Modern tvOS hosts, storage/controllers, regression tests and release authorities: SaveManagerProtocolTests.csproj",
-      "sha256": "9cca1e19813525b017c6c6c2937ee752f00b146ff12034835d0fa059b0fabb76"
+      "sha256": "ee182f6746ab14869e6c684540cb314c1caef74d8b46f992ae78f94b244a8d52"
     },
     {
       "baselineGitObject": "e4959c56a70bbb7a31891acc333e309a6ad6ac4c",

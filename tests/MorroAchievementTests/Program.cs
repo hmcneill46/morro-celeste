@@ -261,6 +261,188 @@ Test("all maximum catalog entries fit the bounded format", () =>
     Check(store.Data.Values.All(value => value.Length <= AchievementLedger.MaximumRecordCharacters));
     Check(new AchievementLedger(fullIds, store.Read, store.Write).UnlockedCount == 64);
 });
+Test("portable export is canonical, bounded and independent of local keys and generations", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("PICO8", 42, notify: false);
+    ledger.TryUnlock("CH1", 0, notify: false);
+    int writes = store.Writes;
+    string backup = ledger.ExportBackup();
+    ledger.ValidateBackup(backup);
+    Check(backup.Length <= 8192 && backup.Contains("CH1=0;PICO8=42"));
+    Check(!backup.Contains(prefix) && !backup.Contains("production") && store.Writes == writes);
+    AchievementLedger other = new(ids, _ => null, (_, _) => { }, "Other.Scope");
+    other.ValidateBackup(backup);
+    Throws<ArgumentException>(() => new AchievementLedger(["CH1"], _ => null, (_, _) => { }).ValidateBackup(backup));
+});
+Test("normalization changes only recovery policy and explicit restore defaults to false", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("CH1", 12);
+    string prior = ledger.ExportBackup();
+    string normalized = ledger.NormalizeBackup(prior);
+    Check(prior != normalized && ledger.NormalizeBackup(normalized, true) == prior);
+    Check(ledger.ReplaceBackup(prior) && ledger.ExportBackup() == normalized && !ledger.AutomaticSaveRecovery);
+    Check(ledger.ReplaceBackup(prior, preserveRecoveryPolicy: true));
+    Check(ledger.ExportBackup() == prior && Ledger(store).AutomaticSaveRecovery);
+});
+Test("exact replacement can remove unlocks and ignores old replicas regardless of generation", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("CH1", 0);
+    string smaller = ledger.ExportBackup();
+    ledger.TryUnlock("ONEUP", 23);
+    int events = 0;
+    ledger.Unlocked += _ => events++;
+    Check(ledger.ReplaceBackup(smaller) && ledger.UnlockedCount == 1 && events == 0);
+    store.Data[prefix + ".B"] = Record("MORROACH|1|9223372036854775807|ONEUP=1");
+    AchievementLedger cold = Ledger(store);
+    Check(cold.Has("CH1") && !cold.Has("ONEUP") && !cold.AutomaticSaveRecovery && cold.IsDirty);
+    Check(cold.Flush() && Ledger(store).UnlockedCount == 1);
+});
+Test("a second empty epoch cannot union either legacy or prior replacement progress", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("CH1", 7);
+    Check(ledger.ReplaceBackup(ledger.ExportBackup()));
+    string oldEpoch = store.Data[prefix + ".A"];
+    Check(ledger.ReplaceBackup(ledger.EmptyBackup()) && ledger.UnlockedCount == 0);
+    store.Data[prefix + ".B"] = oldEpoch;
+    AchievementLedger cold = Ledger(store);
+    Check(cold.UnlockedCount == 0 && !cold.AutomaticSaveRecovery && cold.Flush());
+    Check(store.Data.Values.All(value => value.StartsWith("MORROACH|2|2|", StringComparison.Ordinal)));
+});
+Test("failed replacement retains exact empty target and rejects another pending target", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("CH1", 1);
+    string prior = ledger.ExportBackup();
+    store.FailWrites = true;
+    Check(!ledger.ReplaceBackup(ledger.EmptyBackup()) && ledger.IsDirty && ledger.UnlockedCount == 0);
+    Check(!ledger.TryUnlock("ONEUP", 2) && ledger.UnlockedCount == 0);
+    Throws<InvalidOperationException>(() => ledger.ReplaceBackup(prior));
+    Check(Ledger(store).Has("CH1")); // No replacement write was acknowledged.
+    store.FailWrites = false;
+    Check(ledger.ReplaceBackup(ledger.EmptyBackup()) && !ledger.IsDirty);
+    Check(Ledger(store).UnlockedCount == 0 && !Ledger(store).AutomaticSaveRecovery);
+});
+Test("cached failed synchronization does not acknowledge a replacement", () =>
+{
+    CachedPreferences store = new();
+    AchievementLedger ledger = new(ids, store.Read, store.Write);
+    ledger.TryUnlock("CH1", 1);
+    store.SynchronizeFails = true;
+    Check(!ledger.ReplaceBackup(ledger.EmptyBackup()) && ledger.IsDirty);
+    Check(new AchievementLedger(ids, store.ReadDisk, store.Write).Has("CH1"));
+    Check(!ledger.Flush() && ledger.UnlockedCount == 0);
+    int writes = store.Writes;
+    store.SynchronizeFails = false;
+    Check(ledger.Flush() && store.Writes == writes + 2);
+    Check(new AchievementLedger(ids, store.ReadDisk, store.Write).UnlockedCount == 0);
+});
+Test("interruption after first replacement replica restores only new epoch", () =>
+{
+    CachedPreferences store = new();
+    AchievementLedger ledger = new(ids, store.Read, store.Write);
+    ledger.TryUnlock("CH1", 1);
+    store.FailOnWrite = store.Writes + 2;
+    Check(!ledger.ReplaceBackup(ledger.EmptyBackup()));
+    AchievementLedger cold = new(ids, store.ReadDisk, store.Write);
+    Check(cold.UnlockedCount == 0 && !cold.AutomaticSaveRecovery && cold.IsDirty);
+    store.FailOnWrite = 0;
+    Check(ledger.Flush() && new AchievementLedger(ids, store.ReadDisk, store.Write).UnlockedCount == 0);
+});
+Test("unreadable old replica delays replacement without losing its pending target", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("CH1", 1);
+    int writes = store.Writes;
+    store.FailReads = true;
+    Check(!ledger.ReplaceBackup(ledger.EmptyBackup()) && store.Writes == writes);
+    store.FailReads = false;
+    Check(ledger.Flush() && Ledger(store).UnlockedCount == 0);
+});
+Test("one corrupt acknowledged empty replica cannot resurrect removed progress", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger ledger = Ledger(store);
+    ledger.TryUnlock("CH1", 1);
+    Check(ledger.ReplaceBackup(ledger.EmptyBackup()));
+    store.Data[prefix + ".A"] += "corrupt";
+    AchievementLedger cold = Ledger(store);
+    Check(cold.UnlockedCount == 0 && !cold.AutomaticSaveRecovery && cold.Flush());
+});
+Test("stale ledger flush adopts a newer replacement instead of merging its old state", () =>
+{
+    MemoryStore store = new();
+    AchievementLedger stale = Ledger(store);
+    stale.TryUnlock("CH1", 1);
+    AchievementLedger current = Ledger(store);
+    Check(current.ReplaceBackup(current.EmptyBackup()));
+    int events = 0;
+    stale.Unlocked += _ => events++;
+    Check(!stale.TryUnlock("ONEUP", 2));
+    Check(stale.UnlockedCount == 0 && Ledger(store).UnlockedCount == 0 && events == 0);
+});
+Test("journal rollback supersedes a partially durable replacement with a fresh epoch", () =>
+{
+    CachedPreferences store = new();
+    AchievementLedger ledger = new(ids, store.Read, store.Write);
+    ledger.TryUnlock("CH1", 13);
+    string prior = ledger.ExportBackup();
+    store.FailOnWrite = store.Writes + 2;
+    Check(!ledger.ReplaceBackup(ledger.EmptyBackup()));
+    Check(new AchievementLedger(ids, store.ReadDisk, store.Write).UnlockedCount == 0);
+    store.FailOnWrite = 0;
+    Check(ledger.ReplaceBackup(prior, preserveRecoveryPolicy: true));
+    AchievementLedger cold = new(ids, store.ReadDisk, store.Write);
+    Check(cold.Has("CH1") && cold.AutomaticSaveRecovery && cold.ExportBackup() == prior);
+    Check(store.Disk.Values.All(value => value.StartsWith("MORROACH|2|2|", StringComparison.Ordinal)));
+});
+Test("new epoch replaces an exhausted generation but exhausted epoch remains pending", () =>
+{
+    MemoryStore store = new();
+    store.Data[prefix + ".A"] = Record("MORROACH|1|9223372036854775807|CH1=1");
+    AchievementLedger ledger = Ledger(store);
+    Check(ledger.ReplaceBackup(ledger.EmptyBackup()) && Ledger(store).UnlockedCount == 0);
+    store.Data[prefix + ".A"] = Record("MORROACH|2|9223372036854775807|1|0|CH1=1");
+    ledger = Ledger(store);
+    int writes = store.Writes;
+    Check(!ledger.ReplaceBackup(ledger.EmptyBackup()) && ledger.IsDirty && store.Writes == writes);
+});
+string portableCatalog = Ledger(new()).EmptyBackup().Split('|')[2];
+foreach ((string name, string value) in new (string, string)[]
+{
+    ("checksum", Ledger(new()).EmptyBackup() + "x"),
+    ("oversized", new string('x', 8193)),
+    ("wrong catalog", Record("MORROACHBACKUP|1|other|0|")),
+    ("future schema", Record("MORROACHBACKUP|2|" + portableCatalog + "|0|")),
+    ("unknown ID", Record("MORROACHBACKUP|1|" + portableCatalog + "|0|OTHER=1")),
+    ("duplicate ID", Record("MORROACHBACKUP|1|" + portableCatalog + "|0|CH1=1;CH1=2")),
+    ("negative date", Record("MORROACHBACKUP|1|" + portableCatalog + "|0|CH1=-1")),
+    ("overflow date", Record("MORROACHBACKUP|1|" + portableCatalog + "|0|CH1=253402300800")),
+    ("invalid policy", Record("MORROACHBACKUP|1|" + portableCatalog + "|2|")),
+    ("extra field", Record("MORROACHBACKUP|1|" + portableCatalog + "|0||extra")),
+})
+{
+    Test($"portable {name} is rejected before state or storage mutation", () =>
+    {
+        MemoryStore store = new();
+        AchievementLedger ledger = Ledger(store);
+        ledger.TryUnlock("CH1", 1);
+        int writes = store.Writes;
+        string before = ledger.ExportBackup();
+        Throws<ArgumentException>(() => ledger.ValidateBackup(value));
+        Throws<ArgumentException>(() => ledger.ReplaceBackup(value));
+        Check(ledger.ExportBackup() == before && store.Writes == writes && !ledger.IsDirty);
+    });
+}
 Console.WriteLine($"PASS: {passed} Morro achievement ledger tests");
 
 sealed class MemoryStore

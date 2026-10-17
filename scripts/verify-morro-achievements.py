@@ -47,7 +47,8 @@ def validate_app(app: pathlib.Path, platform: str | None = None) -> None:
     game = app / "Celeste.dll"
     require(game.is_file(), "achievement game assembly missing")
     game_bytes = game.read_bytes()
-    for token in ("MorroAchievements", "MorroAchievementUI", "AchievementLedger", "Recover", "QueueUnlock"):
+    for token in ("MorroAchievements", "MorroAchievementUI", "AchievementLedger", "Recover", "QueueUnlock",
+                  "FullBackupArchive", "ReplaceBackup", "ValidateCentralDirectory"):
         require(token.encode() in game_bytes, "achievement game closure missing: " + token)
     hosts = [app / "CelesteIOSRuntimeHost.dll", app / "CelesteTvOSRuntimeHost.dll"]
     hosts = [p for p in hosts if p.is_file()]
@@ -58,6 +59,11 @@ def validate_app(app: pathlib.Path, platform: str | None = None) -> None:
     host = hosts[0].read_bytes()
     require(b"AppleAchievementStorage" in host and "Morro.VanillaAchievements.".encode("utf-16le") in host,
             "independent Apple achievement storage is missing")
+    ios = hosts[0].name == "CelesteIOSRuntimeHost.dll"
+    require((b"IOSMorroBackupStorage" if ios else b"RestoreMorroBackup") in host,
+            "full-session backup host integration is missing")
+    if ios:
+        require(b"MorroIOSBackups" in game_bytes, "in-game iOS backup integration is missing")
     require((app / "Celeste.aotdata.arm64").is_file() and
             (app / (hosts[0].stem + ".aotdata.arm64")).is_file(), "achievement assemblies lack full-AOT data")
 
@@ -68,7 +74,7 @@ def validate_source(root: pathlib.Path, platform: str) -> dict:
     require(report["schemaVersion"] == 1 and report["feature"] == "morro-vanilla-achievements-v1" and
             report["platform"] == platform, "achievement derivation identity changed")
     require(report["catalogSha256"] == prepare.sha(prepare.CATALOG), "achievement catalog is stale")
-    require(report["trackedSources"] == {p: prepare.sha(ROOT / p) for p in prepare.SOURCES},
+    require(report["trackedSources"] == {p: prepare.sha(ROOT / p) for p in prepare.tracked_sources(platform)},
             "achievement runtime templates are stale")
     baseline = ROOT / (".build/celeste-ios/current" if platform == "ios" else ".build/celeste-runtime/stage6-current/audio")
     original = prepare.manifest(baseline / "managed")
@@ -82,7 +88,7 @@ def validate_source(root: pathlib.Path, platform: str) -> dict:
     with tempfile.TemporaryDirectory(prefix="verify-", dir=ROOT / ".build/morro-achievements") as temporary:
         expected = pathlib.Path(temporary) / "managed"
         shutil.copytree(baseline / "managed", expected, ignore=shutil.ignore_patterns("bin", "obj"))
-        prepare.transform(expected, prepare.read_catalog())
+        prepare.transform(expected, prepare.read_catalog(), platform)
         require(prepare.manifest(expected) == actual, "unexpected change outside the exact achievement derivation")
     paths = validate_icons(root / "content/Content")
     resources = prepare.content_manifest([baseline / "content/Content", baseline / "banks/Content"])

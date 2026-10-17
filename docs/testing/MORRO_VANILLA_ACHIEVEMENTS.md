@@ -1,6 +1,6 @@
 # Vanilla Morro achievements
 
-Status: **IMPLEMENTED — initial full-AOT products verified; viewer refinements checked on the host, with fresh product and physical acceptance pending.**
+Status: **IMPLEMENTED — full-session backup integration under current validation; physical backup/restore acceptance pending.**
 
 This report describes the new vanilla iOS/iPadOS and tvOS feature. Build and
 host-fixture results establish no hardware or physical gameplay PASS. The initial
@@ -74,7 +74,7 @@ PICO-8 completion. Several details matter when checking this integration:
 
 ## Existing saves
 
-Opening Achievements reads the three existing slots through the normal storage
+Before an explicit achievement reset or full-session restore, opening Achievements reads the three existing slots through the normal storage
 authority, or uses the live save when playing. Selecting or loading a save also
 recovers achievements that its original progress can establish. Recovery never
 selects or initializes a save just to inspect it. This covers recorded chapter completion,
@@ -102,21 +102,77 @@ acknowledged merely because the preferences cache returns the new value. Both
 replicas must confirm their writes. Historical recovery batches all awards into
 one pair of writes; live awards are persisted immediately.
 
-This storage does not add fields to Celeste's `SaveData` or `Settings`, does not
-change their serializers, and does not enter the tvOS compressed vanilla-save
-generations. The Save Manager's fixed four-file boundary remains intact.
-Achievement progress therefore remains when a numbered slot is imported,
-replaced, or deleted, when Settings is reset, and through the existing soft
-reload. Importing a save can add recoverable achievements when that save is
-selected or the achievements page is reopened; deleting a save never revokes an
-earned achievement.
+This storage does not add fields to Celeste's `SaveData` or `Settings`, change
+those serializers, or expand the tvOS compressed vanilla-save envelope beyond
+its original four files. Individual slot import/delete and Settings reset retain
+achievement progress. On installations that have never explicitly restored or
+reset achievements, selecting a save or opening the achievements page can still
+recover awards supported by that save.
 
-Ordinary `.celeste` exports contain only the original save or Settings data.
-They do not back up this separate achievement record. Achievement state has no
-cross-device sync or uninstall-survival guarantee: uninstalling the app removes
-its local progress. Reinstalling and importing an old save can recover only
-the achievements evidenced by that save, as described above. There is no
-achievement-reset action in this initial feature.
+### Full-session backups
+
+Vanilla Morro now has a **Full Backup** ZIP alongside the existing individual
+`.celeste` operations. It contains all three slots (including explicit absence),
+Settings, the achievement record and unlock dates, and a bounded allowlist of
+device preferences. It does not contain credentials, pairing tokens, device or
+team identifiers, app binaries, or game content.
+
+- **iOS/iPadOS:** open **Options → Data & Files → Export Full Backup...** and
+  save the single ZIP with the existing Files sheet. Rename it in Files, for
+  example `Harry's Celeste.zip` or `Test Session.zip`. Use **Restore Full Backup...**
+  to choose a ZIP and confirm replacement in Celeste.
+- **tvOS:** open and pair the existing Save Manager, enter a backup name, and
+  download its full ZIP. Upload a full ZIP and confirm replacement, then confirm
+  the existing in-game reload to resume. Export is unavailable while a restore
+  or reload is pending.
+- **Reset Achievements** clears only achievements. Back up first to make that
+  reset reversible. It does not delete saves or reset Settings.
+
+A full restore replaces the session instead of adding to it: a missing slot is
+removed, achievement progress can go down, and neither the old save fallback
+nor an older achievement replica can bring the previous session back. Restoring
+A, then B, then A restores each archive's own state. Explicit restore/reset
+persistently disables automatic achievement recovery from saves. New original
+gameplay achievement events still work normally; merely opening the viewer or
+loading an old save does not undo the restored/reset state.
+
+Full backups can move between vanilla iOS and tvOS subject to the destination's
+existing save-size limits. Settings and achievements travel across platforms;
+device preferences apply only when source and destination platforms match.
+iOS includes touch preferences/layouts, grab modes, haptics, and controller
+prompts. tvOS includes controller prompts and the performance HUD preference.
+Foreign platform preferences are not copied into arbitrary native keys. Files
+renaming on iOS changes the archive filename, not its internal creation label.
+
+The ZIP has a versioned manifest and per-component SHA-256 hashes. Parsing
+accepts only the fixed entry set, validates all files with the existing Celeste
+serializers before mutation, rejects unknown/duplicate entries, and bounds
+compressed and expanded data. It never extracts archive-supplied paths.
+Legacy four-file tvOS ZIPs are not complete-session archives; import their
+`.celeste` files with the existing individual-file actions.
+
+The iOS restore stages one atomic private target journal, blocks stale writes,
+replaces both primary and previous-good copies under the original file-store
+lock, replaces achievements/preferences, and reloads a fresh main menu. The
+journal is removed only after completion; an interrupted process replays the
+validated target before gameplay. tvOS keeps the existing compressed A/B save
+authority and stages a small intent containing old/target hashes and sidecars.
+Cold recovery follows whichever base generation persisted, completes matching
+sidecars, and mirrors both base replicas before clearing the intent. Both
+platforms require storage acknowledgements rather than trusting a preferences
+cache. An unresolved journal blocks gameplay mutations until recovery succeeds.
+
+Local achievement replicas now include a session epoch. Only replicas within
+the highest epoch can merge; explicit replacement creates a new epoch and
+writes both replicas. Portable achievement data contains IDs, timestamps,
+catalog identity, and recovery policy, but no local preference keys or epochs.
+Existing version-1 local records remain readable without changing their
+original recovery behavior.
+
+Ordinary `.celeste` exports still contain only the original save or Settings
+data. Full backups are user-controlled files, with no automatic cloud sync or
+uninstall-survival guarantee for the app's local storage. Keep exported ZIPs
+outside the app before deleting it.
 
 ## Artwork and provenance
 
@@ -282,3 +338,42 @@ derived tree against a fresh
 application of the exact transform and verifies all original content bytes,
 separately from the 64 new private artwork files. The optional iOS package flag
 keeps the original canonical content hash/count/size requirement intact.
+
+### Full-backup validation, 2026-10-17
+
+This integration has separate validation from the initial achievement products
+and viewer-refinement products. Host tests use owned data and isolated storage;
+no restore, reset, or fault injection runs against the owner's device data.
+Current host checks:
+
+| Check | Result |
+| --- | --- |
+| Portable Python suite | PASS — 119 tests, including 21 final-stage preparation/verifier regressions |
+| Achievement ledger and bridge | PASS — 116 checks including batch recovery |
+| Shared ZIP format | PASS — 53 checks including malformed directory counts, payload limits, and exact A/B/A round trips |
+| iOS actual-template operation flow | PASS — 29 assertions including cancellation, journal staging uncertainty, retry, and durable achievement-only reset |
+| iOS durable file authority | PASS — 202 assertions including eight interrupted-write boundaries and previous-good isolation |
+| iOS platform foundation | PASS — 255 assertions including preference validation |
+| tvOS actual transaction with isolated platform fixture | PASS — 70 checks including all eight synchronization failure points with cached/durable uncertainty |
+| tvOS full-backup HTTP protocol | PASS — 79 checks including authentication, stale revision, limits, and blocked export after failed restore |
+| tvOS pairing / continuity | PASS — 31 / 57 checks |
+| Apple API managed compilation | PASS — both platforms, zero errors; host fixtures are not device evidence |
+| Fresh full-AOT products | PENDING — current source must be committed before serial product compilation |
+
+Reproduce the new portable suites with the pinned SDK and flags below. The
+Foundation and durability projects are under `modern-ios`; the ledger and
+bridge projects are under `tests` as listed earlier.
+
+```sh
+dotnet run --project tests/MorroIOSBackupTests --disable-build-servers -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false
+dotnet run --project tests/MorroBackupTests --disable-build-servers -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false
+dotnet run --project tvos/MorroBackupTests --disable-build-servers -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false
+dotnet run --project tvos/SaveManagerProtocolTests --disable-build-servers -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false -p:MorroBackupProtocolTests=true
+```
+
+Physical acceptance remains **NOT_RUN** for the backup changes. On each platform,
+check export through its real file-transfer UI, switch two distinguishable
+archives in both directions, confirm empty slots and achievement counts/dates,
+confirm Settings and platform preferences, cold-launch, and verify a new award.
+Use an isolated test namespace/data set and preserve production backups first.
+Historical build-49 and HOST/K-M/K-N evidence is unchanged.

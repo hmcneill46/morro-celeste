@@ -350,6 +350,96 @@ Test("mutation-connection-gate-releases", () =>
     return gate.Count == 0;
 });
 
+Test("full-backup-controls-and-replacement-warning", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out _);
+    string html = Encoding.UTF8.GetString(full.Handle(Request("GET", "/", Authenticate(full))).Body);
+    return html.Contains("Download full backup", StringComparison.Ordinal) && html.Contains("Reset achievements", StringComparison.Ordinal) &&
+        html.Contains("Slots missing from the backup become empty", StringComparison.Ordinal) &&
+        html.Contains("data-continuity-control id=backup-name", StringComparison.Ordinal);
+});
+Test("full-restore-authentication-before-handler", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    return full.Handle(MutationRequest("/backup/restore", null, null, null, "zip"u8.ToArray(), "application/zip")).StatusCode == 401 && authority.Calls == 0;
+});
+Test("full-restore-csrf-before-handler", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    return full.Handle(MutationRequest("/backup/restore", auth.Session, "wrong", auth.Revision, "zip"u8.ToArray(), "application/zip")).StatusCode == 403 && authority.Calls == 0;
+});
+Test("full-restore-content-type-before-handler", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    return full.Handle(MutationRequest("/backup/restore", auth.Session, auth.Csrf, auth.Revision, "zip"u8.ToArray(), "application/octet-stream")).StatusCode == 415 && authority.Calls == 0;
+});
+Test("full-restore-bound-rejected-from-framing", () =>
+    SaveManagerHttpProtocol.InspectRequestProgress(Raw("POST /backup/restore HTTP/1.1\r\nContent-Length: 1048577\r\n\r\n")).Rejection?.StatusCode == 413);
+#if MORRO_VANILLA_ACHIEVEMENTS
+Test("full-restore-has-independent-larger-body-limit", () =>
+{
+    SaveManagerRequestProgress progress = SaveManagerHttpProtocol.InspectRequestProgress(Raw("POST /backup/restore HTTP/1.1\r\nContent-Length: 900000\r\n\r\n"));
+    return progress.Rejection == null && !progress.Complete && progress.ExpectedBytes > 900000;
+});
+#endif
+Test("full-backup-export-preserves-name", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    SaveManagerHttpResponse response = full.Handle(MutationRequest("/backup/download", auth.Session, auth.Csrf, auth.Revision,
+        Encoding.UTF8.GetBytes("Harry's Celeste"), "text/plain;charset=UTF-8"));
+    return response.StatusCode == 200 && response.Headers["Content-Type"] == "application/zip" && authority.LastName == "Harry's Celeste" && !full.RestartRequired;
+});
+Test("full-backup-revision-binds-achievements", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    full.ReplaceSnapshot(authority.Snapshot with { Achievements = "new-achievements" });
+    return full.Handle(MutationRequest("/reset/achievements", auth.Session, auth.Csrf, auth.Revision, null)).StatusCode == 409 && authority.Calls == 0;
+});
+Test("full-backup-revision-binds-preferences", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    full.ReplaceSnapshot(authority.Snapshot with { Preferences = new Dictionary<string, string?> { ["controllerPrompts"] = "PlayStation" } });
+    return full.Handle(MutationRequest("/reset/achievements", auth.Session, auth.Csrf, auth.Revision, null)).StatusCode == 409 && authority.Calls == 0;
+});
+Test("full-restore-success-requires-reload", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    SaveManagerHttpResponse response = full.Handle(MutationRequest("/backup/restore", auth.Session, auth.Csrf, auth.Revision, "zip"u8.ToArray(), "application/zip"));
+    return response.StatusCode == 200 && full.RestartRequired && authority.Calls == 1 && response.Headers["X-Celeste-Reload-Required"] == "true";
+});
+Test("full-restore-uncertain-failure-requires-recovery", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    authority.FailPending = true;
+    AuthInfo auth = AuthenticateWithTokens(full);
+    SaveManagerHttpResponse response = full.Handle(MutationRequest("/backup/restore", auth.Session, auth.Csrf, auth.Revision, "zip"u8.ToArray(), "application/zip"));
+    return response.StatusCode == 503 && full.RestartRequired && Encoding.UTF8.GetString(response.Body).Contains("needs recovery", StringComparison.Ordinal);
+});
+Test("achievement-reset-keeps-base-snapshot", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    AuthInfo auth = AuthenticateWithTokens(full);
+    byte[] before = authority.Snapshot.Files["0"]!.ToArray();
+    SaveManagerHttpResponse response = full.Handle(MutationRequest("/reset/achievements", auth.Session, auth.Csrf, auth.Revision, null));
+    return response.StatusCode == 200 && authority.Snapshot.Files["0"]!.SequenceEqual(before) && authority.Snapshot.Achievements == "empty";
+});
+Test("pending-full-restore-cannot-export-hybrid-session", () =>
+{
+    SaveManagerHttpProtocol full = NewFullProtocol(out FullBackupAuthority authority);
+    authority.FailPending = true;
+    AuthInfo auth = AuthenticateWithTokens(full);
+    _ = full.Handle(MutationRequest("/backup/restore", auth.Session, auth.Csrf, auth.Revision, "zip"u8.ToArray(), "application/zip"));
+    SaveManagerHttpResponse export = full.Handle(MutationRequest("/backup/download", auth.Session, auth.Csrf, full.RevisionForDiagnostics,
+        "Pending"u8.ToArray(), "text/plain;charset=UTF-8"));
+    return export.StatusCode == 409 && authority.LastName == null;
+});
+
 Console.WriteLine($"STAGE10A_PROTOCOL_TESTS PASS count={passed}");
 return;
 
@@ -367,6 +457,12 @@ static SaveManagerHttpProtocol NewProtocol(Func<DateTimeOffset>? clock = null) =
     ["1"] = null,
     ["2"] = "slot-two"u8.ToArray()
 }), clock);
+
+static SaveManagerHttpProtocol NewFullProtocol(out FullBackupAuthority authority)
+{
+    authority = new FullBackupAuthority();
+    return new(authority.Snapshot, exportBackup: authority.Export, restoreBackup: authority.Restore, resetAchievements: authority.Reset);
+}
 
 static byte[] Request(string method, string path, string? session = null)
 {
@@ -480,5 +576,30 @@ internal sealed class FakeMutationAuthority
             Snapshot = new SaveExportSnapshot(Snapshot.Generation + 1, logical, files);
             return SaveMutationResult.Committed(Snapshot, 1000, 2000);
         }
+    }
+}
+
+internal sealed class FullBackupAuthority
+{
+    internal SaveExportSnapshot Snapshot = new(7, "base-hash", new Dictionary<string, byte[]?>
+    {
+        ["settings"] = "settings"u8.ToArray(), ["0"] = "save"u8.ToArray(), ["1"] = null, ["2"] = null
+    }, "old-achievements", new Dictionary<string, string?> { ["controllerPrompts"] = "Xbox", ["performanceHud"] = null });
+    internal int Calls;
+    internal string? LastName;
+    internal bool FailPending;
+    internal byte[] Export(SaveExportSnapshot snapshot, string name) { LastName = name; return "zip"u8.ToArray(); }
+    internal SaveMutationResult Restore(byte[] archive, SaveExportSnapshot expected)
+    {
+        Calls++;
+        if (FailPending) return SaveMutationResult.Failed("backup-pending", Snapshot with { Achievements = "partial" }, true);
+        Snapshot = Snapshot with { Generation = Snapshot.Generation + 1, Achievements = "restored" };
+        return SaveMutationResult.Committed(Snapshot, 100, 200);
+    }
+    internal SaveMutationResult Reset(SaveExportSnapshot expected)
+    {
+        Calls++;
+        Snapshot = Snapshot with { Generation = Snapshot.Generation + 1, Achievements = "empty" };
+        return SaveMutationResult.Committed(Snapshot, 100, 200);
     }
 }

@@ -47,6 +47,17 @@ ANCHORS = {
 }
 
 
+IOS_ANCHORS = {
+    "Celeste/IOSDataFilesUI.cs": (
+        "    public static bool MutationSafe => Engine.Scene is not Level && !UserIO.Saving;",
+        '        Add(new Button("Export All Saves...").Pressed(() => Run(IOSDataFiles.ExportAll)));'),
+    "Celeste/IOSStorageHooks.cs": (
+        "    public static bool SaveLogicalFile(string logicalName, byte[] payload)\n    {",
+        "    public static bool DeleteLogicalFile(string logicalName)\n    {"),
+    "Celeste/UserIO.cs": ("\tpublic static void SaveHandler(bool file, bool settings)\n\t{",),
+}
+
+
 class AchievementToolingTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory(prefix="morro-achievement-tests-")
@@ -62,7 +73,7 @@ class AchievementToolingTests(unittest.TestCase):
         self.cache = self.root / ".build/morro-achievements/cache"
         self.cache.mkdir(parents=True)
         self.managed.mkdir(parents=True)
-        for name, anchors in ANCHORS.items():
+        for name, anchors in (ANCHORS | IOS_ANCHORS).items():
             path = self.managed / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("// Synthetic, project-owned transform fixture.\n" + "\n".join(anchors) + "\n")
@@ -73,7 +84,7 @@ class AchievementToolingTests(unittest.TestCase):
         content.mkdir(parents=True)
         (content / "owned-fixture.txt").write_text("Original owned content.\n")
 
-        for name in (*prepare.SOURCES, "scripts/celeste-stage3b.py",
+        for name in (*prepare.tracked_sources("ios"), "scripts/celeste-stage3b.py",
                      "docs/licenses/ACHIEVEMENT_HELPER_LICENSE.txt"):
             target = self.root / name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -182,6 +193,29 @@ class AchievementToolingTests(unittest.TestCase):
                         path.write_text(path.read_text().replace(anchor, replacement))
                         with self.assertRaisesRegex(ValueError, "source lock changed"):
                             prepare.transform(candidate, prepare.read_catalog())
+
+    def test_ios_backup_transform_requires_every_anchor_exactly_once(self):
+        for filename, anchors in IOS_ANCHORS.items():
+            for anchor in anchors:
+                for replacement in ("// missing anchor", anchor + "\n" + anchor):
+                    with self.subTest(filename=filename, duplicate=replacement.startswith(anchor)):
+                        candidate = self.root / "candidate"
+                        if candidate.exists():
+                            shutil.rmtree(candidate)
+                        shutil.copytree(self.managed, candidate)
+                        path = candidate / filename
+                        path.write_text(path.read_text().replace(anchor, replacement))
+                        with self.assertRaisesRegex(ValueError, "backup source anchor changed"):
+                            prepare.transform(candidate, prepare.read_catalog(), "ios")
+
+    def test_tvos_omits_ios_backup_integration(self):
+        candidate = self.root / "candidate"
+        shutil.copytree(self.managed, candidate)
+        prepare.transform(candidate, prepare.read_catalog(), "tvos")
+        self.assertTrue((candidate / "Celeste/FullBackupArchive.cs").is_file())
+        self.assertFalse((candidate / "Celeste/MorroIOSBackups.cs").exists())
+        self.assertEqual((candidate / "Celeste/IOSStorageHooks.cs").read_bytes(),
+                         (self.managed / "Celeste/IOSStorageHooks.cs").read_bytes())
 
     def test_transform_rejects_enum_reorder_missing_or_added_value(self):
         enum = self.managed / "Celeste/Achievement.cs"
@@ -385,9 +419,10 @@ class AchievementToolingTests(unittest.TestCase):
         notice.parent.mkdir()
         notice.write_bytes((self.root / "docs/licenses/ACHIEVEMENT_HELPER_LICENSE.txt").read_bytes())
         game = app / "Celeste.dll"
-        game.write_bytes(b"MorroAchievements MorroAchievementUI AchievementLedger Recover QueueUnlock")
+        game.write_bytes(b"MorroAchievements MorroAchievementUI AchievementLedger Recover QueueUnlock "
+                         b"FullBackupArchive ReplaceBackup ValidateCentralDirectory MorroIOSBackups")
         host = app / "CelesteIOSRuntimeHost.dll"
-        host.write_bytes(b"AppleAchievementStorage" + "Morro.VanillaAchievements.".encode("utf-16le"))
+        host.write_bytes(b"AppleAchievementStorage IOSMorroBackupStorage" + "Morro.VanillaAchievements.".encode("utf-16le"))
         (app / "Celeste.aotdata.arm64").write_bytes(b"owned structural fixture")
         host_aot = app / "CelesteIOSRuntimeHost.aotdata.arm64"
         host_aot.write_bytes(b"owned structural fixture")

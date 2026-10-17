@@ -68,6 +68,13 @@ Test("events and recovery before initialization have no side effects", () =>
     MorroAchievements.Flush();
     Check(MorroAchievements.UnlockedCount == 0 && MorroAchievementUI.Notifications.Count == 0 && UserIO.Opens == 0);
 });
+Test("portable validation and empty documents work before host initialization", () =>
+{
+    string empty = MorroAchievements.EmptyBackup();
+    MorroAchievements.ValidateBackup(empty);
+    Check(empty == MorroAchievements.NormalizeBackup(empty) && preferences.Writes == 0);
+    Check(!MorroAchievements.FlushBackup());
+});
 Test("initialization loads independent preferences without saving game data", () =>
 {
     MorroAchievements.Initialize(preferences.Read, preferences.Write, keyPrefix);
@@ -308,6 +315,101 @@ Test("cold ledger restore preserves all awards and only private preference keys"
     Check(cold.UnlockedCount == 32);
     Check(cold.UnlockedAtUtcSeconds("ONEUP") > 0 && cold.UnlockedAtUtcSeconds("PICO8") > 0);
     Check(preferences.Data.Keys.Order().SequenceEqual(new[] { keyPrefix + ".A", keyPrefix + ".B" }));
+});
+Test("backup mutation guard blocks old gameplay, recovery and lifecycle retry", () =>
+{
+    string before = MorroAchievements.ExportBackup();
+    MorroAchievements.SetBackupMutationBlocked(true);
+    int writes = preferences.Writes, opens = UserIO.Opens, updates = MorroAchievementUI.Updates;
+    MorroAchievements.Register("CH1");
+    MorroAchievements.Recover(new SaveData { TotalStrawberries = 175 });
+    MorroAchievements.RecoverExistingSaves();
+    MorroAchievements.Flush();
+    MorroAchievements.Update();
+    Check(MorroAchievements.BackupMutationBlocked && MorroAchievements.ExportBackup() == before);
+    Check(preferences.Writes == writes && UserIO.Opens == opens && MorroAchievementUI.Updates == updates);
+    Check(MorroAchievements.FlushBackup());
+});
+Test("host can replace with empty progress while blocked and clear presentation", () =>
+{
+    Check(MorroAchievements.ReplaceBackup(MorroAchievements.EmptyBackup()));
+    Check(MorroAchievements.UnlockedCount == 0 && !MorroAchievements.StoragePending);
+    MorroAchievements.ClearPresentationAfterBackupRestore();
+    Check(MorroAchievementUI.Notifications.Count == 0 && MorroAchievementUI.Resets == 1);
+    MorroAchievements.Register("CH1");
+    Check(MorroAchievements.UnlockedCount == 0);
+    MorroAchievements.SetBackupMutationBlocked(false);
+});
+Test("explicit reset suppresses save and page backfill across soft and cold reload", () =>
+{
+    SaveData progress = new() { TotalStrawberries = 175, Areas = new() { Area(1, complete: true) } };
+    UserIO.Slots["0"] = progress;
+    SaveData.Instance = progress;
+    int opens = UserIO.Opens, writes = preferences.Writes;
+    RecoverWithoutMutation(progress);
+    MorroAchievements.RecoverExistingSaves();
+    SaveData.Instance = null;
+    MorroAchievements.RecoverExistingSaves();
+    MorroAchievements.Initialize(preferences.Read, preferences.Write, keyPrefix);
+    Check(MorroAchievements.UnlockedCount == 0 && opens == UserIO.Opens && writes == preferences.Writes);
+    AchievementLedger cold = new(MorroAchievementCatalog.Ids, preferences.Read, preferences.Write, keyPrefix);
+    Check(cold.UnlockedCount == 0 && !cold.AutomaticSaveRecovery);
+});
+Test("new original events still earn achievements after an explicit reset", () =>
+{
+    MorroAchievements.Register("ONEUP");
+    Check(MorroAchievements.UnlockedCount == 1 && MorroAchievements.Has("ONEUP"));
+    Check(MorroAchievementUI.Notifications.SequenceEqual(new[] { "ONEUP" }));
+});
+Test("failed host replacement retains exact target and can retry while blocked", () =>
+{
+    MorroAchievements.SetBackupMutationBlocked(true);
+    preferences.FailWrites = true;
+    Check(!MorroAchievements.ReplaceBackup(MorroAchievements.EmptyBackup()));
+    int writes = preferences.Writes;
+    MorroAchievements.Register("CH1");
+    MorroAchievements.Flush();
+    MorroAchievements.Update();
+    Check(MorroAchievements.StoragePending && MorroAchievements.UnlockedCount == 0 && preferences.Writes == writes);
+    preferences.FailWrites = false;
+    Check(MorroAchievements.FlushBackup() && !MorroAchievements.StoragePending);
+    MorroAchievements.ClearPresentationAfterBackupRestore();
+    MorroAchievements.SetBackupMutationBlocked(false);
+});
+Test("journal rollback can preserve prior automatic recovery policy", () =>
+{
+    string legacy = MorroAchievements.NormalizeBackup(MorroAchievements.EmptyBackup(), automaticSaveRecovery: true);
+    Check(MorroAchievements.ReplaceBackup(legacy, preserveRecoveryPolicy: true));
+    Check(MorroAchievements.ExportBackup() == legacy);
+    RecoverWithoutMutation(Save(Area(1, complete: true)));
+    Check(MorroAchievements.Has("CH1") && MorroAchievements.UnlockedAtUtcSeconds("CH1") == 0);
+    string recovered = MorroAchievements.ExportBackup();
+    Check(MorroAchievements.ReplaceBackup(recovered));
+    Check(MorroAchievements.ExportBackup() == MorroAchievements.NormalizeBackup(recovered));
+    RecoverWithoutMutation(Save(Area(2, complete: true)));
+    Check(!MorroAchievements.Has("CH2"));
+});
+Test("mutation guard waits for an in-flight award callback before clearing presentation", () =>
+{
+    Check(MorroAchievements.ReplaceBackup(MorroAchievements.EmptyBackup()));
+    MorroAchievements.ClearPresentationAfterBackupRestore();
+    using ManualResetEventSlim entered = new(), release = new(), attemptingGuard = new();
+    MorroAchievementUI.BeforeQueue = () => { entered.Set(); Check(release.Wait(TimeSpan.FromSeconds(5))); };
+    Task award = Task.Run(() => MorroAchievements.Register("PICO8"));
+    Check(entered.Wait(TimeSpan.FromSeconds(5)));
+    Task replace = Task.Run(() =>
+    {
+        attemptingGuard.Set();
+        MorroAchievements.SetBackupMutationBlocked(true);
+        Check(MorroAchievements.ReplaceBackup(MorroAchievements.EmptyBackup()));
+        MorroAchievements.ClearPresentationAfterBackupRestore(); // Fixture has no game-thread resources.
+    });
+    Check(attemptingGuard.Wait(TimeSpan.FromSeconds(5)));
+    release.Set();
+    Check(Task.WaitAll(new[] { award, replace }, TimeSpan.FromSeconds(5)));
+    MorroAchievementUI.BeforeQueue = null;
+    Check(MorroAchievements.UnlockedCount == 0 && MorroAchievementUI.Notifications.Count == 0);
+    MorroAchievements.SetBackupMutationBlocked(false);
 });
 Console.WriteLine($"PASS: {passed} Morro achievement bridge tests");
 

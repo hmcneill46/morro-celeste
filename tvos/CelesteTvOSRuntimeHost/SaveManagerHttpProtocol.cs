@@ -9,7 +9,9 @@ namespace CelesteTvOSHost;
 internal sealed record SaveExportSnapshot(
     ulong Generation,
     string LogicalHash,
-    IReadOnlyDictionary<string, byte[]?> Files
+    IReadOnlyDictionary<string, byte[]?> Files,
+    string? Achievements = null,
+    IReadOnlyDictionary<string, string?>? Preferences = null
 );
 
 internal sealed record SaveMutationCommand(
@@ -81,7 +83,12 @@ internal sealed class SaveManagerHttpProtocol
     internal const int MaximumPairingBodyBytes = 80;
     internal const int MaximumSettingsUploadBytes = 64 * 1024;
     internal const int MaximumSaveUploadBytes = 256 * 1024;
+    internal const int MaximumBackupUploadBytes = 1024 * 1024;
+#if MORRO_VANILLA_ACHIEVEMENTS
+    internal const int MaximumRequestBodyBytes = MaximumBackupUploadBytes;
+#else
     internal const int MaximumRequestBodyBytes = MaximumSaveUploadBytes;
+#endif
     internal const int MaximumConcurrentConnections = 4;
     internal const string SessionCookieName = "CelesteSaveSession";
     internal const string CsrfHeaderName = "x-celeste-csrf";
@@ -94,6 +101,9 @@ internal sealed class SaveManagerHttpProtocol
     private readonly object gate = new();
     private readonly Func<DateTimeOffset> now;
     private readonly Func<SaveMutationCommand, SaveMutationResult>? mutator;
+    private readonly Func<SaveExportSnapshot, string, byte[]>? backupExporter;
+    private readonly Func<byte[], SaveExportSnapshot, SaveMutationResult>? backupRestorer;
+    private readonly Func<SaveExportSnapshot, SaveMutationResult>? achievementResetter;
     private readonly Dictionary<string, SessionState> sessions = new(StringComparer.Ordinal);
     private readonly byte[] revisionSecret = RandomNumberGenerator.GetBytes(32);
     private byte[] pairingCredential = RandomNumberGenerator.GetBytes(32);
@@ -111,11 +121,17 @@ internal sealed class SaveManagerHttpProtocol
         SaveExportSnapshot stableSnapshot,
         Func<DateTimeOffset>? clock = null,
         Func<SaveMutationCommand, SaveMutationResult>? mutationHandler = null,
-        Func<string>? accessCodeFactory = null)
+        Func<string>? accessCodeFactory = null,
+        Func<SaveExportSnapshot, string, byte[]>? exportBackup = null,
+        Func<byte[], SaveExportSnapshot, SaveMutationResult>? restoreBackup = null,
+        Func<SaveExportSnapshot, SaveMutationResult>? resetAchievements = null)
     {
         snapshot = ValidateSnapshot(stableSnapshot);
         now = clock ?? (() => DateTimeOffset.UtcNow);
         mutator = mutationHandler;
+        backupExporter = exportBackup;
+        backupRestorer = restoreBackup;
+        achievementResetter = resetAchievements;
         accessCode = (accessCodeFactory ?? GenerateAccessCode)();
         if (accessCode.Length != 6 || accessCode.Any(character => !char.IsAsciiDigit(character)))
             throw new InvalidOperationException("Save Manager access codes must contain exactly six digits.");
@@ -193,7 +209,7 @@ internal sealed class SaveManagerHttpProtocol
         catch
         {
             return new SaveManagerProtocolResult(
-                Error(500, "Internal Server Error", "The Save Manager could not complete this request. Your previous save was kept."),
+                Error(500, "Internal Server Error", "The Save Manager could not complete this request. Check the Apple TV before continuing."),
                 CountsAsActivityForRejectedRequest(requestBytes));
         }
     }
@@ -418,6 +434,8 @@ internal sealed class SaveManagerHttpProtocol
 
     private SaveManagerHttpResponse Mutate(ParsedRequest request, SessionState? session)
     {
+        if (request.Path is "/backup/download" or "/backup/restore" or "/reset/achievements")
+            return FullBackupAction(request, session);
         MutationRoute? route = MutationTarget(request.Path);
         if (route == null)
         {
@@ -462,7 +480,10 @@ internal sealed class SaveManagerHttpProtocol
             return Error(409, "Conflict", "The save changed since this page was opened. Refresh and try again.");
         }
         if (!result.Success)
+        {
+            restartRequired |= result.RestartRequired;
             return MutationFailure(result.FailureCategory, route.LogicalName);
+        }
 
         snapshot = ValidateSnapshot(result.Snapshot);
         revision = ComputeRevision(snapshot);
@@ -481,6 +502,61 @@ internal sealed class SaveManagerHttpProtocol
             ["X-Celeste-Restart-Required"] = restartRequired ? "true" : "false"
         };
         return response with { Headers = headers };
+    }
+
+    private SaveManagerHttpResponse FullBackupAction(ParsedRequest request, SessionState? session)
+    {
+        if (backupExporter == null || backupRestorer == null || achievementResetter == null)
+            return Error(404, "Not Found", "That Save Manager route does not exist.");
+        if (session == null) return Error(401, "Unauthorized", "Authenticate with the temporary access code first.");
+        if (!request.Headers.TryGetValue(CsrfHeaderName, out string? csrf) || !FixedEquals(csrf, session.Csrf))
+            return Error(403, "Forbidden", "The Save Manager action token is invalid or expired.");
+        if (!request.Headers.TryGetValue(RevisionHeaderName, out string? suppliedRevision) || !FixedEquals(suppliedRevision, revision))
+            return Error(409, "Conflict", "The session changed since this page was opened. Refresh and try again.");
+        if (!request.ContentLengthPresent) return Error(411, "Length Required", "This action requires an explicit Content-Length.");
+        if (restartRequired) return Error(409, "Conflict", "Return to the Apple TV and reload before exporting or restoring another full session.");
+        if (request.Path == "/backup/download")
+        {
+            if (!request.Headers.TryGetValue("content-type", out string? type) || type != "text/plain;charset=UTF-8")
+                return Error(415, "Unsupported Media Type", "Provide a backup name as plain text.");
+            string name;
+            try { name = new UTF8Encoding(false, true).GetString(request.Body).Trim(); }
+            catch { return Error(422, "Unprocessable Content", "The backup name is invalid."); }
+            if (name.Length is < 1 or > 80 || name.Any(char.IsControl))
+                return Error(422, "Unprocessable Content", "Use a backup name between 1 and 80 characters.");
+            byte[] archive;
+            try { archive = backupExporter(snapshot, name); }
+            catch { return Error(503, "Service Unavailable", "The full backup could not be created. No restore was started."); }
+            Dictionary<string, string> headers = BaseHeaders("application/zip", archive.Length, null);
+            headers["Content-Disposition"] = "attachment; filename=\"Morro-backup.zip\"";
+            return new SaveManagerHttpResponse(200, "OK", headers, archive);
+        }
+        if (request.Path == "/backup/restore" &&
+            (!request.Headers.TryGetValue("content-type", out string? contentType) || contentType != "application/zip" || request.Body.Length == 0))
+            return Error(415, "Unsupported Media Type", "Choose a full Morro backup ZIP.");
+        if (request.Path == "/reset/achievements" && request.Body.Length != 0)
+            return Error(400, "Bad Request", "Achievement reset does not accept a request body.");
+        SaveMutationResult result = request.Path == "/backup/restore"
+            ? backupRestorer(request.Body, snapshot) : achievementResetter(snapshot);
+        restartRequired |= result.RestartRequired;
+        snapshot = ValidateSnapshot(result.Snapshot);
+        revision = ComputeRevision(snapshot);
+        if (result.Conflict) return Error(409, "Conflict", "The session changed. Refresh and try again.");
+        if (!result.Success)
+            return Error(result.RestartRequired ? 503 : 422, result.RestartRequired ? "Service Unavailable" : "Unprocessable Content",
+                result.RestartRequired
+                    ? "Restore needs recovery. Return to the Apple TV and press Confirm to reload. If needed, fully close and reopen Celeste."
+                    : "This full backup could not be validated. No restore was started.");
+        session.Notice = request.Path == "/backup/restore"
+            ? "The full session was restored, including save slots, settings and achievements. Return to the Apple TV and press Confirm to reload."
+            : "Achievements were reset. Save slots and settings were kept. Return to the Apple TV and press Confirm to reload.";
+        SaveManagerHttpResponse response = AuthenticatedResponse(200, "OK", session, session.Notice, headOnly: false);
+        Dictionary<string, string> responseHeaders = new(response.Headers, StringComparer.Ordinal)
+        {
+            ["X-Celeste-Mutation"] = "committed", ["X-Celeste-Mutation-Target"] = "session",
+            ["X-Celeste-Reload-Required"] = "true", ["X-Celeste-Restart-Required"] = "true"
+        };
+        return response with { Headers = responseHeaders };
     }
 
     private static SaveManagerHttpResponse MutationFailure(string category, string logicalName)
@@ -523,8 +599,18 @@ internal sealed class SaveManagerHttpProtocol
 
     private string ComputeRevision(SaveExportSnapshot value)
     {
-        byte[] material = Encoding.ASCII.GetBytes(value.Generation.ToString(CultureInfo.InvariantCulture) + ":" + value.LogicalHash);
-        return Convert.ToHexString(HMACSHA256.HashData(revisionSecret, material)).ToLowerInvariant();
+        using MemoryStream material = new();
+        using (BinaryWriter writer = new(material, Encoding.UTF8, leaveOpen: true))
+        {
+            writer.Write(value.Generation); writer.Write(value.LogicalHash);
+            writer.Write(value.Achievements ?? "");
+            foreach (KeyValuePair<string, string?> preference in (value.Preferences ?? new Dictionary<string, string?>()).OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            {
+                writer.Write(preference.Key); writer.Write(preference.Value != null);
+                if (preference.Value != null) writer.Write(preference.Value);
+            }
+        }
+        return Convert.ToHexString(HMACSHA256.HashData(revisionSecret, material.ToArray())).ToLowerInvariant();
     }
 
     private static ParsedRequest Parse(byte[] bytes)
@@ -612,6 +698,8 @@ internal sealed class SaveManagerHttpProtocol
         if (method != "POST") return 0;
         if (path == "/auth") return MaximumAuthBodyBytes;
         if (path == "/pair") return MaximumPairingBodyBytes;
+        if (path == "/backup/download") return 320;
+        if (path == "/backup/restore") return MaximumBackupUploadBytes;
         MutationRoute? mutation = MutationTarget(path);
         if (mutation == null || !mutation.Replace) return 0;
         return mutation.LogicalName == "settings" ? MaximumSettingsUploadBytes : MaximumSaveUploadBytes;
@@ -676,7 +764,8 @@ internal sealed class SaveManagerHttpProtocol
             value.Files.Keys.Any(name => !LogicalNames.Contains(name, StringComparer.Ordinal)))
             throw new InvalidOperationException("Save Manager snapshots must contain exactly settings and save slots 0, 1, and 2.");
         return new SaveExportSnapshot(value.Generation, value.LogicalHash,
-            value.Files.ToDictionary(pair => pair.Key, pair => pair.Value?.ToArray(), StringComparer.Ordinal));
+            value.Files.ToDictionary(pair => pair.Key, pair => pair.Value?.ToArray(), StringComparer.Ordinal),
+            value.Achievements, value.Preferences?.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal));
     }
 
     private static byte[] CreateArchive(SaveExportSnapshot value)
@@ -780,7 +869,12 @@ internal sealed class SaveManagerHttpProtocol
         if (!string.IsNullOrEmpty(notice)) body.Append("<p class=success>").Append(notice).Append("</p>");
         if (restartRequired)
             body.Append("<p class=warning><strong>Return to your Apple TV and press Confirm to reload Celeste.</strong><br>Celeste will validate and load the new state without quitting the app. If reload fails, fully close Celeste from the Apple TV app switcher and reopen it.</p>");
-        body.Append("<p><a data-continuity-control href=/download/all download=Celeste-saves.zip>Download backup (.zip)</a></p><ul>");
+        if (value.Achievements != null)
+            body.Append("<section><h2>Full session backups</h2><p>A full backup contains all three save slots, Celeste settings, achievements and Apple TV preferences. Restoring replaces the whole session, including empty slots. Device preferences apply only on the same platform.</p>")
+                .Append("<label>Backup name <input data-continuity-control id=backup-name maxlength=80 value=\"Morro backup\"></label><button data-continuity-control id=backup-download type=button>Download full backup (.zip)</button>")
+                .Append("<label class=replace>Restore full backup <input data-continuity-control id=backup-file type=file accept=.zip></label><button data-continuity-control class=danger id=backup-restore type=button>Restore full backup</button>")
+                .Append("<button data-continuity-control class=danger id=achievement-reset type=button>Reset achievements</button><div class=result id=result-backup></div></section>");
+        body.Append("<p><a data-continuity-control href=/download/all download=Celeste-saves.zip>Download save files only (.zip)</a></p><ul>");
         foreach (string logicalName in LogicalNames)
         {
             string label = Label(logicalName);
@@ -807,6 +901,11 @@ internal sealed class SaveManagerHttpProtocol
             .Append("document.querySelectorAll('[data-replace]').forEach(b=>b.onclick=()=>{const n=b.dataset.replace,f=document.querySelector('[data-file=\"'+n+'\"]').files[0];if(!f){document.getElementById('result-'+n).textContent='Choose a .celeste file first.';return;}const label=n==='settings'?'Settings':'Save Slot '+(Number(n)+1);if(confirm('Replace '+label+' with '+f.name+' ('+f.size+' bytes)?'))act('/replace/'+n,f,'application/octet-stream',n);});")
             .Append("document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const n=b.dataset.delete;if(confirm('Delete Save Slot '+(Number(n)+1)+'? This intentionally changes the current save state.'))act('/delete/'+n,null,null,n);});")
             .Append("document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>{if(confirm('Reset Settings to Celeste defaults? Save slots are not changed. Return to the Apple TV and press Confirm to reload.'))act('/reset/settings',null,null,'settings');});")
+            .Append("const backupDownload=document.getElementById('backup-download');if(backupDownload){backupDownload.onclick=async()=>{if(!continuityConnected)return;const name=document.getElementById('backup-name').value.trim();if(!name){document.getElementById('result-backup').textContent='Enter a backup name.';return;}try{const r=await fetch('/backup/download',{method:'POST',credentials:'same-origin',headers:{'X-Celeste-CSRF':csrf,'X-Celeste-Revision':revision,'Content-Type':'text/plain;charset=UTF-8'},body:name});if(!r.ok)throw Error('The full backup could not be created.');const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download=(name.replace(/[^a-zA-Z0-9 _.-]/g,'_')||'Morro backup')+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}catch(e){document.getElementById('result-backup').textContent=e.message;}};")
+            .Append("document.getElementById('backup-restore').onclick=()=>{const f=document.getElementById('backup-file').files[0];if(!f){document.getElementById('result-backup').textContent='Choose a full Morro backup ZIP first.';return;}if(f.size>")
+            .Append(MaximumBackupUploadBytes.ToString(CultureInfo.InvariantCulture))
+            .Append("){document.getElementById('result-backup').textContent='This backup exceeds the Apple TV upload limit.';return;}if(confirm('Restore '+f.name+'? This replaces ALL save slots, settings and achievements. Slots missing from the backup become empty. Download your current full backup first if you want to keep it.'))act('/backup/restore',f,'application/zip','backup');};")
+            .Append("document.getElementById('achievement-reset').onclick=()=>{if(confirm('Reset ALL achievements? Save slots and settings are kept. Existing saves will not automatically re-award old achievements; future game events can unlock them again.'))act('/reset/achievements',null,null,'backup');};}")
             .Append(ContinuityScript(instance, authenticationRequired: true))
             .Append("</script>");
         return Page("Celeste Save Manager", body.ToString());

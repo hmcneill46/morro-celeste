@@ -59,6 +59,7 @@ public sealed class CelesteFileDurabilityStore
     private readonly object gate = new();
     private readonly ICelesteFileDurabilityBackend backend;
     private readonly ICelesteLogicalFileValidator validator;
+    private bool sessionReplacementPending;
 
     public CelesteFileDurabilityStore(
         ICelesteFileDurabilityBackend backend,
@@ -80,6 +81,7 @@ public sealed class CelesteFileDurabilityStore
 
         lock (gate)
         {
+            RequireOrdinaryWrites();
             bool cleanupSucceeded = TryCleanup(logicalName);
             byte[]? primary = ReadForMutation(logicalName, CelesteFileCopy.Primary);
             bool primaryValid = IsValid(logicalName, primary);
@@ -131,6 +133,7 @@ public sealed class CelesteFileDurabilityStore
         ValidateLogicalName(logicalName);
         lock (gate)
         {
+            RequireOrdinaryWrites();
             _ = TryCleanup(logicalName);
             byte[]? primary = TryRead(logicalName, CelesteFileCopy.Primary);
             bool primaryValid = IsValid(logicalName, primary);
@@ -155,6 +158,7 @@ public sealed class CelesteFileDurabilityStore
         ValidateLogicalName(logicalName);
         lock (gate)
         {
+            RequireOrdinaryWrites();
             byte[]? previousGood = TryRead(logicalName, CelesteFileCopy.PreviousGood);
             return IsValid(logicalName, previousGood) ? previousGood : null;
         }
@@ -172,6 +176,7 @@ public sealed class CelesteFileDurabilityStore
         ValidateLogicalName(logicalName);
         lock (gate)
         {
+            RequireOrdinaryWrites();
             byte[]? previousGood = ReadForMutation(logicalName, CelesteFileCopy.PreviousGood);
             if (!IsValid(logicalName, previousGood))
                 return new CelesteFileRestoreResult(false, false, TryCleanup(logicalName));
@@ -225,6 +230,7 @@ public sealed class CelesteFileDurabilityStore
         ValidateLogicalName(logicalName);
         lock (gate)
         {
+            RequireOrdinaryWrites();
             bool existed = ReadForMutation(logicalName, CelesteFileCopy.Primary) is not null ||
                            ReadForMutation(logicalName, CelesteFileCopy.PreviousGood) is not null;
             backend.Delete(logicalName, CelesteFileCopy.Primary);
@@ -232,6 +238,76 @@ public sealed class CelesteFileDurabilityStore
             _ = TryCleanup(logicalName);
             return existed;
         }
+    }
+
+    public void SetSessionReplacementPending(bool pending)
+    {
+        lock (gate) sessionReplacementPending = pending;
+    }
+
+    public IReadOnlyDictionary<string, byte[]?> CreateSnapshot()
+    {
+        lock (gate)
+        {
+            RequireOrdinaryWrites();
+            Dictionary<string, byte[]?> snapshot = new(StringComparer.Ordinal);
+            foreach (string name in new[] { "settings", "0", "1", "2" })
+                snapshot.Add(name, Load(name).Data?.ToArray());
+            return snapshot;
+        }
+    }
+
+    /// <summary>
+    /// Replays a separately journalled, validated whole-session target. The
+    /// caller must durably stage that target before enabling this operation,
+    /// retain it on failure, and replay it before allowing any game writes.
+    /// Both physical copies become the target, so recovery cannot resurrect
+    /// data from the previous session. Missing entries remove both copies.
+    /// </summary>
+    public void ReplaceSessionFiles(IReadOnlyDictionary<string, byte[]?> target)
+    {
+        ArgumentNullException.ThrowIfNull(target);
+        string[] names = { "settings", "0", "1", "2" };
+        if (target.Count != names.Length || names.Any(name => !target.ContainsKey(name)))
+            throw new InvalidDataException("A session must specify all four Celeste files.");
+        Dictionary<string, byte[]?> copy = new(StringComparer.Ordinal);
+        foreach (string name in names)
+        {
+            byte[]? bytes = target[name]?.ToArray();
+            if (bytes is not null)
+            {
+                ValidateSize(bytes.Length);
+                if (!validator.IsValid(name, bytes))
+                    throw new InvalidDataException("Celeste rejected invalid session state before mutation.");
+            }
+            copy.Add(name, bytes);
+        }
+        lock (gate)
+        {
+            if (!sessionReplacementPending)
+                throw new InvalidOperationException("A durable session replacement must be pending.");
+            foreach (string name in names)
+            {
+                byte[]? bytes = copy[name];
+                foreach (CelesteFileCopy physical in new[] { CelesteFileCopy.PreviousGood, CelesteFileCopy.Primary })
+                {
+                    if (bytes is null)
+                    {
+                        backend.Delete(name, physical);
+                        if (backend.Read(name, physical) is not null)
+                            throw new IOException("A removed session file remained present.");
+                    }
+                    else WriteAndVerify(name, physical, bytes);
+                }
+                _ = TryCleanup(name);
+            }
+        }
+    }
+
+    private void RequireOrdinaryWrites()
+    {
+        if (sessionReplacementPending)
+            throw new IOException("A complete session restore must finish before ordinary file changes.");
     }
 
     private void WriteAndVerify(string logicalName, CelesteFileCopy copy, ReadOnlyMemory<byte> data)

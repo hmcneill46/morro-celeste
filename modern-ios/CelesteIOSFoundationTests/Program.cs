@@ -671,4 +671,32 @@ Check(IOSFilePortabilityBridge.RequestExport(
 IOSFilePortabilityBridge.Clear();
 Check(!IOSFilePortabilityBridge.IsAvailable, "Files bridge clears every process-owned delegate");
 
+Dictionary<string, string?> backupPreferences = IOSBackupPreferences.Keys.Keys.ToDictionary(key => key, _ => (string?)null);
+IOSBackupPreferences.Validate(backupPreferences);
+Check(backupPreferences.Count == 17, "backup preference allowlist is explicit and complete");
+backupPreferences["controllerPrompts"] = "PlayStation";
+backupPreferences["touchVisibility"] = "Always";
+backupPreferences["touchLayoutPhone"] = encodedPhone;
+backupPreferences["grabTouch"] = "Toggle";
+IOSBackupPreferences.Validate(backupPreferences);
+Check(true, "backup accepts canonical input and layout preferences");
+foreach ((string alias, string bad) in new[] { ("touchVisibility", "bad"), ("touchOpacity", "71"),
+    ("touchSize", "1000"), ("touchHaptics", "true"), ("grabTouch", "Always"),
+    ("touchLayoutPhone", "broken"), ("controllerPrompts", "Unrecognized"), ("touchLayoutMigrated", "Maybe") })
+{
+    Dictionary<string, string?> invalidPreferences = new(backupPreferences) { [alias] = bad };
+    bool rejected = false;
+    try { IOSBackupPreferences.Validate(invalidPreferences); } catch (InvalidDataException) { rejected = true; }
+    Check(rejected, "backup rejects noncanonical " + alias);
+}
+Dictionary<string, string?> missingPreference = new(backupPreferences);
+missingPreference.Remove("grabKeyboard");
+bool incompleteRejected = false;
+try { IOSBackupPreferences.Validate(missingPreference); } catch (InvalidDataException) { incompleteRejected = true; }
+Check(incompleteRejected, "backup cannot silently retain a missing preference from outgoing session");
+Dictionary<string, string?> injectedPreference = new(backupPreferences) { ["NSUserDefaults.other"] = "value" };
+bool injectedRejected = false;
+try { IOSBackupPreferences.Validate(injectedPreference); } catch (InvalidDataException) { injectedRejected = true; }
+Check(injectedRejected, "backup cannot choose an arbitrary native preference key");
+
 Console.WriteLine($"PASS: modern iOS foundation deterministic tests {passed}");

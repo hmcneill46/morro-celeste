@@ -112,10 +112,26 @@ internal sealed class SaveManagerService : IDisposable
         try
         {
             DateTimeOffset deadline = DateTimeOffset.UtcNow.AddSeconds(8);
+#if MORRO_VANILLA_ACHIEVEMENTS
+            // Options stay open underneath the manager, so OuiOptions.Leave
+            // has not saved the user's latest settings. Capture through the
+            // normal main-thread save coroutine before taking the snapshot.
+            while (!await SaveMorroCurrentStateAsync().WaitAsync(TimeSpan.FromSeconds(8)).ConfigureAwait(false))
+            {
+                lock (gate) if (disposed || status.Phase != "starting") return;
+                if (DateTimeOffset.UtcNow >= deadline) throw new TimeoutException("The current save did not become available.");
+                await Task.Delay(25).ConfigureAwait(false);
+            }
+#endif
             while (UserIO.Saving && DateTimeOffset.UtcNow < deadline) await Task.Delay(25).ConfigureAwait(false);
             if (UserIO.Saving) throw new TimeoutException("Celeste did not finish its in-progress save before the snapshot deadline.");
 
+#if MORRO_VANILLA_ACHIEVEMENTS
+            if (!UserIO.SavingResult) throw new IOException("The current session could not be saved for backup.");
+            SaveExportSnapshot stableSnapshot = persistence.CreateMorroSaveManagerSnapshot();
+#else
             SaveExportSnapshot stableSnapshot = persistence.CreateReadOnlySaveManagerSnapshot();
+#endif
             IReadOnlyList<string> addresses = DiscoverLanAddresses();
             if (addresses.Count == 0)
             {
@@ -126,7 +142,14 @@ internal sealed class SaveManagerService : IDisposable
 
             SaveManagerHttpProtocol nextProtocol = new(
                 stableSnapshot,
+#if MORRO_VANILLA_ACHIEVEMENTS
+                mutationHandler: persistence.MutateMorroSingleFile,
+                exportBackup: persistence.ExportMorroBackup,
+                restoreBackup: persistence.RestoreMorroBackup,
+                resetAchievements: persistence.ResetMorroAchievements
+#else
                 mutationHandler: persistence.MutateFromSaveManager
+#endif
             );
             NWListener nextListener = CreateConfiguredListener(addresses, preferredAttempt: true);
 
@@ -154,6 +177,7 @@ internal sealed class SaveManagerService : IDisposable
         {
             lock (gate)
             {
+                if (disposed || status.Phase != "starting") return;
                 status = new TvOSSaveManagerDisplayState
                 {
                     Phase = "failed",
@@ -164,6 +188,31 @@ internal sealed class SaveManagerService : IDisposable
             StopNetworkObjects(clearStatus: false);
         }
     }
+
+#if MORRO_VANILLA_ACHIEVEMENTS
+    private Task<bool> SaveMorroCurrentStateAsync()
+    {
+        TaskCompletionSource<bool> result = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        UIApplication.SharedApplication.BeginInvokeOnMainThread(() =>
+        {
+            try
+            {
+                lock (gate)
+                {
+                    if (disposed || status.Phase != "starting" || UserIO.Saving)
+                    {
+                        result.SetResult(false);
+                        return;
+                    }
+                    UserIO.SaveHandler(file: SaveData.Instance != null, settings: true);
+                    result.SetResult(true);
+                }
+            }
+            catch (Exception exception) { result.SetException(exception); }
+        });
+        return result.Task;
+    }
+#endif
 
     private NWListener CreateConfiguredListener(IReadOnlyList<string> addresses, bool preferredAttempt)
     {

@@ -156,6 +156,9 @@ internal sealed class SoftReloadCoordinator : IDisposable
         if (UserIO.Saving) throw new InvalidOperationException("UserIO became busy during reload preparation.");
         if (saveManager.IsListening) throw new InvalidOperationException("Save Manager listener remained active during reload.");
 
+#if MORRO_VANILLA_ACHIEVEMENTS
+        persistence.RecoverMorroBackup(startup: false);
+#endif
         ticket = persistence.PrepareExternalMutationReload();
         RequireRuntimeIdentity();
 
@@ -192,6 +195,9 @@ internal sealed class SoftReloadCoordinator : IDisposable
         SaveData.Instance = null;
         SaveData.NoFileAssistChecks();
         OuiFileSelect.Loaded = false;
+#if MORRO_VANILLA_ACHIEVEMENTS
+        if (persistence.ApplyMorroBackupPresentation()) promptMode = TvOSControllerPromptHooks.Mode;
+#endif
         TvOSStage3CBridge.StopAllRumble("stage13b-soft-reload");
         Audio.SetMusic(null, allowFadeOut: false);
         Audio.SetAmbience(null);
@@ -236,7 +242,13 @@ internal sealed class SoftReloadCoordinator : IDisposable
             throw new InvalidOperationException("The existing FMOD runtime or seven-bank inventory is not ready.");
 #endif
 
+#if MORRO_VANILLA_ACHIEVEMENTS
+        persistence.VerifyMorroBackupReload();
+#endif
         persistence.CompleteExternalMutationReload(current);
+#if MORRO_VANILLA_ACHIEVEMENTS
+        persistence.CompleteMorroBackupReload();
+#endif
         saveManager.CompleteSoftReload();
         stateMachine.Complete();
         completedReloads++;

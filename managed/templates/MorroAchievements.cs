@@ -23,10 +23,61 @@ public static class MorroAchievements
     private static readonly object InitializationGate = new();
     private static volatile AchievementLedger ledger;
     private static float retryIn;
+    private static bool backupMutationBlocked;
     public static int UnlockedCount => ledger?.UnlockedCount ?? 0;
     public static bool StoragePending => ledger?.IsDirty ?? false;
     public static bool Has(string id) => ledger != null && ledger.Has(id);
     public static long? UnlockedAtUtcSeconds(string id) => ledger?.UnlockedAtUtcSeconds(id);
+    public static bool BackupMutationBlocked { get { lock (InitializationGate) return backupMutationBlocked; } }
+
+    public static void SetBackupMutationBlocked(bool blocked)
+    {
+        lock (InitializationGate) backupMutationBlocked = blocked;
+    }
+
+    // Validation is available before host storage initialization and never reads
+    // preferences. Portable documents cannot choose a local persistence scope.
+    private static AchievementLedger BackupCodec()
+    {
+        string[] ids = new string[Definitions.Length];
+        for (int i = 0; i < ids.Length; i++) ids[i] = Definitions[i].Id;
+        return new AchievementLedger(ids, _ => null, (_, _) =>
+            throw new InvalidOperationException("The portable codec cannot write preferences."));
+    }
+
+    public static void ValidateBackup(string value) => BackupCodec().ValidateBackup(value);
+    public static string EmptyBackup() => BackupCodec().EmptyBackup();
+    public static string NormalizeBackup(string value, bool automaticSaveRecovery = false) =>
+        BackupCodec().NormalizeBackup(value, automaticSaveRecovery);
+
+    public static string ExportBackup()
+    {
+        lock (InitializationGate)
+            return (ledger ?? throw new InvalidOperationException("Achievement storage is not initialized.")).ExportBackup();
+    }
+
+    // Host transaction operations remain available while old gameplay is blocked.
+    // A false result is pending, never a promise that no durable write occurred.
+    public static bool ReplaceBackup(string value, bool preserveRecoveryPolicy = false)
+    {
+        lock (InitializationGate)
+            return (ledger ?? throw new InvalidOperationException("Achievement storage is not initialized.")).ReplaceBackup(value, preserveRecoveryPolicy);
+    }
+
+    public static bool FlushBackup()
+    {
+        lock (InitializationGate) return ledger != null && ledger.Flush();
+    }
+
+    // The host calls this on the game thread before releasing the mutation guard.
+    public static void ClearPresentationAfterBackupRestore()
+    {
+        lock (InitializationGate)
+        {
+            MorroAchievementUI.Reset();
+            retryIn = 0f;
+        }
+    }
 
     public static void Initialize(Func<string, string> read, Action<string, string> write, string keyPrefix)
     {
@@ -41,8 +92,19 @@ public static class MorroAchievements
         }
     }
 
-    public static void Register(string id) => ledger?.TryUnlock(id);
-    public static void Flush() => ledger?.Flush();
+    public static void Register(string id)
+    {
+        // Includes the synchronous notification callback. Once the mutation
+        // guard is acquired, no earlier event can enqueue a delayed toast.
+        lock (InitializationGate)
+            if (!backupMutationBlocked) ledger?.TryUnlock(id);
+    }
+
+    public static void Flush()
+    {
+        lock (InitializationGate)
+            if (!backupMutationBlocked) ledger?.Flush();
+    }
 
     // Opening Achievements before Play must still recognize existing saves.
     // Read through the same authority as File Select, retaining its existing
@@ -50,7 +112,13 @@ public static class MorroAchievements
     // that would mutate progress/assist state just to display achievements.
     public static void RecoverExistingSaves()
     {
-        if (ledger == null || UserIO.Saving || AreaData.Areas == null || AreaData.Areas.Count == 0) return;
+        lock (InitializationGate) RecoverExistingSavesUnsafe();
+    }
+
+    private static void RecoverExistingSavesUnsafe()
+    {
+        if (backupMutationBlocked || ledger == null || !ledger.AutomaticSaveRecovery ||
+            UserIO.Saving || AreaData.Areas == null || AreaData.Areas.Count == 0) return;
         if (SaveData.Instance != null)
         {
             Recover(SaveData.Instance);
@@ -67,20 +135,30 @@ public static class MorroAchievements
 
     public static void Update()
     {
-        retryIn -= Engine.RawDeltaTime;
-        if (retryIn <= 0)
+        lock (InitializationGate)
         {
-            retryIn = 5f;
-            if (StoragePending) Flush();
+            if (backupMutationBlocked) return;
+            retryIn -= Engine.RawDeltaTime;
+            if (retryIn <= 0)
+            {
+                retryIn = 5f;
+                if (StoragePending) Flush();
+            }
+            MorroAchievementUI.Update();
         }
-        MorroAchievementUI.Update();
     }
 
     // Read only the progress the vanilla save can actually establish. Historical
     // unlock dates are unknown; restoring old progress produces no toast storm.
     public static void Recover(SaveData save)
     {
-        if (ledger == null || save == null || save.Areas == null) return;
+        lock (InitializationGate) RecoverUnsafe(save);
+    }
+
+    private static void RecoverUnsafe(SaveData save)
+    {
+        if (backupMutationBlocked || ledger == null || !ledger.AutomaticSaveRecovery ||
+            save == null || save.Areas == null) return;
         void Restore(string id) => ledger.TryUnlock(id, 0, notify: false, flushImmediately: false);
         if (save.TotalStrawberries >= 30) Restore("STRB1");
         if (save.TotalStrawberries >= 80) Restore("STRB2");

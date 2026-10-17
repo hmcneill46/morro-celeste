@@ -77,8 +77,11 @@ namespace Celeste
     {
         public static readonly List<string> Notifications = new();
         public static int Updates;
-        public static void QueueUnlock(string id) => Notifications.Add(id);
+        public static int Resets;
+        public static Action BeforeQueue;
+        public static void QueueUnlock(string id) { BeforeQueue?.Invoke(); Notifications.Add(id); }
         public static void Update() => Updates++;
+        public static void Reset() { Notifications.Clear(); Resets++; }
     }
 
     public static class MorroAchievementCatalog

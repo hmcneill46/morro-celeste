@@ -230,6 +230,10 @@ for unsigned-package help.
 - Explicitly activated same-network Save Manager
 - One-time QR pairing, plus the manual address and six-digit-code fallback
 - Download/backup, validated replacement, slot deletion, and Settings reset
+- Named full-session ZIP backup and restore in vanilla Morro, including all slots,
+  Settings, achievements, and compatible device preferences; empty slots replace
+  previous files rather than merging sessions
+- Achievement reset with saves and Settings preserved
 - Confirm-driven verified soft reload without restarting the FNA runtime
 
 ### In-game achievements
@@ -242,12 +246,15 @@ for unsigned-package help.
 - Unlocked achievements appear first, with the original order preserved within
   both groups; held scrolling stops at either end and a fresh press wraps around
 - Progress belongs to this app installation and is stored separately from
-  vanilla saves and Settings; opening the page or selecting a save restores achievements
-  that its recorded progress can establish
+  vanilla saves and Settings; initially, opening the page or selecting a save recovers
+  achievements that its recorded progress can establish. Full backup restoration or
+  an explicit achievement reset disables that recovery so the chosen state stays exact
 
 Achievement text is initially English. Achievements work without a Steam login
-or an internet connection at runtime. They are not included in ordinary save
-exports and do not survive uninstalling the app. This is a new source feature;
+or an internet connection at runtime. Ordinary `.celeste` exports do not include
+achievements; **Full Backup** ZIPs do. Export a full backup before uninstalling
+to preserve that progress. On iOS use **Options → Data & Files**; on tvOS use
+the existing paired Save Manager. This is a new source feature;
 its build and physical acceptance status is recorded in the
 [vanilla achievements report](docs/testing/MORRO_VANILLA_ACHIEVEMENTS.md).
 
