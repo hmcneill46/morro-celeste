@@ -1,6 +1,6 @@
 # Vanilla Morro achievements
 
-Status: **IMPLEMENTED — full-session backup integration under current validation; physical backup/restore acceptance pending.**
+Status: **IMPLEMENTED — fresh iOS/tvOS full-AOT products and host checks verified; physical backup/restore acceptance pending.**
 
 This report describes the new vanilla iOS/iPadOS and tvOS feature. Build and
 host-fixture results establish no hardware or physical gameplay PASS. The initial
@@ -358,7 +358,8 @@ Current host checks:
 | tvOS full-backup HTTP protocol | PASS — 79 checks including authentication, stale revision, limits, and blocked export after failed restore |
 | tvOS pairing / continuity | PASS — 31 / 57 checks |
 | Apple API managed compilation | PASS — both platforms, zero errors; host fixtures are not device evidence |
-| Fresh full-AOT products | PENDING — current source must be committed before serial product compilation |
+| Fresh iOS full-AOT product | PASS — 261.270 seconds, exit 0; source, feature closure, and final unsigned package checks passed |
+| Fresh tvOS full-AOT product | PASS — 279.503 seconds, exit 0; source, feature closure, and final unsigned Stage 8A package checks passed |
 
 Reproduce the new portable suites with the pinned SDK and flags below. The
 Foundation and durability projects are under `modern-ios`; the ledger and
@@ -370,6 +371,21 @@ dotnet run --project tests/MorroBackupTests --disable-build-servers -m:1 -nr:fal
 dotnet run --project tvos/MorroBackupTests --disable-build-servers -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false
 dotnet run --project tvos/SaveManagerProtocolTests --disable-build-servers -m:1 -nr:false -p:BuildInParallel=false -p:UseSharedCompilation=false -p:MorroBackupProtocolTests=true
 ```
+
+Both fresh products were built serially from clean source commit
+`108f73ea4cbaf26fe3b07934d742cd37511bb82f` using Xcode 26.6, Apple SDK 26.5,
+.NET SDK 10.0.302/runtime 10.0.10, full AOT/full trimming, and disabled
+interpreter, build servers, node reuse, and shared compilation. Each final
+sanitized app passed its feature and platform package checks. The original
+canonical input trees and historical products were preserved. Native/game/FNA
+build and trim warnings remain; these are not zero-warning or gameplay claims.
+The inventory check accounted for 1,031 source entries and 32 reasoned removals.
+
+The private build receipt and logs are under
+`.build/morro-achievements/full-backup-20261017/`. Its `aot-ios` and `aot-tvos`
+folders contain the new unsigned app products. These products were not signed,
+installed, or used to mutate production device data. The earlier viewer build
+installed on Apple TV remains a separate product.
 
 Physical acceptance remains **NOT_RUN** for the backup changes. On each platform,
 check export through its real file-transfer UI, switch two distinguishable
