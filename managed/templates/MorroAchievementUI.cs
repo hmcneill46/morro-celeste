@@ -151,33 +151,8 @@ public static class MorroAchievementUI
         Engine.Scene is Level level && level.FrozenOrPaused ||
         Engine.Scene is Overworld overworld && (overworld.Current is OuiOptions || overworld.Current is OuiJournal);
 
-    private static bool CompactForTouch
-    {
-        get
-        {
-            #if IOS_CELESTE_RUNTIME_HOST
-            return IOSTouchControls.TouchPromptActive;
-            #else
-            return false;
-            #endif
-        }
-    }
-
-    private static float CompactListLeft
-    {
-        get
-        {
-            #if IOS_CELESTE_RUNTIME_HOST
-            return IOSPresentationCoordinator.Current.IsPad ? 380f : 550f;
-            #else
-            return 370f;
-            #endif
-        }
-    }
-
-    // Adapted from AchievementGameComponent.Draw. Position changes to the
-    // top-right to leave Apple's bottom touch controls clear; sizing and the
-    // two outlined text lines retain the original helper's presentation.
+    // Adapted from AchievementGameComponent.Draw. Both Apple platforms use
+    // the same top-right placement, sizing and outlined text presentation.
     private static void DrawNotification()
     {
         const float height = 80f;
@@ -311,7 +286,7 @@ public static class MorroAchievementUI
 
     private sealed class AchievementPage : Entity
     {
-        private static int VisibleRows => CompactForTouch ? 5 : 6;
+        private const int VisibleRows = 6;
         private readonly Action onClose;
         private readonly HashSet<string> revealed = new(StringComparer.Ordinal);
         private readonly MorroAchievementDefinition[] definitions;
@@ -442,61 +417,50 @@ public static class MorroAchievementUI
             // backdrop, keeping the mountain or paused game visible behind it.
             Draw.Rect(-10f, -10f, 1940f, 1100f, Color.Black * fade * 0.55f);
             if (fade < 0.05f) return;
-            bool compact = CompactForTouch;
-            float left = compact ? CompactListLeft : 370f;
-            float width = compact ? (left > 500f ? 650f : 1160f) : 1180f;
+            // Keep the controller layout identical on iPhone, iPad and TV,
+            // even when the optional iOS touch controls are visible.
+            const float left = 370f;
+            const float width = 1180f;
             int count = ordered.Length;
-            if (compact && left > 500f)
-            {
-                // Keep the phone's top-center Pause control clear as well as
-                // its default lower-left movement and lower-right actions.
-                Header("ACHIEVEMENTS", left, 124f, 0.77f, fade, 0f);
-                Text(MorroAchievements.UnlockedCount + " / " + count + " unlocked",
-                    1250f, 124f, 0.44f, Muted * fade);
-            }
-            else
-            {
-                Header("ACHIEVEMENTS", 960f, 111f, 1.45f, fade, 0.5f);
-                Text(MorroAchievements.UnlockedCount + " / " + count + " unlocked",
-                    960f, 183f, 0.5f, Muted * fade, 0.5f);
-            }
+            Header("ACHIEVEMENTS", 960f, 111f, 1.45f, fade, 0.5f);
+            Text(MorroAchievements.UnlockedCount + " / " + count + " unlocked",
+                960f, 183f, 0.5f, Muted * fade, 0.5f);
 
             for (int row = 0; row < VisibleRows && first + row < count; row++)
                 DrawRow(first + row, row, left, width, fade);
             DrawScrollArrows(left + width + 30f, first > 0, first + VisibleRows < count, fade);
 
-            float footerY = compact ? 780f : 1009f;
-            Prompt(Input.MenuUp, "Browse", compact ? 680f : 705f, footerY);
-            Prompt(Input.MenuRight, "Page", compact ? 865f : 920f, footerY);
-            Prompt(Input.MenuCancel, "Back", compact ? 1050f : 1135f, footerY);
+            const float footerY = 1009f;
+            Prompt(Input.MenuUp, "Browse", 705f, footerY);
+            Prompt(Input.MenuRight, "Page", 920f, footerY);
+            Prompt(Input.MenuCancel, "Back", 1135f, footerY);
             Text(count == 0 ? "0 / 0" : (selection + 1) + " / " + count,
-                compact ? 520f : 370f, footerY, 0.39f, Muted * fade);
-            if (count > 0) DrawSelectedHint(ordered[selection], compact ? 844f : 970f, fade);
+                370f, footerY, 0.39f, Muted * fade);
+            if (count > 0) DrawSelectedHint(ordered[selection], 970f, fade);
             if (MorroAchievements.StoragePending)
-                Text("Saving progress...", 960f, compact ? 914f : 1055f, 0.34f, Muted * fade, 0.5f);
+                Text("Saving progress...", 960f, 1055f, 0.34f, Muted * fade, 0.5f);
         }
 
         // Adapted from AchievementMenuItem.Render. The original helper's
         // icon/name/description, purple panel, double border and locked dimming
-        // are retained; bounds adapt to the fixed Apple controller/touch layouts.
+        // are retained in one shared Apple controller layout.
         private void DrawRow(int index, int row, float x, float width, float fade)
         {
             MorroAchievementDefinition definition = ordered[index];
             bool unlocked = MorroAchievements.Has(definition.Id);
             bool secret = definition.Hidden && !unlocked && !revealed.Contains(definition.Id);
-            bool compact = CompactForTouch;
-            float height = compact ? 90f : 108f;
-            float iconSize = compact ? 64f : 80f;
-            float y = 238f + row * (compact ? 100f : 120f);
+            const float height = 108f;
+            const float iconSize = 80f;
+            float y = 238f + row * 120f;
             float textX = x + iconSize + 24f;
             float textWidth = width - iconSize - 44f;
             Draw.Rect(x, y, width, height, Panel * fade);
             DrawIcon(definition, x + 12f, y + (height - iconSize) / 2f,
                 iconSize, secret, unlocked, fade);
             FitText(secret ? "???" : definition.Name, textX, y + height / 3f,
-                textWidth, compact ? 0.56f : 0.7f, Color.White * fade);
+                textWidth, 0.7f, Color.White * fade);
             FitText(secret ? "???" : definition.Description, textX, y + height * 3f / 4f,
-                textWidth, compact ? 0.4f : 0.5f, Muted * fade);
+                textWidth, 0.5f, Muted * fade);
             DrawFrame(x, y, width, height, (index == selection ? Gold : Frame) * fade);
             if (!unlocked) Draw.Rect(x, y, width, height, Color.Black * 0.5f * fade);
         }
@@ -507,7 +471,7 @@ public static class MorroAchievementUI
             {
                 MTexture arrow = GFX.Gui["dotarrow_outline"];
                 if (above) arrow.DrawCentered(new Vector2(x, 259f), Color.White * fade, 0.65f, -(float)Math.PI / 2f);
-                if (below) arrow.DrawCentered(new Vector2(x, CompactForTouch ? 707f : 925f),
+                if (below) arrow.DrawCentered(new Vector2(x, 925f),
                     Color.White * fade, 0.65f, (float)Math.PI / 2f);
             }
         }

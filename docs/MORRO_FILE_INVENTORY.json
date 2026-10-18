@@ -3959,7 +3959,7 @@
       "gitMode": "100644",
       "path": "docs/testing/MORRO_VANILLA_ACHIEVEMENTS.md",
       "purpose": "Modern project guidance, architecture, acceptance history or immutable historical evidence: MORRO_VANILLA_ACHIEVEMENTS.md",
-      "sha256": "f0b36d27d7b62fda9d1ef963239b3f8acddde4ae8956aeca4725d1e277336941"
+      "sha256": "b390527d854fdbaaaa9c354377765a1bc10862ba97d947748239a16c5094d6dc"
     },
     {
       "baselineGitObject": "6d5813f02d3a0627270a72166b8b84c45bc97a35",
@@ -4234,7 +4234,7 @@
       "gitMode": "100644",
       "path": "managed/templates/MorroAchievementUI.cs",
       "purpose": "Canonical source generation, locked game profiles and platform transforms: MorroAchievementUI.cs",
-      "sha256": "0109ca67c1696a69ba58be7d5ba0bec1039da688c6d4ffa7aed98d42902bbd04"
+      "sha256": "0906b4fb9299dcaeb434025cea5cfb398df97c9cf2ede23c4284f6db37a4e2bd"
     },
     {
       "disposition": "migration-added",

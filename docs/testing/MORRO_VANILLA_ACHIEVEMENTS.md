@@ -15,7 +15,9 @@ achievements. The page uses Achievement Helper's illustrated rows, purple
 panels, outlined text, selected-row borders, and an unlocked count over the
 existing Celeste scene. Use the existing menu controls to move through the
 list, page through it, reveal a selected secret, or go back. The same game UI is
-used by the vanilla iPhone/iPad and Apple TV builds.
+used by the vanilla iPhone/iPad and Apple TV builds. All three use the same
+centered six-row controller layout, text and icon sizes, and footer positions.
+Optional iOS touch controls do not shrink or reposition the achievement page.
 
 Unlocked achievements appear first, followed by locked achievements. Each group
 keeps the original catalog order, so an entirely locked or unlocked list has the
@@ -209,9 +211,9 @@ slate-blue cards, double borders, and locked-entry dimming),
 `AchievementGameComponent.Draw`, `Update`, and `ShowNext` (notification sizing,
 80-pixel icons, text proportions, five-second hold, and 0.3-second entry/exit),
 and `OuiAchievementMenu.Render` (the translucent backdrop over the current
-scene). Morro moves notifications to the upper right to avoid the Apple touch
-controls and uses five visible rows with touch controls or six with a
-controller. The original helper's Everest-only lock artwork is replaced with
+scene). Morro uses the same upper-right notifications and six-row achievement
+page on iPhone, iPad, and Apple TV, independent of the active input source.
+The original helper's Everest-only lock artwork is replaced with
 the game's own lock artwork.
 
 The presentation is adapted to use the original game's achievement events,
@@ -235,6 +237,12 @@ pinned toolchain, serial app AOT, full trimming, and disabled shared
 compilation/build-server policies still apply.
 
 ## Validation record
+
+The controller-layout unification on 2026-10-18 removes the former iOS compact
+layout while retaining the existing tvOS geometry and all shared notification
+and navigation behavior. The historical touch/controller reflow results below
+describe the earlier layout. Current build and comparison results are recorded
+separately; older device observations do not establish acceptance of a new IPA.
 
 The following results describe the initial implementation and its products. A
 source review, unit test, or successful build cannot establish physical gameplay
